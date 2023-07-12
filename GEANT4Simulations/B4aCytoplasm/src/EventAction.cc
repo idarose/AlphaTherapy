@@ -41,9 +41,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
-    //Adding a row in TTree file
-    analysisManager->AddNtupleRow();
-
+    if(booleanFirstInteractionNotInCellNucleus)
+    {
+        //Adding a row in TTree file
+        analysisManager->AddNtupleRow();
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

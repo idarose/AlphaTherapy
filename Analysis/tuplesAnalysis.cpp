@@ -49,24 +49,15 @@ std::vector<double> importDataStringDouble(std::string filename)
 
 }
 
-
-void tuplesAnalysis()
+std::vector<std::tuple<int,double,double,double>> organizeDataFromTTree(const char* filename)
 {
-    //------------------–----------
-    // Importing data on decay dynamics from Mathematica calculations
-    std::vector<double> decayData;
-
-    decayData = importDataStringDouble("../Mathematica/Output/C4-2/Solution/Decays_Activity10_Solution.dat");
-
-    // double totAlphaDecays1h = decayData[decayData.size()];
-    double totDecays212PbSolutionFirstHour = decayData[0];
+    /*Returns Tuple  with data organized as : <cellID, energyDepMembrane, energyDepCytoplasm, energyDepNucleus>*/
 
     //------------------–----------
     // Opening TTree file and creating TTreeReader
-    std::unique_ptr<TFile> myFile(TFile::Open("../GEANT4Simulations/B4aSolution-build/B4.root", "READ"));
+    std::unique_ptr<TFile> myFile(TFile::Open(filename, "READ"));
     auto tree = myFile->Get<TTree>("B4");
     TTreeReader myReader(tree);
-
 
     //------------------–----------
     // Accessing brances of tree
@@ -77,14 +68,85 @@ void tuplesAnalysis()
     TTreeReaderArray<int> particleType(myReader, "ParticleType");
     TTreeReaderArray<double> interactionTime(myReader, "InteractionTime");
 
+    std::vector<std::tuple<int,double,double,double>> storedInfoAllEvents;
 
-    //------------------–----------
-    // Making Histograms
+    // Looping over every branch/event
+    while(myReader.Next())
+    {
+        std::vector<std::tuple<int,double,double,double>> storedInfoEvent;
 
-    // // // Histogram for average energy deposited in one cell per decay
-    // TH1D *hEnergyDepsTotal = new TH1D("hEnergyDepsTotal", "Energy Deposition", 10000, 0.0, 20.0);
+        // Looping over every leaf/step
+        for(int i=0; i<energyDeps.GetSize(); i++)
+        {
+            // If first step store the energy
+            if(storedInfoEvent.size()==0)
+            {
+                if(volumeTypes[i]==1)
+                {
+                    //Membrane
+                    storedInfoEvent.push_back(make_tuple(cellIDs[i],energyDeps[i],0.0,0.0));
+                }
+                else if(volumeTypes[i]==2)
+                {
+                    // Cytoplasm
+                    storedInfoEvent.push_back(make_tuple(cellIDs[i],0.0,energyDeps[i], 0.0));
+                }
+                if(volumeTypes[i]==3)
+                {
+                    // Nucleus
+                    storedInfoEvent.push_back(make_tuple(cellIDs[i],0.0,0.0,energyDeps[i]));
+                }
+            }
+            // If not first step check for same cellIDS
+            else
+            {
+                // Looping over every tuple stored
+                for(int j=0;j<storedInfoEvent.size();j++)
+                {
+                    // If the cellID has already been stored before then add the enery
+                    if(get<0>(storedInfoEvent[j])==cellIDs[i])
+                    {
+                        // If in membrane
+                        if(volumeTypes[i]==1)
+                        {
+                            get<1>(storedInfoEvent[j]) += energyDeps[i];
+                        }
+                        // If in cytoplasm
+                        else if(volumeTypes[i]==2)
+                        {
+                            get<2>(storedInfoEvent[j]) += energyDeps[i];
+                        }
+                        // If in nucleus
+                        else if(volumeTypes[i]==3)
+                        {
+                            get<3>(storedInfoEvent[j]) += energyDeps[i];
+                        }
+                    }
+                }
+            }
+        }
+        // Storing info from one event to tuple storing info from all events
+        for(int k=0; k<storedInfoEvent.size(); k++)
+        {
+            storedInfoAllEvents.push_back(storedInfoEvent[k]);
+        }
+    }
+    return storedInfoAllEvents;
+}
 
-    // Histogram for total energy deposited in one nuclei per decay
+
+void tuplesAnalysis()
+{
+    std::vector<std::tuple<int,double,double,double>> storedInfoDecaysSolution;
+    // std::vector<std::tuple<int,double,double,double>> storedInfoDecaysMembrane;
+    // std::vector<std::tuple<int,double,double,double>> storedInfoDecaysCytoplasm;
+
+
+    storedInfoDecaysSolution = organizeDataFromTTree("../GEANT4Simulations/B4aSolution-build/B4.root");
+    // storedInfoDecaysMembrane = organizeDataFromTTree("../GEANT4Simulations/B4aMembrane-build/B4.root");
+    // storedInfoDecaysCytoplasm = organizeDataFromTTree("../GEANT4Simulations/B4aCytoplasm-build/B4.root");
+
+     // Histogram for total energy deposited in one nuclei per decay
     TH1D *hEnergyDepsNucleus = new TH1D("hEnergyDepsNucleus", "Energy Deposition in Cell Nuclei / Decay", 10000, 0.0, 20.0);
 
     // Histogram for total energy deposited in one membrane per decay
@@ -98,91 +160,28 @@ void tuplesAnalysis()
     auto OutputTuplesAnalysis = new TFile("OutputTuplesAnalysis.root", "RECREATE");
 
 
-    //------------------–----------
-    // Data analysis
-
-    // Make summation variable to stop the processing of the TTree data once the amount 212Pb decays reaches amount calculated by mathematica
-    int decaysProcessed = 0;
-
-
-    // Looping over every branch/event
-    while(myReader.Next())
+    //Filling histograms
+    for(int k=0; k<storedInfoDecaysSolution.size(); k++)
     {
-        decaysProcessed ++;
-        //Tuple <cellID, energyDepMembrane, energyDepCytoplasm, energyDepNucleus>; <0,1,2,3>
+       hEnergyDepsMembrane->Fill(get<1>(storedInfoDecaysSolution[k]));
+       // hEnergyDepsMembrane->Fill(get<1>(storedInfoDecaysMembrane[k]));
+       // hEnergyDepsMembrane->Fill(get<1>(storedInfoDecaysCytoplasm[k]));
 
-        std::vector<std::tuple<int,double,double,double>> storedInfo;
-
-        // Looping over every leaf/step
-        for(int i=0; i<energyDeps.GetSize(); i++)
-        {
-            // If first step store the energy
-            if(storedInfo.size()==0)
-            {
-                if(volumeTypes[i]==1)
-                {
-                    //Membrane
-                    storedInfo.push_back(make_tuple(cellIDs[i],energyDeps[i],0.0,0.0));
-                }
-                else if(volumeTypes[i]==2)
-                {
-                    // Cytoplasm
-                    storedInfo.push_back(make_tuple(cellIDs[i],0.0,energyDeps[i], 0.0));
-                }
-                if(volumeTypes[i]==3)
-                {
-                    // Nucleus
-                    storedInfo.push_back(make_tuple(cellIDs[i],0.0,0.0,energyDeps[i]));
-                }
-            }
-            // If not first step check for same cellIDS
-            else
-            {
-                // Looping over every tuple stored
-                for(int j=0;j<storedInfo.size();j++)
-                {
-                    // If the cellID has already been stored before then add the enery
-                    if(get<0>(storedInfo[j])==cellIDs[i])
-                    {
-                        // If in membrane
-                        if(volumeTypes[i]==1)
-                        {
-                            get<1>(storedInfo[j]) += energyDeps[i];
-                        }
-                        // If in cytoplasm
-                        else if(volumeTypes[i]==2)
-                        {
-                            get<2>(storedInfo[j]) += energyDeps[i];
-                        }
-                        // If in nucleus
-                        else if(volumeTypes[i]==3)
-                        {
-                            get<3>(storedInfo[j]) += energyDeps[i];
-                        }
-                    }
-                }
-            }
-        }
-        // Filling histograms
-        for(int k=0;k<storedInfo.size();k++)
-        {
-           hEnergyDepsMembrane->Fill(get<1>(storedInfo[k]));
-           hEnergyDepsCytoplasm->Fill(get<2>(storedInfo[k]));
-           hEnergyDepsNucleus->Fill(get<3>(storedInfo[k]));
-        }
-
-        if(decaysProcessed >= totDecays212PbSolutionFirstHour)
-        {
-            break;
-        }
+       hEnergyDepsCytoplasm->Fill(get<2>(storedInfoDecaysSolution[k]));
+       hEnergyDepsNucleus->Fill(get<3>(storedInfoDecaysSolution[k]));
     }
 
-    std::cout << decaysProcessed << " , " << totDecays212PbSolutionFirstHour << std::endl;
-    // hEnergyDepsTotal->Write();
+    hEnergyDepsMembrane->Scale(1.0/storedInfoDecaysSolution.size());
+    hEnergyDepsCytoplasm->Scale(1.0/storedInfoDecaysSolution.size());
+    hEnergyDepsNucleus->Scale(1.0/storedInfoDecaysSolution.size());
+
+
     hEnergyDepsMembrane->Write();
     hEnergyDepsCytoplasm->Write();
     hEnergyDepsNucleus->Write();
+
     OutputTuplesAnalysis->Write();
     OutputTuplesAnalysis->Close();
+
 
 }
