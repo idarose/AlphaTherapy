@@ -1,0 +1,1374 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     62173,       1366]
+NotebookOptionsPosition[     61567,       1347]
+NotebookOutlinePosition[     61966,       1363]
+CellTagsIndexPosition[     61923,       1360]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"CalculateDecays", "[", 
+   RowBox[{
+   "inputActivity_", ",", " ", "inputCellLine_", ",", " ", "inputA0PerCell_", 
+    ",", " ", "inputA0InternalisedPerCell_", ",", " ", "analysisRegion_", ",",
+     " ", "saveFullOutput_"}], "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"(", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"inputActivity", " ", "given", " ", "in", " ", 
+     RowBox[{"kBq", "/", "ml"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"inputActivityPerSample", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"10.0", "^", "3"}], ")"}], "*", 
+      RowBox[{"inputActivity", "/", "5.0"}]}]}], ";", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Bq", "/", "0.2"}], " ", "ml"}], "*)"}], 
+    RowBox[{"inputActivityPerSampleHour", " ", "=", " ", 
+     RowBox[{"inputActivityPerSample", "*", "3600"}]}], ";", " ", 
+    RowBox[{"(*", 
+     RowBox[{"decays", "/", "hour"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"nCellsPerSample", " ", "=", " ", "1.0*^6"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"A0PerCellMembrane", " ", "=", " ", 
+     RowBox[{"inputA0PerCell", "-", "inputA0InternalisedPerCell"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"A0", " ", "=", " ", 
+     RowBox[{"nCellsPerSample", "*", "inputA0PerCell"}]}], ";", 
+    RowBox[{"(*", 
+     RowBox[{
+     "total", " ", "number", " ", "of", " ", "radionulcides", " ", 
+      "absorbed"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"k", " ", "=", " ", "50"}], ";", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Constant", " ", "determining", " ", "rapidity", " ", "of", " ", 
+      "uptake"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"t0", " ", "=", " ", 
+     RowBox[{"(", 
+      RowBox[{"1", "+", 
+       RowBox[{"0.25", "/", "2.0"}]}], ")"}]}], ";", " ", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Constant", " ", "determining", " ", "midpoint", " ", "of", " ", 
+      "uptake"}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Decay", " ", "Constants"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"l212Pb", "=", "0.0649622"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"l212Bi", "=", "0.687646"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"l208Tl", "=", "13.6236"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"l212Po", "=", 
+     RowBox[{"8.4904", "*", "1000000000"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"l208Pb", "=", "0"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Branching", " ", "ratios"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"fBiToTl", "=", "0.3594"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"fBiToPo", "=", "0.6406"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"timeIntervalForDataExport", " ", "=", " ", "0.001"}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"N0", "=", 
+     RowBox[{"inputActivityPerSampleHour", "/", "l212Pb"}]}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"analysisRegion", "==", "\"\<Cells\>\""}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"A0", "*=", 
+         RowBox[{"-", "1"}]}], ",", " ", 
+        RowBox[{"N0", "=", "0"}]}], " ", "}"}]}], " ", "]"}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Uptake", " ", "function"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"A", "[", "t_", "]"}], " ", ":=", " ", 
+     RowBox[{"A0", "/", 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"-", "k"}], 
+          RowBox[{"(", 
+           RowBox[{"t", " ", "-", " ", "t0"}], ")"}]}], "]"}]}], ")"}]}]}], 
+    ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"A", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}]}], "]"}], "]"}], 
+      ";"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"tStart", " ", "=", " ", "0.0"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"tStop", " ", "=", " ", "24.0"}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"212", "PB", " ", "CALCULATIONS"}], "*)"}], 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "total", " ", "number", " ", "of", " ", "212", 
+      "Pb"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"sN212PbTotal", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{
+           RowBox[{"-", "l212Pb"}], "*", 
+           RowBox[{"y", "[", "t", "]"}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "N0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"N212PbTotal", "[", "t_", "]"}], "=", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sN212PbTotal", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Calculating", " ", "number", " ", "of", " ", "212", "Pb"}], 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"sN212Pb", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"-", "l212Pb"}], "*", 
+            RowBox[{"y", "[", "t", "]"}]}], "-", 
+           RowBox[{
+            RowBox[{"A", "'"}], "[", "t", "]"}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "N0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"N212Pb", "[", "t_", "]"}], "=", " ", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", " ", 
+      RowBox[{"sN212Pb", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "number", " ", "of", " ", "decays", " ", "of", " ", 
+      "212", "Pb", " ", "to", " ", "212", "Bi"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"sDecays212Pb212Bi", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{"l212Pb", "*", 
+           RowBox[{"N212Pb", "[", "t", "]"}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"decays212Pb212Bi", " ", "[", "t_", "]"}], "=", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sDecays212Pb212Bi", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"212", "BI", " ", "CALCULATIONS"}], "*)"}], 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Calculating", " ", "number", " ", "of", " ", "212", "Bi"}], 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"sN212Bi", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{
+           RowBox[{"l212Pb", "*", 
+            RowBox[{"N212Pb", "[", "t", "]"}]}], "-", 
+           RowBox[{"l212Bi", "*", 
+            RowBox[{"y", "[", "t", "]"}]}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"N212Bi", "[", "t_", "]"}], "=", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sN212Bi", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "number", " ", "of", " ", "decays", " ", "from", " ",
+       "212", "Bi", " ", "to", " ", "208", "Tl"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"sDecays212Bi208Tl", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{"fBiToTl", "*", "l212Bi", "*", 
+           RowBox[{"N212Bi", "[", "t", "]"}]}]}], ",", " ", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", " ", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", " ", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"decays212Bi208Tl", "[", "t_", "]"}], "=", " ", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sDecays212Bi208Tl", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "number", " ", "of", " ", "decays", " ", "from", " ",
+       "212", "Bi", " ", "to", " ", "212", "Po"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"sDecays212Bi212Po", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{"fBiToPo", "*", "l212Bi", "*", 
+           RowBox[{"N212Bi", "[", "t", "]"}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"decays212Bi212Po", "[", "t_", "]"}], "=", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sDecays212Bi212Po", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"208", "TL", " ", "CALCULATIONS"}], "*)"}], 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "number", " ", "of", " ", "208", "Tl", " ", 
+      "nuclides"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"sN208Tl", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{
+           RowBox[{"fBiToTl", "*", "l212Bi", "*", 
+            RowBox[{"N212Bi", "[", "t", "]"}]}], "-", 
+           RowBox[{"l208Tl", "*", 
+            RowBox[{"y", "[", "t", "]"}]}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"N208Tl", "[", "t_", "]"}], "=", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sN208Tl", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "number", " ", "of", " ", "decays", " ", "from", " ",
+       "208", "Tl", " ", "to", " ", "208", "Pb"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"sDecays208Tl208Pb", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{"l208Tl", "*", 
+           RowBox[{"N208Tl", "[", "t", "]"}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"decays208Tl208Pb", "[", "t_", "]"}], " ", "=", " ", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sDecays208Tl208Pb", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"212", "PO", " ", "CALCULATIONS"}], "*)"}], 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculting", " ", "number", " ", "of", " ", "212", "Po", " ", 
+      "nuclides"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"sN212Po", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"-", "l212Po"}], "*", 
+            RowBox[{"y", "[", "t", "]"}]}], "+", 
+           RowBox[{"fBiToPo", "*", "l212Bi", "*", 
+            RowBox[{"N212Bi", "[", "t", "]"}]}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"N212Po", "[", "t_", "]"}], " ", "=", " ", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sN212Po", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "number", " ", "of", " ", "decays", " ", "from", " ",
+       "212", "Po", " ", "to", " ", "208", "Pb"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"sDecays212Po208Pb", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{"l212Po", "*", 
+           RowBox[{"N212Po", "[", "t", "]"}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"decays212Po208Pb", "[", "t_", "]"}], "=", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sDecays212Po208Pb", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"208", "PB", " ", "CALCULATIONS"}], "*)"}], 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Calculating", " ", "number", " ", "of", " ", "208", "Pb", " ", 
+      "nuclei"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"sN208Pb", " ", "=", " ", 
+     RowBox[{"NDSolve", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"y", "'"}], "[", "t", "]"}], "==", 
+          RowBox[{
+           RowBox[{"l212Po", "*", 
+            RowBox[{"N212Po", "[", "t", "]"}]}], " ", "+", " ", 
+           RowBox[{"l208Tl", "*", 
+            RowBox[{"N208Tl", "[", "t", "]"}]}]}]}], ",", 
+         RowBox[{
+          RowBox[{"y", "[", "0", "]"}], "==", "0"}]}], "}"}], ",", 
+       RowBox[{"y", "[", "t", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", " ", 
+       RowBox[{"MaxStepSize", "->", "0.01"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"N208Pb", "[", "t_", "]"}], " ", "=", " ", 
+     RowBox[{
+      RowBox[{"y", "[", "t", "]"}], "/.", 
+      RowBox[{"sN208Pb", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"RATIO", " ", "CALCULATIONS"}], "*)"}], "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"ratio", "[", "t_", "]"}], " ", ":=", " ", 
+       RowBox[{
+        RowBox[{"N212Pb", "[", "t", "]"}], "/", 
+        RowBox[{"N212PbTotal", "[", "t", "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{"ratio", ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}]}], "]"}], "]"}], 
+      ";"}], "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", "PLOTTING", " ", "*)"}], "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"N212Pb", "[", "t", "]"}], ",", 
+           RowBox[{"N212Bi", "[", "t", "]"}], ",", 
+           RowBox[{"N212Po", "[", "t", "]"}], ",", 
+           RowBox[{"N208Tl", "[", "t", "]"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{"PlotLegends", "->", 
+          RowBox[{"{", 
+           RowBox[{
+           "\"\<N212Pb\>\"", ",", "\"\<N212Bi\>\"", ",", "\"\<N212Po\>\"", 
+            ",", "\"\<N208Tl\>\""}], "}"}]}]}], "]"}], "]"}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"N212PbTotal", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{"PlotLabel", "->", "\"\<N212Pb in Total\>\""}]}], "]"}], 
+       "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"N212Pb", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{"PlotLabel", "->", "\"\<N212Pb in Solution\>\""}]}], "]"}], 
+       "]"}], ";", "\n", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"decays212Pb212Bi", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{
+         "PlotLabel", "->", "\"\<Decays 212Pb->212Bi in Solution\>\""}]}], 
+        "]"}], "]"}], ";", "\n", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"N212Bi", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{"PlotLabel", "->", "\"\<N212Bi in Solution\>\""}]}], "]"}], 
+       "]"}], ";", "\[IndentingNewLine]", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"decays212Bi208Tl", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{
+         "PlotLabel", "->", "\"\<Decays 212Bi->208Tl in Solution\>\""}]}], 
+        "]"}], "]"}], ";", "\n", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"decays212Bi212Po", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{
+         "PlotLabel", "->", "\"\<Decays 212Bi->212Po in Solution\>\""}]}], 
+        "]"}], "]"}], ";", "\n", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"N208Tl", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{"PlotLabel", "->", "\"\<N208Tl in Solution\>\""}]}], "]"}], 
+       "]"}], ";", "\n", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"decays208Tl208Pb", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{
+         "PlotLabel", "->", "\"\<Decays 208Tl->208Pb in Solution\>\""}]}], 
+        "]"}], "]"}], ";", "\[IndentingNewLine]", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"N212Po", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{"PlotLabel", "->", "\"\<N212Po in solution\>\""}]}], "]"}], 
+       "]"}], ";", "\n", "\n", "  ", 
+      RowBox[{"Print", "[", 
+       RowBox[{"Plot", "[", 
+        RowBox[{
+         RowBox[{"decays212Po208Pb", "[", "t", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
+         RowBox[{
+         "PlotLabel", "->", "\"\<Decays 212Po->208Pb in Solution\>\""}]}], 
+        "]"}], "]"}], ";"}], "\n", "\n", "*)"}], "\n", "\[IndentingNewLine]", 
+    
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"SAVING", " ", "OUTPUT"}], " ", "*)"}], "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", 
+    RowBox[{"outputDirectory", "=", " ", 
+     RowBox[{"StringJoin", "[", 
+      RowBox[{
+      "\"\</Users/idarosenqvist/OneDrive/DesktopOD/Academics/Codes/\
+AlphaTherapyMaster/Mathematica/Output\>\"", " ", ",", " ", "\"\</\>\"", ",", 
+       " ", "inputCellLine", ",", " ", "\"\</\>\"", ",", " ", 
+       "analysisRegion", ",", "\"\</\>\""}], "]"}]}], ";", "\n", "\n", 
+    "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"saveFullOutput", "==", "\"\<true\>\""}], ",", " ", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
+        "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", 
+         "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+          "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+          "===", "==="}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{"Storing", " ", "number", " ", "of", " ", "nuclides"}], 
+        "*)"}], "\[IndentingNewLine]", "\t", 
+       RowBox[{
+        RowBox[{"tableN212PbTotal", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", " ", 
+             RowBox[{"N212PbTotal", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_N212PbTotal.dat\>\"", ",", "outputDirectory", 
+            ",", "inputActivity"}], "]"}], "]"}]}], ";", "\n", "\t\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableN212PbTotal"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableN212Pb", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", " ", 
+             RowBox[{"N212Pb", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", "\n", 
+        "\t\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_N212Pb.dat\>\"", ",", "outputDirectory", ",", 
+            "inputActivity"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableN212Pb"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableN212Bi", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", " ", 
+             RowBox[{"N212Bi", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", " ", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_N212Bi.dat\>\"", ",", "outputDirectory", ",", 
+            "inputActivity"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableN212Bi"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableN208Tl", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", " ", 
+             RowBox[{"N208Tl", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", " ", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_N208Tl.dat\>\"", ",", "outputDirectory", ",", 
+            "inputActivity"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableN208Tl"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\t", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableN212Po", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", " ", 
+             RowBox[{"N212Po", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", " ", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_N212Po.dat\>\"", ",", "outputDirectory", ",", 
+            "inputActivity"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableN212Po"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableN208Pb", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", 
+             RowBox[{"N208Pb", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_N208Pb.dat\>\"", ",", " ", "outputDirectory", 
+            ",", " ", "inputActivity"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", " ", "tableN208Pb"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{"tableN208Pb", " ", "=", " ", 
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"t", ",", " ", 
+               RowBox[{"N208Pb", "[", "t", "]"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+              "t", ",", " ", "tStart", ",", "tStop", ",", " ", 
+               "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", "\t", 
+          RowBox[{"filePath", " ", "=", " ", 
+           RowBox[{"ToString", "[", 
+            RowBox[{"StringForm", "[", 
+             RowBox[{
+             "\"\<``Activity``_N208Pb.dat\>\"", ",", "outputDirectory", ",", 
+              "inputActivity"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+          "\t", 
+          RowBox[{"Export", "[", 
+           RowBox[{"filePath", ",", "tableN08Pb"}], "]"}], ";"}], "*)"}], 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+           "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+           "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+           "===", "==="}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "Storing", " ", "total", " ", "decays", " ", "of", " ", "nuclides"}],
+          "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableDecays212Pb212Bi", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", 
+             RowBox[{"decays212Pb212Bi", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_TotalDecays212Pb212Bi.dat\>\"", ",", 
+            "outputDirectory", ",", "inputActivity"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableDecays212Pb212Bi"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableDecays212Bi212Po", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", 
+             RowBox[{"decays212Bi212Po", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_TotalDecays212Bi212Po.dat\>\"", ",", 
+            "outputDirectory", ",", "inputActivity"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableDecays212Bi212Po"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableDecays212Bi208Tl", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", 
+             RowBox[{"decays212Bi208Tl", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_TotalDecays212Bi208Tl.dat\>\"", ",", 
+            "outputDirectory", ",", "inputActivity"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableDecays212Bi208Tl"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableDecays208Tl208Pb", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", 
+             RowBox[{"decays208Tl208Pb", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_TotalDecays208Tl208Pb.dat\>\"", ",", 
+            "outputDirectory", ",", "inputActivity"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableDecays208Tl208Pb"}], "]"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\t", 
+        RowBox[{"tableDecays212Po208Pb", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"t", ",", 
+             RowBox[{"decays212Po208Pb", "[", "t", "]"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+            "t", ",", "tStart", ",", "tStop", ",", " ", 
+             "timeIntervalForDataExport"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Activity``_TotalDecays212Po208Pb.dat\>\"", ",", 
+            "outputDirectory", ",", "inputActivity"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\t", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "tableDecays212Po208Pb"}], "]"}], ";"}], 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "}"}]}], "]"}], ";", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"analysisRegion", "==", "\"\<Solution\>\""}], ",", " ", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"decays212Pb212Bi$1h$2h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Pb212Bi", "[", "2", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Pb212Bi", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays212Bi208Tl$1h$2h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Bi208Tl", "[", "2", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Bi208Tl", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays212Bi212Po$1h$2h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Bi212Po", "[", "2", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Bi212Po", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays212Po208Pb$1h$2h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Po208Pb", "[", "2", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Po208Pb", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays208Tl208Pb$1h$2h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays208Tl208Pb", "[", "2", "]"}], " ", "-", " ", 
+          RowBox[{"decays208Tl208Pb", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"TotalAlphaDecays$1h$2h", " ", "=", " ", 
+         RowBox[{
+         "decays212Bi208Tl$1h$2h", " ", "+", " ", 
+          "decays212Po208Pb$1h$2h"}]}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Decays_Activity``_``.dat\>\"", ",", " ", "outputDirectory", 
+            ",", " ", "inputActivity", ",", " ", "analysisRegion"}], "]"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "\[IndentingNewLine]", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Pb212Bi$1h$2h\>\"", ",", " ", 
+              "decays212Pb212Bi$1h$2h"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi212Po$1h$2h\>\"", ",", " ", 
+              "decays212Bi212Po$1h$2h"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi208Tl$1h$2h\>\"", ",", 
+              "decays212Bi208Tl$1h$2h"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Po208Pb$1h$2h\>\"", ",", " ", 
+              "decays212Po208Pb$1h$2h"}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays208Tl208Pb$1h$2h\>\"", ",", " ", 
+              "decays208Tl208Pb$1h$2h"}], " ", "}"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalAlphaDecays$1h$2h\>\"", ",", " ", 
+              "TotalAlphaDecays$1h$2h"}], " ", "}"}]}], "\[IndentingNewLine]",
+            "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", "}"}]}], "]"}], ";",
+     "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+     "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+       "===", "===", "===", "===", "===", "===", "===", "===", "===", "==="}],
+      "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"analysisRegion", "==", "\"\<Cells\>\""}], ",", " ", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Print", "[", "\"\<Yes has been called!\>\"", "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"decays212Pb212Bi$1h$24h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Pb212Bi", "[", "24", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Pb212Bi", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays212Bi208Tl$1h$24h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Bi208Tl", "[", "24", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Bi208Tl", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays212Bi212Po$1h$24h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Bi212Po", "[", "24", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Bi212Po", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays212Po208Pb$1h$24h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays212Po208Pb", "[", "24", "]"}], " ", "-", " ", 
+          RowBox[{"decays212Po208Pb", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"decays208Tl208Pb$1h$24h", " ", "=", " ", 
+         RowBox[{
+          RowBox[{"decays208Tl208Pb", "[", "24", "]"}], " ", "-", " ", 
+          RowBox[{"decays208Tl208Pb", "[", "1", "]"}]}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"TotalAlphaDecays$1h$24h", " ", "=", " ", 
+         RowBox[{
+         "decays212Bi208Tl$1h$24h", " ", "+", " ", 
+          "decays212Po208Pb$1h$24h"}]}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"filePath", " ", "=", " ", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{
+           "\"\<``Decays_Activity``_``.dat\>\"", ",", " ", "outputDirectory", 
+            ",", " ", "inputActivity", ",", " ", "analysisRegion"}], "]"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"Export", "[", 
+         RowBox[{"filePath", ",", "\[IndentingNewLine]", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Pb212Bi$1h$24h\>\"", ",", " ", 
+              "decays212Pb212Bi$1h$24h"}], "}"}], ",", "\[IndentingNewLine]", 
+            
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi208Tl$1h$24h\>\"", ",", " ", 
+              "decays212Bi208Tl$1h$24h"}], "}"}], ",", "\[IndentingNewLine]", 
+            
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi212Po$1h$24h\>\"", ",", " ", 
+              "decays212Bi212Po$1h$24h"}], "}"}], ",", "\[IndentingNewLine]", 
+            
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Po208Pb$1h$24h\>\"", ",", " ", 
+              "decays212Po208Pb$1h$24h"}], "}"}], ",", "\[IndentingNewLine]", 
+            
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays208Tl208Pb$1h$24h\>\"", ",", " ", 
+              "decays208Tl208Pb$1h$24h"}], "}"}], ",", "\[IndentingNewLine]", 
+            
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<ToyalAlphaDecays$1h$24h\>\"", ",", " ", 
+              "TotalAlphaDecays$1h$24h"}], "}"}], ",", "\[IndentingNewLine]", 
+            
+            RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Pb212Bi$1h$24h(cellMembrane)\>\"", ",", " ", 
+              RowBox[{"decays212Pb212Bi$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"A0PerCellMembrane", "/", "inputA0PerCell"}], 
+                ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi208Tl$1h$24h(cellMembrane)\>\"", ",", " ", 
+              RowBox[{"decays212Bi208Tl$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"A0PerCellMembrane", "/", "inputA0PerCell"}], 
+                ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi212Po$1h$24h(cellMembrane)\>\"", ",", " ", 
+              RowBox[{"decays212Bi212Po$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"A0PerCellMembrane", "/", "inputA0PerCell"}], 
+                ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Po208Pb$1h$24h(cellMembrane)\>\"", ",", " ", 
+              RowBox[{"decays212Po208Pb$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"A0PerCellMembrane", "/", "inputA0PerCell"}], 
+                ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays208Tl208Pb$1h$24h(cellMembrane)\>\"", ",", " ", 
+              RowBox[{"decays208Tl208Pb$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"A0PerCellMembrane", "/", "inputA0PerCell"}], 
+                ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalAlphaDecays$1h$24h(cellMembrane)\>\"", ",", " ", 
+              RowBox[{"TotalAlphaDecays$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"A0PerCellMembrane", "/", "inputA0PerCell"}], 
+                ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Pb212Bi$1h$24h(cellInternalised)\>\"", ",", 
+              " ", 
+              RowBox[{"decays212Pb212Bi$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"inputA0InternalisedPerCell", "/", "inputA0PerCell"}],
+                 ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi208Tl$1h$24h(cellInternalised)\>\"", ",", 
+              " ", 
+              RowBox[{"decays212Bi208Tl$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"inputA0InternalisedPerCell", "/", "inputA0PerCell"}],
+                 ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Bi212Po$1h$24h(cellInternalised)\>\"", ",", 
+              " ", 
+              RowBox[{"decays212Bi212Po$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"inputA0InternalisedPerCell", "/", "inputA0PerCell"}],
+                 ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays212Po208Pb$1h$24h(cellInternalised)\>\"", ",", 
+              " ", 
+              RowBox[{"decays212Po208Pb$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"inputA0InternalisedPerCell", "/", "inputA0PerCell"}],
+                 ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalDecays208Tl208Pb$1h$24h(cellInternalised)\>\"", ",", 
+              " ", 
+              RowBox[{"decays208Tl208Pb$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"inputA0InternalisedPerCell", "/", "inputA0PerCell"}],
+                 ")"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<TotalAlphaDecays$1h$24h(cellInternalised)\>\"", ",", " ", 
+              RowBox[{"TotalAlphaDecays$1h$24h", "*", 
+               RowBox[{"(", 
+                RowBox[{"inputA0InternalisedPerCell", "/", "inputA0PerCell"}],
+                 ")"}]}]}], "}"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], 
+        ";"}], "\[IndentingNewLine]", "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]", ")"}]}], "\[IndentingNewLine]", 
+ StyleBox[
+  RowBox[{
+   RowBox[{"CalculateDecays", "[", 
+    RowBox[{
+    "10", ",", " ", "\"\<C4-2\>\"", ",", " ", "4", ",", " ", "2", ",", " ", 
+     "\"\<Solution\>\"", ",", " ", "\"\<true\>\""}], "]"}], ";"}], 
+  "Code"], "\[IndentingNewLine]", 
+ StyleBox[
+  RowBox[{
+   RowBox[{"CalculateDecays", "[", 
+    RowBox[{
+    "10", ",", " ", "\"\<C4-2\>\"", ",", " ", "4", ",", " ", "2", ",", " ", 
+     "\"\<Cells\>\"", ",", " ", "\"\<true\>\""}], "]"}], ";"}], 
+  "Code"], "\n"}], "Input",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8939150975180063`*^9, 3.893915543580122*^9}, {
+   3.893915637790778*^9, 3.8939157251076727`*^9}, {3.894079339509713*^9, 
+   3.8940793855956707`*^9}, {3.894079425360456*^9, 3.8940795065619392`*^9}, {
+   3.8940795947796803`*^9, 3.894079760771983*^9}, {3.8940798803597803`*^9, 
+   3.894080266680201*^9}, {3.8940803054179897`*^9, 3.8940806273628902`*^9}, {
+   3.894080682139895*^9, 3.894080683953273*^9}, {3.894080717135178*^9, 
+   3.894080718639018*^9}, {3.89408077935631*^9, 3.894080920187187*^9}, {
+   3.894080981482637*^9, 3.8940812266615057`*^9}, {3.894081268626717*^9, 
+   3.8940812718109827`*^9}, {3.8940813796999693`*^9, 3.894081497022737*^9}, {
+   3.8940824855942087`*^9, 3.894082497836591*^9}, {3.894083471879095*^9, 
+   3.8940834723247557`*^9}, {3.894083524455633*^9, 3.894083556037756*^9}, {
+   3.894083737447525*^9, 3.894083740707699*^9}, {3.894083807296385*^9, 
+   3.89408387007314*^9}, {3.894083918618389*^9, 3.894083964796061*^9}, {
+   3.8940839982234497`*^9, 3.894084073768073*^9}, {3.894084124794574*^9, 
+   3.894084179819745*^9}, {3.894084317046672*^9, 3.894084322110484*^9}, {
+   3.894084491223826*^9, 3.894084496404848*^9}, {3.894084637848366*^9, 
+   3.894084638311823*^9}, {3.894429552854035*^9, 3.8944295532192373`*^9}, {
+   3.894429975274768*^9, 3.894429999008635*^9}, {3.894602702588353*^9, 
+   3.8946027409788733`*^9}, {3.894602985024254*^9, 3.894602996412964*^9}, {
+   3.894603334208625*^9, 3.894603467044265*^9}, {3.894603666810117*^9, 
+   3.894603667299715*^9}, {3.894604485540351*^9, 3.8946045102409143`*^9}, {
+   3.894604552489744*^9, 3.894604643208867*^9}, {3.894604777760709*^9, 
+   3.894604782487193*^9}, {3.894604823546177*^9, 3.89460491515648*^9}, {
+   3.8959059673548937`*^9, 3.895906026662963*^9}, {3.8959065813171186`*^9, 
+   3.8959066347956038`*^9}, {3.895906667643775*^9, 3.895906756159053*^9}, {
+   3.8959068245207443`*^9, 3.89590685327041*^9}, {3.895906910366486*^9, 
+   3.895907009951473*^9}, {3.895907056116885*^9, 3.895907206193778*^9}, {
+   3.895907287711413*^9, 3.895907306324333*^9}, {3.895907369540037*^9, 
+   3.895907457888356*^9}, {3.895907493389534*^9, 3.8959075731586037`*^9}, {
+   3.895911811619254*^9, 3.895911881026792*^9}, {3.895911924956552*^9, 
+   3.8959119442891827`*^9}, {3.8959120780792627`*^9, 3.895912081487808*^9}, {
+   3.89597504572746*^9, 3.8959751068090076`*^9}, {3.8959751386394453`*^9, 
+   3.89597515195021*^9}, {3.895975209118092*^9, 3.895975346604311*^9}, {
+   3.895975434473384*^9, 3.89597549060822*^9}, {3.895975605045244*^9, 
+   3.895975634380972*^9}, {3.895975748782803*^9, 3.895975750339695*^9}, {
+   3.8959757905297747`*^9, 3.895975820722805*^9}, 3.8959758724577103`*^9, {
+   3.895975957533163*^9, 3.895975962932675*^9}, {3.895976019878757*^9, 
+   3.8959760359567347`*^9}, {3.895976134987193*^9, 3.895976235778598*^9}, {
+   3.895976299246389*^9, 3.895976333747374*^9}, 3.895977126948516*^9, {
+   3.89597732484947*^9, 3.8959774014998426`*^9}, {3.8959774382589407`*^9, 
+   3.8959774487248373`*^9}, {3.8959775281079063`*^9, 3.895977543519803*^9}, {
+   3.895977702104895*^9, 3.895977704290061*^9}, {3.8959778408238983`*^9, 
+   3.895977861236205*^9}, {3.8959780244665613`*^9, 3.895978056374234*^9}, 
+   3.895978964206992*^9, 3.8959789969229*^9, {3.895979048008891*^9, 
+   3.8959791417823668`*^9}, {3.895979177586935*^9, 3.895979188940773*^9}, {
+   3.895979376794855*^9, 3.895979385647108*^9}, {3.895979446725349*^9, 
+   3.895979472996429*^9}, {3.895979516443303*^9, 3.895979603267104*^9}, {
+   3.895979764908257*^9, 3.8959803923334227`*^9}, {3.895982302868878*^9, 
+   3.8959823632757263`*^9}, {3.8959823972386703`*^9, 3.895982445342874*^9}, {
+   3.8959824796366177`*^9, 3.895982495829365*^9}, {3.895982534086423*^9, 
+   3.8959826164753847`*^9}, {3.895982657451535*^9, 3.895982740509206*^9}, {
+   3.895982988614295*^9, 3.895983233951427*^9}, {3.895983264998292*^9, 
+   3.895983485027546*^9}, {3.895983551649435*^9, 3.895983582306284*^9}, {
+   3.8959837491317463`*^9, 3.8959837777336493`*^9}, {3.895983820250461*^9, 
+   3.895983829939905*^9}, {3.895983864677496*^9, 3.8959841546381702`*^9}, {
+   3.8959841930607347`*^9, 3.89598419641184*^9}, {3.895984331475733*^9, 
+   3.895984332394369*^9}, {3.895984396055585*^9, 3.895984398943406*^9}, {
+   3.8959844466239862`*^9, 3.895984460924776*^9}, {3.895984814785159*^9, 
+   3.8959848226264143`*^9}, {3.8959849238459597`*^9, 3.895984927801733*^9}, {
+   3.895985047046247*^9, 3.895985057668515*^9}, {3.89598515928904*^9, 
+   3.895985175858214*^9}, {3.895985529204863*^9, 3.8959855354064198`*^9}, {
+   3.895986637889792*^9, 3.8959866522055693`*^9}, {3.895986702059491*^9, 
+   3.895986761350877*^9}, {3.895986804243032*^9, 3.895986863293436*^9}, {
+   3.895987047808131*^9, 3.895987111120804*^9}, {3.8959871458173933`*^9, 
+   3.895987150048831*^9}, {3.895987244916024*^9, 3.8959872474073*^9}, {
+   3.8959873764483223`*^9, 3.895987381413965*^9}, {3.8959874280540657`*^9, 
+   3.8959874330761147`*^9}, {3.895987918677507*^9, 3.89598802515772*^9}, {
+   3.895988192365261*^9, 3.8959882372409077`*^9}, {3.895988319755628*^9, 
+   3.895988384147212*^9}, {3.8959884259254503`*^9, 3.895988474674746*^9}, {
+   3.895988506376884*^9, 3.8959887054056664`*^9}, {3.895988792691395*^9, 
+   3.895988794992136*^9}, {3.89598890009778*^9, 3.8959889332109632`*^9}, {
+   3.895989016643139*^9, 3.895989107947652*^9}, {3.895989209696516*^9, 
+   3.8959892655970716`*^9}, {3.895989310251442*^9, 3.895989314171722*^9}, 
+   3.895989631135594*^9, {3.8959897273357143`*^9, 3.895989754318185*^9}, {
+   3.895989799640979*^9, 3.895989847591216*^9}, {3.895989894645597*^9, 
+   3.8959898952299967`*^9}, {3.895989976157825*^9, 3.8959900614282503`*^9}, {
+   3.895990114196274*^9, 3.8959901164608927`*^9}, {3.8960060904030037`*^9, 
+   3.896006116051466*^9}, {3.896073561046183*^9, 3.896073607143979*^9}, {
+   3.896073780642894*^9, 3.896073811078734*^9}, {3.8960739373136787`*^9, 
+   3.896073950724752*^9}, {3.896074000869774*^9, 3.896074008613595*^9}, {
+   3.89607408171238*^9, 3.896074138592395*^9}, {3.896074176946266*^9, 
+   3.896074179485794*^9}, {3.896074318484424*^9, 3.896074462410327*^9}, {
+   3.89607479120582*^9, 3.896074921863142*^9}, {3.896075001163354*^9, 
+   3.896075083706489*^9}, {3.89607517569897*^9, 3.8960751802588053`*^9}, 
+   3.896075220534091*^9, {3.896075325571527*^9, 3.896075330758299*^9}, {
+   3.896075471122096*^9, 3.8960754973795757`*^9}, {3.8960755587714767`*^9, 
+   3.896075722864952*^9}, {3.896075910185267*^9, 3.8960759600482597`*^9}, {
+   3.896076009605895*^9, 3.8960760935277443`*^9}, {3.896076157771151*^9, 
+   3.896076375710334*^9}, {3.896076458296261*^9, 3.896076462914486*^9}, {
+   3.896076511362356*^9, 3.896076691375162*^9}, {3.896076733386841*^9, 
+   3.8960767505392942`*^9}, {3.8960775103993797`*^9, 3.896077614788747*^9}, {
+   3.896077868261034*^9, 3.8960778844390707`*^9}, {3.896077949659437*^9, 
+   3.896077987523267*^9}, {3.8960780468923264`*^9, 3.89607805448349*^9}, {
+   3.8960780962723427`*^9, 3.896078141443223*^9}, {3.8960781885491543`*^9, 
+   3.896078238692872*^9}, 3.896149487735355*^9, 3.896149613976371*^9, {
+   3.8961550688296223`*^9, 3.8961550751028967`*^9}, {3.896155832819927*^9, 
+   3.8961558509913063`*^9}, {3.896155895830265*^9, 3.8961558961198606`*^9}, {
+   3.896167887766202*^9, 3.8961679095400343`*^9}, {3.8961679735244207`*^9, 
+   3.896168026044972*^9}, {3.896168209653121*^9, 3.896168218947731*^9}, {
+   3.896168318241508*^9, 3.896168550972641*^9}, {3.896169155793316*^9, 
+   3.896169170606765*^9}, {3.8961692192144403`*^9, 3.896169220671*^9}, {
+   3.896247939954095*^9, 3.896247970619141*^9}, {3.896248003270547*^9, 
+   3.896248013436286*^9}, {3.896248069964912*^9, 3.896248083502095*^9}, {
+   3.8962481702352324`*^9, 3.8962481782450438`*^9}, {3.8962482190439777`*^9, 
+   3.896248417491563*^9}, 3.8962486276252947`*^9, {3.896329178691331*^9, 
+   3.896329350295389*^9}, {3.896329567494514*^9, 3.8963295798924923`*^9}, {
+   3.896332074462378*^9, 3.8963321926032743`*^9}, {3.8963324007505302`*^9, 
+   3.896332443441663*^9}, 3.8963325076549797`*^9, {3.896332555840303*^9, 
+   3.896332568936907*^9}, {3.896929681964692*^9, 3.896929720511476*^9}, {
+   3.896930048224841*^9, 3.896930112703628*^9}, {3.896930170634273*^9, 
+   3.8969302386755133`*^9}, {3.896930270896146*^9, 3.896930335530884*^9}, 
+   3.896930368194922*^9, {3.8969306007003183`*^9, 3.896930601034326*^9}, {
+   3.8969306980022097`*^9, 3.89693094180394*^9}, {3.896931015349835*^9, 
+   3.8969315544455137`*^9}, {3.896931627646172*^9, 3.896931959535437*^9}, {
+   3.896931989864039*^9, 3.896932218363039*^9}, {3.896934804553844*^9, 
+   3.8969348534690723`*^9}, {3.8969348963710003`*^9, 3.896934921606008*^9}, {
+   3.896935043288151*^9, 3.896935297662418*^9}, {3.896935335452495*^9, 
+   3.89693536818194*^9}, {3.89693541935896*^9, 3.896935834029747*^9}, {
+   3.896935984984672*^9, 3.896936145698028*^9}, {3.896936193516073*^9, 
+   3.896936242388289*^9}, {3.897012138362759*^9, 3.8970121406327953`*^9}, {
+   3.897012171715125*^9, 3.897012281726018*^9}, {3.897012319531785*^9, 
+   3.89701231986862*^9}, {3.897012394940816*^9, 3.8970123972189407`*^9}, {
+   3.897012477970853*^9, 3.897012643500662*^9}, {3.897109494757785*^9, 
+   3.8971095054679213`*^9}, {3.897375488272753*^9, 3.897375511638597*^9}, {
+   3.897375562306549*^9, 3.8973756708512163`*^9}, {3.897394608536784*^9, 
+   3.89739462175261*^9}, {3.897394762425145*^9, 3.8973948186629057`*^9}, {
+   3.89739500980425*^9, 3.8973950318468037`*^9}, {3.8973951383972282`*^9, 
+   3.897395141828231*^9}, {3.897395193173958*^9, 3.8973951958758917`*^9}, {
+   3.897395358755046*^9, 3.897395371840961*^9}, {3.8973954726940947`*^9, 
+   3.8973955040679207`*^9}, {3.897395728950873*^9, 3.897395742219002*^9}, {
+   3.897396127934237*^9, 3.89739616426606*^9}, 3.897396258954493*^9},
+ CellLabel->"In[17]:=",ExpressionUUID->"7f0197de-3e03-4def-affb-878124b39fe3"],
+
+Cell[BoxData["\<\"Yes has been called!\"\>"], "Print",
+ CellChangeTimes->{3.897396266485319*^9},
+ CellLabel->
+  "During evaluation of \
+In[17]:=",ExpressionUUID->"39d9ee8b-068a-487e-9a91-d5638a01c2d3"]
+}, Open  ]],
+
+Cell["", "Item",
+ CellChangeTimes->{
+  3.897012398318894*^9},ExpressionUUID->"c0a42d31-c7e1-4085-ae8d-\
+1890766d0430"]
+},
+WindowSize->{Full, Full},
+WindowMargins->{{171, Automatic}, {50, Automatic}},
+FrontEndVersion->"13.2 for Mac OS X ARM (64-bit) (January 30, 2023)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"3d460149-3223-4e90-bbf0-a8be2a74b71c"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 60646, 1311, 5919, "Input",ExpressionUUID->"7f0197de-3e03-4def-affb-878124b39fe3",
+ InitializationCell->False],
+Cell[61229, 1335, 201, 4, 24, "Print",ExpressionUUID->"39d9ee8b-068a-487e-9a91-d5638a01c2d3"]
+}, Open  ]],
+Cell[61445, 1342, 118, 3, 32, "Item",ExpressionUUID->"c0a42d31-c7e1-4085-ae8d-1890766d0430"]
+}
+]
+*)
+
