@@ -22,6 +22,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     // Functions for extracting geometry constants from detectorConstruction
     G4int& GetNumberCells() {return numberCells;};
     std::vector<G4ThreeVector>& GetCellPosition() {return cellPositions;};
+
     G4double& GetThickness_membrane() {return thickness_membrane;};
     G4double& GetCellTubeRMin() {return cellTubeRMin;};
     G4double& GetCellTubeHeight() {return cellTubeHeight;};
@@ -35,6 +36,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     // Constants of geometry
     G4int numberCells;
     std::vector<G4ThreeVector> cellPositions;
+
     G4double cellTubeRMin;
     G4double cellTubeHeight;
     G4double cellRMax;

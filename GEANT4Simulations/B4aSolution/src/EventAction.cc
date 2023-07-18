@@ -43,7 +43,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
 
     //Adding a row in TTree file only if interaction was in solution
-    if(energyDepVec.size()!=0)
+    if(booleanFirstInteractionInSolution)
     {
         analysisManager->AddNtupleRow();
     }

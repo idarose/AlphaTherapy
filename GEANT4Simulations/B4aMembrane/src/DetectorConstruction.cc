@@ -183,7 +183,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
     //cell parameters
     G4double cellRMin = 0.*um; //Inner radius
-    cellRMax = 10.*um; //Outer radius
+    cellRMax = 9.*um; //Outer radius
     G4double cellSPhi = 0.*deg; //Phi Start
     G4double cellEPhi = 360.*deg; //Phi end
     G4double cellSTheta = 0.*deg; //Start Theta
@@ -196,7 +196,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     //Making Cell Membrane
 
     //Thickness of cell membrane
-    thickness_membrane = 1.*um;
+    thickness_membrane = 4.*nm;
 
     //Cell membrane parameters
     G4double membraneRMax = cellRMax;
@@ -264,7 +264,13 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     //Placing 1000 cells uniformly within the cell tube
 
     //Number of cells to be placed
-    numberCells = 1000;
+    G4double numberCells_sample = 1000000;
+    G4double milliLiter_sample = 0.2;
+    G4double cellDensity_sample = numberCells_sample/(milliLiter_sample*1000*mm*mm*mm);
+
+    G4double volumeCellTube = CLHEP::pi*std::pow(cellTubeRMin,2.0)*cellTubeHeight;
+
+    numberCells = volumeCellTube*cellDensity_sample;
 
     //Counter
     G4int cellCounter = 0;
@@ -293,7 +299,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             G4double diffDistance = diffVec.mag();
 
             //Make bolean false if overlap
-            if(diffDistance <= 2*cellRMax)
+            if(diffDistance <= (2*cellRMax))
             {
                 foundNewPosition = false;
             }
@@ -361,7 +367,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                             fCheckOverlaps);
 
             //------------------------
-            //Place cell nucleus
+            //Place cell nuclei
 
             //Generate uniformly distributes cell nuclei
             G4double r_nucleus = std::pow(CLHEP::RandFlat::shoot(),1.0/3) * (cellRMax - thickness_membrane - cellNucleusRMax);
@@ -373,7 +379,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             G4double z_nucleus = r_nucleus*std::cos(theta_nucleus);
 
             G4ThreeVector nucluesPosition = G4ThreeVector(x_nucleus,y_nucleus,z_nucleus);
-
 
             //Making cell nucleus physical
             new G4PVPlacement(0,
@@ -388,6 +393,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     }
     return worldPV;
 }
+
 
 
 

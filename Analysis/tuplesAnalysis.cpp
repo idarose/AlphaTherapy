@@ -176,6 +176,14 @@ void tuplesAnalysis()
     hEnergyDepsNucleus->Scale(1.0/storedInfoDecaysSolution.size());
 
 
+    hEnergyDepsMembrane->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsMembrane->GetYaxis()->SetTitle("Counts / Num. Decays");
+    hEnergyDepsCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsCytoplasm->GetYaxis()->SetTitle("Counts / Num. Decays");
+    hEnergyDepsNucleus->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsNucleus->GetYaxis()->SetTitle("Counts / Num. Decays");
+
+
     hEnergyDepsMembrane->Write();
     hEnergyDepsCytoplasm->Write();
     hEnergyDepsNucleus->Write();
