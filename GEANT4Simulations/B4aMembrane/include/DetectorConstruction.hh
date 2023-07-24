@@ -23,7 +23,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4int& GetNumberCells() {return numberCells;};
     std::vector<G4ThreeVector>& GetCellPositions() {return cellPositions;};
 
-    G4double& GetThickness_membrane() {return thickness_membrane;};
+    G4double& GetThickness_cellMembrane() {return thickness_cellMembrane;};
     G4double& GetCellTubeRMin() {return cellTubeRMin;};
     G4double& GetCellTubeHeight() {return cellTubeHeight;};
     G4double& GetCellRMax() {return cellRMax;};
@@ -40,7 +40,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double cellTubeRMin;
     G4double cellTubeHeight;
     G4double cellRMax;
-    G4double thickness_membrane;
+    G4double thickness_cellMembrane;
 };
 
 

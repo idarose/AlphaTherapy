@@ -84,7 +84,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     //cell parameters
     G4double cellRMax_ = fDetConstruction->GetCellRMax(); //Outer radius
-    G4double thickness_membrane_ = fDetConstruction->GetThickness_membrane();
+    G4double thickness_membrane_ = fDetConstruction->GetThickness_cellMembrane();
     G4double cytoplasmRMax_ = cellRMax_ - thickness_membrane_;
 
 
