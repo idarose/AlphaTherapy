@@ -243,13 +243,12 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
         region_cell->AddRootLogicalVolume(cellLV);
 
-        G4ProductionCuts* cutCell = new G4ProductionCuts;
-        cutCell->SetProductionCut(0.01*um);
-        region_cell->SetProductionCuts(cutCell);
-
         cellLVVec.push_back(cellLV);
     }
 
+    G4ProductionCuts* cutCell = new G4ProductionCuts;
+    cutCell->SetProductionCut(0.01*um);
+    region_cell->SetProductionCuts(cutCell);
 
 
     //-------------------------------
