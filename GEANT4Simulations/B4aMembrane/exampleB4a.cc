@@ -28,6 +28,7 @@
 /// \brief Main program of the B4a example
 
 #include "DetectorConstruction.hh"
+#include "PhysicsList.hh"
 #include "ActionInitialization.hh"
 
 #include "G4RunManagerFactory.hh"
@@ -118,9 +119,14 @@ int main(int argc,char** argv)
   auto detConstruction = new DetectorConstruction();
   runManager->SetUserInitialization(detConstruction);
 
-  auto physicsList = new FTFP_BERT;
+  // auto physicsList = new FTFP_BERT;
+  // physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
+  // runManager->SetUserInitialization(physicsList);
+
+  auto physicsList = new PhysicsList;
   physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
   runManager->SetUserInitialization(physicsList);
+
 
   auto actionInitialization = new ActionInitialization(detConstruction);
   runManager->SetUserInitialization(actionInitialization);
