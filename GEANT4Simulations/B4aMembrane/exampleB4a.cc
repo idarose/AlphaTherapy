@@ -119,13 +119,13 @@ int main(int argc,char** argv)
   auto detConstruction = new DetectorConstruction();
   runManager->SetUserInitialization(detConstruction);
 
-  // auto physicsList = new FTFP_BERT;
-  // physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
-  // runManager->SetUserInitialization(physicsList);
-
-  auto physicsList = new PhysicsList;
+  auto physicsList = new FTFP_BERT;
   physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
   runManager->SetUserInitialization(physicsList);
+
+  // auto physicsList = new PhysicsList;
+  // physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
+  // runManager->SetUserInitialization(physicsList);
 
 
   auto actionInitialization = new ActionInitialization(detConstruction);

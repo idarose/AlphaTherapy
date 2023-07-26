@@ -26,7 +26,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4double& GetThickness_cellMembrane() {return thickness_cellMembrane;};
     G4double& GetCellTubeRMin() {return cellTubeRMin;};
     G4double& GetCellTubeHeight() {return cellTubeHeight;};
-    G4double& GetCellRMax() {return cellRMax;};
+    G4double& GetCellCytoplasmRMax() {return cellCytoplasmRMax;};
+    // G4double& GetCellRMax() {return cellRMax;};
 
   private:
     G4VPhysicalVolume* DefineVolumes();
@@ -39,7 +40,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     G4double cellTubeRMin;
     G4double cellTubeHeight;
-    G4double cellRMax;
+    G4double cellCytoplasmRMax;
     G4double thickness_cellMembrane;
 };
 

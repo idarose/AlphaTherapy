@@ -12,16 +12,37 @@
 #include "Randomize.hh"
 #include "G4IonTable.hh"
 
+// https://stackoverflow.com/questions/6942273/how-to-get-a-random-element-from-a-c-container
+
+#include  <random>
+#include  <iterator>
+
+
+// Methods to extract random element from a vector
+template<typename Iter, typename RandomGenerator>
+Iter select_randomly(Iter start, Iter end, RandomGenerator& gen) {
+    std::uniform_int_distribution<> dis(0, std::distance(start, end) - 1);
+    std::advance(start, dis(gen));
+    return start;
+}
+
+template<typename Iter>
+Iter select_randomly(Iter start, Iter end) {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    return select_randomly(start, end, gen);
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* detConstruction): fDetConstruction(detConstruction)
 {
+    //-------------------------------
     G4int n_particle = 1;
     fParticleGun  = new G4ParticleGun(n_particle);
 
-    // default particle kinematic
-    //
+    //-------------------------------
+    // default particle kinematics
     auto particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("alpha");
     fParticleGun->SetParticleDefinition(particleDefinition);
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
@@ -29,15 +50,17 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* detConstruc
     // fParticleGun->SetParticleEnergy(1.0*eV);
     fParticleGun->SetParticleCharge(0);
 
-    // // default particle kinematic
-    // G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    // G4String particleName;
 
+    //-------------------------------
+    numberCells = fDetConstruction->GetNumberCells();
+    cellPositions = fDetConstruction->GetCellPositions();
 
-    // fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.0,0.0,0.0));
-    // fParticleGun->SetParticleEnergy(0.0*MeV);
+    cellTubeRMin = fDetConstruction->GetCellTubeRMin();
+    cellTubeHeight = fDetConstruction->GetCellTubeHeight();
+    cellCytoplasmRMax = fDetConstruction->GetCellCytoplasmRMax();
+    thickness_cellMembrane = fDetConstruction->GetThickness_cellMembrane();
+    cellRMax = thickness_cellMembrane + cellCytoplasmRMax;
 }
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
@@ -60,18 +83,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     //-------------------------------
     // Distributing radionuclides randomly within the cell tube. There are methods in eventAction and steppingAction that sorts the decays happening in solution from decays happening inside cell
 
-
-
-    //Cell tube parameters
-    G4double cellTubeRMin_ = fDetConstruction->GetCellTubeRMin(); //Inner radius
-    G4double cellTubeHeight_ = fDetConstruction->GetCellTubeHeight(); //Height in z-direction
-
-
     //------------------------
     //Generating random postion for particle inside cell Tube
-    G4double r_particle = std::pow(G4UniformRand(), 1.0/2.0) * cellTubeRMin_;
+    G4double r_particle = std::pow(G4UniformRand(), 1.0/2.0) * cellTubeRMin;
     G4double theta_particle = G4UniformRand()*2*CLHEP::pi;
-    G4double z_particle = (G4UniformRand() - 0.5)*(cellTubeHeight_);
+    G4double z_particle = (G4UniformRand() - 0.5)*(cellTubeHeight);
 
     G4double x_particle = r_particle*std::cos(theta_particle);
     G4double y_particle = r_particle*std::sin(theta_particle);

@@ -26,7 +26,7 @@
 
 
 
-// /run/beamOn 17600000
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -178,94 +178,73 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 -3,
                 fCheckOverlaps);
 
-    G4Region* region_cellTubeSolution = new G4Region("region_cellTubeSolution");
-    region_cellTubeSolution->AddRootLogicalVolume(cellTubeSolutionLV);
+    //-------------------------------
+    //Making Cell Cytoplasm
 
-    G4ProductionCuts* cutCellTubeSolution = new G4ProductionCuts;
-    cutCellTubeSolution->SetProductionCut(0.01*um);
-    region_cellTubeSolution->SetProductionCuts(cutCellTubeSolution);
+    //Thickness of cell membrane
+    thickness_cellMembrane = 4.*nm;
+
+    //cell cytoplasm parameters
+    G4double cellCytoplasmRMin = 0.*um; //Inner radius
+    cellCytoplasmRMax = 9.*um - thickness_cellMembrane; //Outer radius
+    G4double cellCytoplasmSPhi = 0.*deg; //Phi Start
+    G4double cellCytoplasmEPhi = 360.*deg; //Phi end
+    G4double cellCytoplasmSTheta = 0.*deg; //Start Theta
+    G4double cellCytoplasmETheta = 180.*deg; //End Theta
+
+    //Cell cytoplasm Material
+    G4Material* cell_mat = nist->FindOrBuildMaterial("G4_WATER");
+
+    // Vector to store cytoplasm logical volumes
+    std::vector<G4LogicalVolume *> cellCytoplasmLVVec;
 
 
     //-------------------------------
-    //Making Cell
-
-
-    //cell parameters
-    G4double cellRMin = 0.*um; //Inner radius
-    cellRMax = 9.*um; //Outer radius
-    G4double cellSPhi = 0.*deg; //Phi Start
-    G4double cellEPhi = 360.*deg; //Phi end
-    G4double cellSTheta = 0.*deg; //Start Theta
-    G4double cellETheta = 180.*deg; //End Theta
-
-    //Cell Material
-    G4Material* cell_mat = nist->FindOrBuildMaterial("G4_WATER");
-
-
-    std::vector<G4LogicalVolume *> cellLVVec;
-
-    // Calculating number of cells to be placed
     //Number of cells to be placed
-
-    // Number of cells in original sample
     G4double numberCells_sample = 1000000;
-
-    // Original sample in mL
     G4double milliLiter_sample = 0.2;
-
-    // Cell density original sample
     G4double cellDensity_sample = numberCells_sample/(milliLiter_sample*1000*mm*mm*mm);
 
-    // Volume cell tube
     G4double volumeCellTube = CLHEP::pi*std::pow(cellTubeRMin,2.0)*cellTubeHeight;
 
-    // Number of cells that shoudl be placed in cell tube
     numberCells = volumeCellTube*cellDensity_sample;
 
 
-
-    G4Region* region_cell= new G4Region("region_cell");
-
-    // Making the cells
+    //-------------------------------
+    // Making and storing cell cytoplasm logical volumes
     for(int i=0; i<numberCells; i++)
     {
         //-----------------------
-        //Making cell solid
-        G4Sphere* cellSV =
+        //Making cell cytoplasm solid
+        G4Sphere* cellCytoplasmSV =
         new G4Sphere("Cell",
-                    cellRMin,
-                    cellRMax,
-                    cellSPhi,
-                    cellEPhi,
-                    cellSTheta,
-                    cellETheta);
+                    cellCytoplasmRMin,
+                    cellCytoplasmRMax,
+                    cellCytoplasmSPhi,
+                    cellCytoplasmEPhi,
+                    cellCytoplasmSTheta,
+                    cellCytoplasmETheta);
 
         //Making cell logical shape
-        G4LogicalVolume* cellLV =
-        new G4LogicalVolume(cellSV,
+        G4LogicalVolume* cellCytoplasmLV =
+        new G4LogicalVolume(cellCytoplasmSV,
                             cell_mat,
                             "Cell");
 
-        region_cell->AddRootLogicalVolume(cellLV);
+        auto cellCytoplasmVisAtt = new G4VisAttributes(false);
+        // cellcellMembraneVisAtt->SetForceSolid(true);
+        cellCytoplasmLV->SetVisAttributes(cellCytoplasmVisAtt);
 
-        G4ProductionCuts* cutCell = new G4ProductionCuts;
-        cutCell->SetProductionCut(0.01*um);
-        region_cell->SetProductionCuts(cutCell);
-
-        cellLVVec.push_back(cellLV);
+        cellCytoplasmLVVec.push_back(cellCytoplasmLV);
     }
-
 
 
     //-------------------------------
     //Making Cell Membrane
 
-    //Thickness of cell membrane
-    thickness_cellMembrane = 4.*nm;
-
     //Cell membrane parameters
-    G4double cellMembraneRMax = cellRMax;
-    G4double cellMembraneRMin = cellMembraneRMax - thickness_cellMembrane;
+    G4double cellMembraneRMax = cellCytoplasmRMax + thickness_cellMembrane;
+    G4double cellMembraneRMin = cellCytoplasmRMax;
     G4double cellMembraneSPhi = 0.*deg;
     G4double cellMembraneEPhi = 360.*deg;
     G4double cellMembraneSTheta = 0.*deg;
@@ -290,12 +269,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                     cellMembrane_mat,
                     "cellMembrane");
 
-    G4Region* region_cellMembrane = new G4Region("region_cellMembrane");
-    region_cellMembrane->AddRootLogicalVolume(cellMembraneLV);
-
-    G4ProductionCuts* cutCellMembrane = new G4ProductionCuts;
-    cutCellMembrane->SetProductionCut(0.01*nm);
-    region_cellMembrane->SetProductionCuts(cutCellMembrane);
 
     auto cellMembraneVisAtt = new G4VisAttributes(G4Colour(0.0,0.5,1.0));
     // cellcellMembraneVisAtt->SetForceSolid(true);
@@ -331,44 +304,22 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                     cellNucleus_mat,
                     "CellNucleus");
 
-
-    G4Region* region_cellNucleus= new G4Region("region_cellNucleus");
-    region_cellNucleus->AddRootLogicalVolume(cellNucleusLV);
-
-    G4ProductionCuts* cutCellNucleus = new G4ProductionCuts;
-    cutCellNucleus->SetProductionCut(0.01*um);
-    region_cellNucleus->SetProductionCuts(cutCellNucleus);
-
-
-    //-------------------------------
-    //Placing 1000 cells uniformly within the cell tube
-
-    // //Number of cells to be placed
-    // G4double numberCells_sample = 1000000;
-    // G4double milliLiter_sample = 0.2;
-    // G4double cellDensity_sample = numberCells_sample/(milliLiter_sample*1000*mm*mm*mm);
-
-    // G4double volumeCellTube = CLHEP::pi*std::pow(cellTubeRMin,2.0)*cellTubeHeight;
-
-    // numberCells = volumeCellTube*cellDensity_sample;
-    // // numberCells = 100;
-
     //Counter
-    G4int cellCounter = 0;
+    G4int numberCells_counter = 0;
 
-    while(cellCounter < numberCells)
+    while(numberCells_counter < numberCells)
     {
         //Generating uniformly distributed position inside cell tube
-        G4double r_cell = std::pow(CLHEP::RandFlat::shoot(), 1.0/2) * (cellTubeRMin - cellRMax);
+        G4double r_cell = std::pow(CLHEP::RandFlat::shoot(), 1.0/2) * (cellTubeRMin - cellCytoplasmRMax);
         G4double theta_cell = CLHEP::RandFlat::shoot()*2*CLHEP::pi;
-        G4double z_cell = (CLHEP::RandFlat::shoot() - 0.5)*(cellTubeHeight - 2*cellRMax);
+        G4double z_cell = (CLHEP::RandFlat::shoot() - 0.5)*(cellTubeHeight - 2*cellCytoplasmRMax);
 
         G4double x_cell = r_cell*std::cos(theta_cell);
         G4double y_cell = r_cell*std::sin(theta_cell);
 
         G4ThreeVector newVec = G4ThreeVector(x_cell,y_cell,z_cell);
 
-        //Boolean, true if new position is found, or else false
+        //Boolean, true if new position is found, false if no new position is found
         bool foundNewPosition = true;
 
         //Check for overlaps with other cells
@@ -380,7 +331,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             G4double diffDistance = diffVec.mag();
 
             //Make bolean false if overlap
-            if(diffDistance <= (2*cellRMax))
+            if(diffDistance <= (2*cellCytoplasmRMax))
             {
                 foundNewPosition = false;
             }
@@ -389,72 +340,62 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         //Place cell in new generated position
         if(foundNewPosition)
         {
-            G4LogicalVolume* logicalVolumeCell = cellLVVec[cellCounter];
+            G4LogicalVolume* cellCytoplasmLV = cellCytoplasmLVVec[numberCells_counter];
+
             //-----------------------
             //Store new position
             cellPositions.push_back(newVec);
 
             //Update number of cells
-            cellCounter += 1;
+            numberCells_counter += 1;
 
-            //Copy number for cells
-            G4int cellCopyNumber = cellCounter;
 
-            //Copy number for cellMembranes
-            G4int cellMembraneCopyNumber = cellCounter + numberCells;
+            /*
+            Cell ID numbers work like this:
+
+            Cell IDs are numbered from 1 to number of cells.
+
+            The cell membrane has a volume copy number equal to the cell ID number.
+            The cell cytoplasm of a cell has a volume copy number equal to the cell ID number plus the number of cells.
+            The cell nuleus has a volume copy number equal to the cell ID plus two times the number of cells.
+            */
+
+            //Copy number for cell membrane
+            G4int cellMembraneCopyNumber = numberCells_counter;
+
+            //Copy number for cell cytoplasm
+            G4int cellCytoplasmCopyNumber = numberCells_counter + numberCells;
 
             //Copy number for nucleus
-            G4int nucleusCopynumber = cellCounter + 2*numberCells;
-
-            //Copy number for cell nucleus
-            G4int cellNucleusCopyNumber = numberCells + cellCounter;
-
-            // //-----------------------
-            // //Making cell solid
-            // G4Sphere* cellSV =
-            // new G4Sphere("Cell",
-            //             cellRMin,
-            //             cellRMax,
-            //             cellSPhi,
-            //             cellEPhi,
-            //             cellSTheta,
-            //             cellETheta);
-
-            // //Making cell logical shape
-            // G4LogicalVolume* cellLV =
-            // new G4LogicalVolume(cellSV,
-            //                     cell_mat,
-            //                     "Cell");
-
-            //Placeing cell
-            new G4PVPlacement(0,
-                        newVec,
-                        logicalVolumeCell,
-                        "Cell",
-                        cellTubeSolutionLV,
-                        false,
-                        cellCopyNumber,
-                        fCheckOverlaps);
-
+            G4int cellNucleusCopynumber = numberCells_counter + 2*numberCells;
 
 
             //----------------------------
-            //Placing memebrane
-            //Making cellMembrane physical
+            //Placing cell memebrane
             new G4PVPlacement(0,
-                            G4ThreeVector(),
+                            newVec,
                             cellMembraneLV,
                             "cellMembrane",
-                            logicalVolumeCell,
+                            cellTubeSolutionLV,
                             false,
                             cellMembraneCopyNumber,
                             fCheckOverlaps);
 
-            //------------------------
-            //Place cell nucleus
+            //----------------------------
+            //Placeing cell cytoplasm
+            new G4PVPlacement(0,
+                        newVec,
+                        cellCytoplasmLV,
+                        "Cell",
+                        cellTubeSolutionLV,
+                        false,
+                        cellCytoplasmCopyNumber,
+                        fCheckOverlaps);
 
-            //Generate uniformly distributes cell nuclei
-            G4double r_nucleus = std::pow(CLHEP::RandFlat::shoot(),1.0/3) * (cellRMax - thickness_cellMembrane - cellNucleusRMax);
+
+            //------------------------
+            //Generate uniformly distributed cell nuclei
+            G4double r_nucleus = std::pow(CLHEP::RandFlat::shoot(),1.0/3) * (cellCytoplasmRMax - thickness_cellMembrane - cellNucleusRMax);
             G4double theta_nucleus = std::acos(1 - 2*CLHEP::RandFlat::shoot());
             G4double phi_nucleus = 2*CLHEP::pi*CLHEP::RandFlat::shoot();
 
@@ -464,14 +405,14 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
             G4ThreeVector nucluesPosition = G4ThreeVector(x_nucleus,y_nucleus,z_nucleus);
 
-            //Making cell nucleus physical
+            //Placing cell nucleus
             new G4PVPlacement(0,
                             nucluesPosition,
                             cellNucleusLV,
                             "CellNucleus",
-                            logicalVolumeCell,
+                            cellCytoplasmLV,
                             false,
-                            nucleusCopynumber,
+                            cellNucleusCopynumber,
                             fCheckOverlaps);
         }
     }
@@ -479,5 +420,4 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
     return worldPV;
 }
-
 

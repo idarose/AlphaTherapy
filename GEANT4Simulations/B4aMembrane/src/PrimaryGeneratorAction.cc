@@ -37,11 +37,12 @@ Iter select_randomly(Iter start, Iter end) {
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* detConstruction): fDetConstruction(detConstruction)
 {
+    //-------------------------------
     G4int n_particle = 1;
     fParticleGun  = new G4ParticleGun(n_particle);
 
-    // default particle kinematic
-    //
+    //-------------------------------
+    // default particle kinematics
     auto particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("alpha");
     fParticleGun->SetParticleDefinition(particleDefinition);
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
@@ -49,13 +50,16 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* detConstruc
     // fParticleGun->SetParticleEnergy(1.0*eV);
     fParticleGun->SetParticleCharge(0);
 
-    // // default particle kinematic
-    // G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    // G4String particleName;
 
+    //-------------------------------
+    numberCells = fDetConstruction->GetNumberCells();
+    cellPositions = fDetConstruction->GetCellPositions();
 
-    // fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.0,0.0,0.0));
-    // fParticleGun->SetParticleEnergy(0.0*MeV);
+    cellTubeRMin = fDetConstruction->GetCellTubeRMin();
+    cellTubeHeight = fDetConstruction->GetCellTubeHeight();
+    cellCytoplasmRMax = fDetConstruction->GetCellCytoplasmRMax();
+    thickness_cellMembrane = fDetConstruction->GetThickness_cellMembrane();
+    cellRMax = thickness_cellMembrane + cellCytoplasmRMax;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -82,48 +86,28 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     // Distributing radionuclides randomly within the cell memebrane
 
 
-    //cell parameters
-    G4double cellRMax_ = fDetConstruction->GetCellRMax(); //Outer radius
-    G4double thickness_membrane_ = fDetConstruction->GetThickness_cellMembrane();
-    G4double cytoplasmRMax_ = cellRMax_ - thickness_membrane_;
-
-
-    // Vector with cell positions
-    std::vector<G4ThreeVector> cellPositions_ = fDetConstruction->GetCellPositions();
-
-
-    // Transformed distribution to generate random radii
-    G4double T = (std::pow(cellRMax_, 3.0) - std::pow(cytoplasmRMax_, 3.0))*G4UniformRand() + std::pow(cytoplasmRMax_, 3.0);
-
-    // Generating radius relative to cell center
+    //Generating random radius
+    G4double T = (std::pow(cellRMax, 3.0) - std::pow(cellCytoplasmRMax, 3.0))*G4UniformRand() + std::pow(cellCytoplasmRMax, 3.0);
     G4double radius = std::pow(T, 1.0/3.0);
 
-
-    // Generating angles
+    // Generating random angles
     G4double theta = std::acos(1 - (2.0*G4UniformRand()));
     G4double phi = 2*CLHEP::pi*G4UniformRand();
-
-
-
 
     // Transforming from spherical coord, to cartesian
     G4double x_particle = radius*std::sin(theta)*std::cos(phi);
     G4double y_particle = radius*std::sin(theta)*sin(phi);
     G4double z_particle = radius*std::cos(theta);
 
-
-
     // Selecting radom cell
-    G4ThreeVector centerOfCell = *select_randomly(cellPositions_.begin(), cellPositions_.end());
-
+    G4ThreeVector centerOfCell = *select_randomly(cellPositions.begin(), cellPositions.end());
 
 
     // Generating position inside memebrane of this cell
     G4ThreeVector particlePosRelativeToCenterCell = G4ThreeVector(x_particle,y_particle,z_particle);
 
-    // Finding the absolute position
+    // Finding position relative to world volume
     G4ThreeVector particlePosRelativeWorld = particlePosRelativeToCenterCell + centerOfCell;
-
 
 
     fParticleGun->SetParticlePosition(particlePosRelativeWorld);

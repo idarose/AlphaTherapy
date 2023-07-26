@@ -3,6 +3,8 @@
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
+#include "G4ThreeVector.hh"
+#include <vector>
 
 
 class G4ParticleGun;
@@ -24,6 +26,15 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     private:
       G4ParticleGun* fParticleGun = nullptr; // G4 particle gun
       DetectorConstruction* fDetConstruction;
+
+      G4int numberCells;
+      std::vector<G4ThreeVector> cellPositions;
+
+      G4double cellTubeRMin;
+      G4double cellTubeHeight;
+      G4double cellCytoplasmRMax;
+      G4double cellRMax;
+      G4double thickness_cellMembrane;
 };
 
 

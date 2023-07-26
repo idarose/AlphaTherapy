@@ -21,11 +21,12 @@ private:
   DetectorConstruction* fDetConstruction;
   EventAction* fEventAction = nullptr;
 
-
   // Volume type numbers defined
   G4int volumeTypeMembrane = 1;
   G4int volumeTypeCytoplasm = 2;
   G4int volumeTypeNucleus = 3;
+
+  G4int numberCells;
 };
 
 
