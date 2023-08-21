@@ -203,9 +203,14 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     //Number of cells to be placed
     G4double numberCells_sample = 1000000;
     G4double milliLiter_sample = 0.2;
-    G4double cellDensity_sample = numberCells_sample/(milliLiter_sample*1000*mm*mm*mm);
+    G4double volume_sample = milliLiter_sample*1000*mm*mm*mm;
+    G4double cellDensity_sample = numberCells_sample/volume_sample;
 
     G4double volumeCellTube = CLHEP::pi*std::pow(cellTubeRMin,2.0)*cellTubeHeight;
+
+    // G4cout << "Volume cell sample : " << volume_sample/(mm*mm*mm) << G4;
+    // G4
+    G4cout << "Ratio volumes : " << volumeCellTube/volume_sample << G4endl;
 
     numberCells = volumeCellTube*cellDensity_sample;
 
