@@ -1,17 +1,29 @@
 #!/bin/bash
 #SBATCH --account=NN9895K
-#SBATCH --job-name VF_KCWLI
+#SBATCH --job-name AlphaTherapy
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=k.c.w.li@fys.uio.no
-#SBATCH --time=0-12:00:00
-#SBATCH --mem-per-cpu=1500
+#SBATCH --mail-user=idapro@fys.uio.no
+#SBATCH --time=0-00:10:00
+#SBATCH --mem-per-cpu=1000
 #SBATCH --ntasks=1 --cpus-per-task=20
-#SBATCH --array=245,461
+#SBATCH --array=1
 
-EXECUTABLE=VF_scenario${SLURM_ARRAY_TASK_ID}_4plusH1
-OUTPUTFILE=/cluster/projects/nn9895k/kcwli/VeridicalFit/VeridicalFitResults/12C_2021/scenario${SLURM_ARRAY_TASK_ID}_4plusH1
+# export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6"
+# export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6_212Pb_212Bi"
+# export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6_212Bi_208Tl"
+# export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6_212Bi_212Po"
+# export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6_212Pb_212Bi"
+# export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6_212Po_208Pb"
+
+
+
+EXECUTABLE=exampleB4a
+
+OUTPUTFILE=$SLURM_ARRAY_TASK_ID
+#OUTPUTFILE=Sim$SLURM_ARRAY_TASK_ID
 OUTPUTFILE="${OUTPUTFILE}_TerminalOutput.txt"
 
-./$EXECUTABLE > $OUTPUTFILE
-Skriv til Kevin Li
+MACRO=run$SLURM_ARRAY_TASK_ID
+MACRO="${MACRO}.mac"
 
+./$EXECUTABLE -m $MACRO > $OUTPUTFILE
