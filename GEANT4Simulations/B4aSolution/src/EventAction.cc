@@ -42,10 +42,13 @@ void EventAction::EndOfEventAction(const G4Event* event)
     auto analysisManager = G4AnalysisManager::Instance();
 
 
-    //Adding a row in TTree file only if interaction was in solution
+    //Adding a row in TTree file only if first interaction was in solution
     if(booleanFirstInteractionInSolution)
     {
-        analysisManager->AddNtupleRow();
+        if(energyDepVec.size()>0)
+        {
+            analysisManager->AddNtupleRow();
+        }
     }
 
 
