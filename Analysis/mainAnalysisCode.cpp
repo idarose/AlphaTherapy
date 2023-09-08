@@ -398,6 +398,8 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     std::cout << "Events run in G4: " << 500000 <<  " Entries in TTree: " << myReaderSolutionSim.GetEntries() << " Ratio: " << e/g << std::endl;
     int timesThroughLoop = 0;
 
+    std::cout << "Decays in solution " << numberDecays212PbInSolutionFirstHour << std::endl;
+
     //------------------–----------
     //  Function for filling histograms
     auto fillHistograms = [&]()
@@ -408,10 +410,18 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
         int numberDecays212PbInSolutionFirstHour_counter = 0;
         while(myReaderSolutionSim.Next())
         {
+
             // std::cout << numberDecays212PbInSolutionFirstHour_counter <<std::endl;
             // Vector to store all cell hits for one event/decay
             std::vector<cellHit> storedInfoForEvent;
 
+            if(energyDepsSolutionSim.GetSize()>0)
+            {
+                if(interactionTimeSolutionSim[0]/3600.0 < 1.0)
+                {
+                    numberDecays212PbInSolutionFirstHour_counter++;
+                }
+            }
             // looping over all steps for one event/decay
             for(int i=0; i<energyDepsSolutionSim.GetSize(); i++)
             {
@@ -428,7 +438,7 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
                         if(storedInfoForEvent.size()==0)
                         {
                             // Update counter
-                            numberDecays212PbInSolutionFirstHour_counter ++;
+                            // numberDecays212PbInSolutionFirstHour_counter ++;
 
                             cellHit aNewCellHit = cellHit(cellIDsSolutionSim[i]);
                             aNewCellHit.AddEnergyDeposition(energyDepsSolutionSim[i],volumeTypesSolutionSim[i]);
