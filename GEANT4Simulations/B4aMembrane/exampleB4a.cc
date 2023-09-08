@@ -28,7 +28,6 @@
 /// \brief Main program of the B4a example
 
 #include "DetectorConstruction.hh"
-#include "PhysicsList.hh"
 #include "ActionInitialization.hh"
 
 #include "G4RunManagerFactory.hh"
@@ -68,7 +67,7 @@ int main(int argc,char** argv)
   G4String session;
   G4bool verboseBestUnits = true;
 #ifdef G4MULTITHREADED
-  G4int nThreads = 0;
+  G4int nThreads = 40;
 #endif
   for ( G4int i=1; i<argc; i=i+2 ) {
     if      ( G4String(argv[i]) == "-m" ) macro = argv[i+1];
@@ -122,11 +121,6 @@ int main(int argc,char** argv)
   auto physicsList = new FTFP_BERT;
   physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
   runManager->SetUserInitialization(physicsList);
-
-  // auto physicsList = new PhysicsList;
-  // physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
-  // runManager->SetUserInitialization(physicsList);
-
 
   auto actionInitialization = new ActionInitialization(detConstruction);
   runManager->SetUserInitialization(actionInitialization);

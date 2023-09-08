@@ -4,7 +4,7 @@
 # or interactively: Idle> /control/execute run1.mac
 #
 # Change the default number of workers (in multi-threading mode) 
-#/run/numberOfThreads 4
+#/run/numberOfThreads 40
 #
 # Initialize kernel
 /run/initialize
@@ -15,5 +15,5 @@
 #
 /tracking/verbose 1
 /run/printProgress 10000
-/run/beamOn 100000
+/run/beamOn 500000
 #
