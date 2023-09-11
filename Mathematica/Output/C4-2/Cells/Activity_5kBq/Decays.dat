@@ -1,0 +1,20 @@
+TotalDecays212Pb212Bi$1h$24h	1.779563529635541e6
+TotalDecays212Bi208Tl$1h$24h	620063.729373173
+TotalDecays212Bi212Po$1h$24h	1.1052109767470532e6
+TotalDecays212Po208Pb$1h$24h	1.105210976223506e6
+TotalDecays208Tl208Pb$1h$24h	619074.0988554222
+ToyalAlphaDecays$1h$24h	1.725274705596679e6
+
+TotalDecays212Pb212Bi$1h$24h(cellMembrane)	897518.9975553162
+TotalDecays212Bi208Tl$1h$24h(cellMembrane)	312727.7939447307
+TotalDecays212Bi212Po$1h$24h(cellMembrane)	557410.7534898181
+TotalDecays212Po208Pb$1h$24h(cellMembrane)	557410.7532257682
+TotalDecays208Tl208Pb$1h$24h(cellMembrane)	312228.6759444738
+TotalAlphaDecays$1h$24h(cellMembrane)	870138.5471704989
+
+TotalDecays212Pb212Bi$1h$24h(cellInternalised)	882044.5320802247
+TotalDecays212Bi208Tl$1h$24h(cellInternalised)	307335.93542844226
+TotalDecays212Bi212Po$1h$24h(cellInternalised)	547800.2232572351
+TotalDecays212Po208Pb$1h$24h(cellInternalised)	547800.2229977378
+TotalDecays208Tl208Pb$1h$24h(cellInternalised)	306845.4229109484
+TotalAlphaDecays$1h$24h(cellInternalised)	855136.15842618
