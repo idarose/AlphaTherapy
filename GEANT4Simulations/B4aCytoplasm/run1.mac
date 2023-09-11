@@ -15,5 +15,5 @@
 #
 /tracking/verbose 1
 /run/printProgress 10000
-/run/beamOn 500000
+/run/beamOn 50000
 #

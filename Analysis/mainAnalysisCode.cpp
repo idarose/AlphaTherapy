@@ -347,7 +347,7 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     // Opening TTree files and creating TTreeReaders
 
     // Reader for solution simulation
-    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/B4.root", "READ"));
+    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
     auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
     TTreeReader myReaderSolutionSim(treeSolutionSim);
 
