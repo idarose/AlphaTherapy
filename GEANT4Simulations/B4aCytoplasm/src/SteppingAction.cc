@@ -45,18 +45,24 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     //------------------------
     // Checking if first interaction took place inside a cell nucleus
-    if(fEventAction->GetVolumeTypeVec().size() == 0)
+    if(fEventAction->GetStepNumber() == 0)
     {
         if(volumeCopyNumber >= (2*numberCells+1) && volumeCopyNumber <= 3*numberCells)
         {
-            //First interaction was in cell nucleus
-            fEventAction->ChangeBooleanFirstInteractionNotInCellNucleus(true);
+            fEventAction->BooleanFirstInteractionInCellNucleusMakeTrue();
+        }
+        else
+        {
+            fEventAction->BooleanFirstInteractionInCellNucleusMakeFalse();
         }
     }
 
+    // Add step number
+    fEventAction->AddStepNumber();
+
 
     // Only store information if first interaction was NOT in the cell nucleus
-    if(fEventAction->GetBooleanFirstInteractionNotInCellNucleus())
+    if(!fEventAction->GetBooleanFirstInteractionInCellNucleus())
     {
         //----------------------------------
         //Checking if the interaction took place in the membrane of the cell

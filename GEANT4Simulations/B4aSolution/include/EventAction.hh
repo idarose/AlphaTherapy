@@ -30,6 +30,11 @@ class EventAction : public G4UserEventAction
     std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
     std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
 
+    // Methods to add, reset and extract step number
+    void AddStepNumber(){stepNumber++;};
+    int GetStepNumber(){return stepNumber;};
+    void ResetStepNumber(){stepNumber=0;};
+
 
 
 
@@ -39,7 +44,8 @@ class EventAction : public G4UserEventAction
     bool& GetBooleanFirstInteractionInSolution() {return booleanFirstInteractionInSolution;};
 
     // Function for updating the value of the boolean
-    void UpdateBooleanFirstInteractionInSolution(bool newValue) {booleanFirstInteractionInSolution = newValue;};
+    void BooleanFirstInteractionInSolutionMakeTrue() {booleanFirstInteractionInSolution = true;};
+    void BooleanFirstInteractionInSolutionMakeFalse() {booleanFirstInteractionInSolution = false;};
 
   private:
     std::vector<G4double> energyDepVec;
@@ -48,6 +54,9 @@ class EventAction : public G4UserEventAction
     std::vector<G4double> kineticEnergyVec;
     std::vector<G4int> particleTypeVec;
     std::vector<G4double> interactionTimeVec;
+
+    // Number to count steps
+    int stepNumber = 0;
 
 
     // Boolean. True: First interaction took place in solution. False: First interaction did not take place in solution

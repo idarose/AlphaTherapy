@@ -31,7 +31,11 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     particleTypeVec.clear();
     interactionTimeVec.clear();
 
-    booleanFirstInteractionNotInCellNucleus = false;
+    // Resetting step number
+    ResetStepNumber();
+
+    // Default value
+    BooleanFirstInteractionInCellNucleusMakeTrue();
 
 }
 
@@ -41,9 +45,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
-    if(booleanFirstInteractionNotInCellNucleus)
+    if(!booleanFirstInteractionInCellNucleus)
     {
-        //Adding a row in TTree file
+        // Adding row
         analysisManager->AddNtupleRow();
     }
 }
