@@ -51,16 +51,16 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         {
             fEventAction->BooleanFirstInteractionInSolutionMakeTrue();
             // G4cout << "First interaction in solution, bool: " << fEventAction->GetBooleanFirstInteractionInSolution() << G4endl;
-            G4cout << "First interaction in solution : " << volumeCopyNumber << " bool: " << fEventAction->GetBooleanFirstInteractionInSolution() << G4endl;
+            // G4cout << "First interaction in solution : " << volumeCopyNumber << " bool: " << fEventAction->GetBooleanFirstInteractionInSolution() << G4endl;
         }
         else
         {
             fEventAction->BooleanFirstInteractionInSolutionMakeFalse();
-            G4cout << "First interaction not in solution " << volumeCopyNumber <<  " bool : " << fEventAction->GetBooleanFirstInteractionInSolution() << G4endl;
+            // G4cout << "First interaction not in solution " << volumeCopyNumber <<  " bool : " << fEventAction->GetBooleanFirstInteractionInSolution() << G4endl;
         }
     }
 
-    G4cout << numberCells << G4endl;
+    // G4cout << numberCells << G4endl;
     // Update step number
     fEventAction->AddStepNumber();
 

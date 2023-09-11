@@ -352,12 +352,12 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     TTreeReader myReaderSolutionSim(treeSolutionSim);
 
     // Reader for membrane simulation
-    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/B4aMembrane-build/B4.root", "READ"));
+    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Membrane.root", "READ"));
     auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
     TTreeReader myReaderMembraneSim(treeMembraneSim);
 
         // Reader for cytoplasm simulation
-    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/B4aCytoplasm-build/B4.root", "READ"));
+    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
     auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
     TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
 
