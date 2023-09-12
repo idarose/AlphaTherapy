@@ -35,8 +35,8 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     // Resetting step number
     ResetStepNumber();
 
-    // Default value of boolean
-    BooleanFirstInteractionInSolutionMakeFalse();
+    // Reset First interaction var
+    SetFirstInteractionVolume(0);
 
 }
 
@@ -46,8 +46,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
-    //Adding a row in TTree file only if first interaction was in solution
-    if(booleanFirstInteractionInSolution)
+    // //Adding a row in TTree file only if first interaction was in solution
+    if(firstInteractionVolume==1)
     {
         analysisManager->AddNtupleRow();
     }

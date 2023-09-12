@@ -30,14 +30,13 @@ class EventAction : public G4UserEventAction
     std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
     std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
 
-    // Methods to make sure information of events where first interaction takes place inside cell nucleus is not stored
-    void BooleanFirstInteractionInCellNucleusMakeTrue() {booleanFirstInteractionInCellNucleus = true;};
-    void BooleanFirstInteractionInCellNucleusMakeFalse() {booleanFirstInteractionInCellNucleus = false;};
-    bool GetBooleanFirstInteractionInCellNucleus(){return booleanFirstInteractionInCellNucleus;};
+    void SetFirstInteractionNotInCellNucleus(G4int number) {firstInteractionNotInCellNucleus = number;};
+    G4int GetFirstInteractionNotInCellNucleus() {return firstInteractionNotInCellNucleus;};
 
-    void AddStepNumber(){stepNumber++;};
-    int GetStepNumber(){return stepNumber;};
-    void ResetStepNumber(){stepNumber=0;};
+    // Methods to keep track of step number
+    void AddStepNumber() {stepNumber++;};
+    G4int GetStepNumber() {return stepNumber;};
+    void ResetStepNumber() {stepNumber=0;};
 
   private:
     std::vector<G4double> energyDepVec;
@@ -47,11 +46,12 @@ class EventAction : public G4UserEventAction
     std::vector<G4int> particleTypeVec;
     std::vector<G4double> interactionTimeVec;
 
-    int stepNumber = 0;
+    // If = 1 first interaction not in cell nucleus, if = 0 first interaction in cell nucleus
+    G4int firstInteractionNotInCellNucleus;
 
 
-    // Boolean for first interaction information
-    bool booleanFirstInteractionInCellNucleus;
+    G4int stepNumber = 0;
+
 };
 
 

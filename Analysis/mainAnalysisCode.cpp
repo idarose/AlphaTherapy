@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <iostream>
+
 #include <tuple>
 
 
@@ -62,6 +63,9 @@ class decayDynamics
         double GetNumberDecaysInSolutionFirstHour(){return numberDecays212PbInSolutionFirstHour;};
         double GetNumberDecaysInMembraneTotalTime(){return numberDecays212PbInMembraneTotalTime;};
         double GetNumberDecaysInCytoplasmTotalTime(){return numberDecays212PbInCytoplasmTotalTime;};
+
+        int GetActivity(){return activitySample;};
+        std::string GetCellLine(){return cellLine;};
 
     private:
 
@@ -180,7 +184,7 @@ class energyDepositionHistograms
     public:
         energyDepositionHistograms(int NBins_in, double EMin_in, double EMax_in);
 
-        void GenerateEmptyHistograms();
+        void GenerateEmptyHistograms(decayDynamics decayDynamicsInstance);
         void AddCellHitsToHistograms(cellHit cellHitPerEvent);
         void ScaleHistograms(double factor);
         void WriteHistogramsToFile();
@@ -230,8 +234,12 @@ energyDepositionHistograms::energyDepositionHistograms(int NBins_in, double EMin
 
 
 //------------------–----------
-void energyDepositionHistograms::GenerateEmptyHistograms()
+void energyDepositionHistograms::GenerateEmptyHistograms(decayDynamics decayDynamicsInstance)
 {
+    std::string generalHistogramName = "hEnergyDeps_212Pb_" + decayDynamicsInstance.GetCellLine() + "_" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_";
+
+    std::string histogramNameNucleus = generalHistogramName + "_Nucleus";
+
     hEnergyDepsNucleus = new TH1D("hEnergyDepsNucleus", "Energy Deposition in Cell Nucleus / Number of Cells", NBins, EMin, EMax);
     hEnergyDepsMembrane = new TH1D("hEnergyDepsMembrane", "Energy Depsition in Cell Membrane / Number of Cells", NBins, EMin, EMax);
     hEnergyDepsCytoplasm = new TH1D("hEnergyDepsCytoplasm", "Energy Depsition in Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
@@ -339,7 +347,7 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     //------------------–----------
     // Making energy deposition histogram instance
     energyDepositionHistograms energyDepHistograms = energyDepositionHistograms(NBins, EMin, EMax);
-    energyDepHistograms.GenerateEmptyHistograms();
+    energyDepHistograms.GenerateEmptyHistograms(decayDynamicsInstance);
 
 
 
@@ -347,17 +355,17 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     // Opening TTree files and creating TTreeReaders
 
     // Reader for solution simulation
-    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
+    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/B4.root", "READ"));
     auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
     TTreeReader myReaderSolutionSim(treeSolutionSim);
 
     // Reader for membrane simulation
-    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Membrane.root", "READ"));
+    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/B4aMembrane-build/B4.root", "READ"));
     auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
     TTreeReader myReaderMembraneSim(treeMembraneSim);
 
         // Reader for cytoplasm simulation
-    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
+    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/B4aCytoplasm-build/B4.root", "READ"));
     auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
     TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
 
@@ -367,6 +375,8 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
 
     //------------------–----------
     // Accessing brances of tree
+
+    // TTreeReaderArray<int> initialVolumeTypeID(myReaderSolutionSim, "initialVolumeTypeID");
 
     // Solution
     TTreeReaderArray<double> energyDepsSolutionSim(myReaderSolutionSim, "EnergyDeps");
@@ -393,11 +403,12 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     TTreeReaderArray<int> particleTypeCytoplasmSim(myReaderCytoplasmSim, "ParticleType");
     TTreeReaderArray<double> interactionTimeCytoplasmSim(myReaderCytoplasmSim, "InteractionTime");
 
-    std::cout << "Entries cytoplasm tree : " << myReaderCytoplasmSim.GetEntries() << std::endl;
+    double j = myReaderCytoplasmSim.GetEntries();
+    std::cout <<"Events run in G4: " << 500000 << " Entries cytoplasm tree : " << myReaderCytoplasmSim.GetEntries() << " Ratio : " << j/500000. << std::endl;
 
     double g = 500000.;
     double e = myReaderSolutionSim.GetEntries();
-    std::cout << "Events run in G4: " << 500000 <<  " Entries in TTree: " << myReaderSolutionSim.GetEntries() << " Ratio: " << e/g << std::endl;
+    std::cout << "Events run in G4: " << 500000 <<  " Entries in colution tree: " << myReaderSolutionSim.GetEntries() << " Ratio: " << e/g << std::endl;
     int timesThroughLoop = 0;
 
     std::cout << "Decays in solution " << numberDecays212PbInSolutionFirstHour << std::endl;

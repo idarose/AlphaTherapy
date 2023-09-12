@@ -34,9 +34,6 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     // Resetting step number
     ResetStepNumber();
 
-    // Default value
-    BooleanFirstInteractionInCellNucleusMakeTrue();
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -45,7 +42,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
-    if(!booleanFirstInteractionInCellNucleus)
+    if(GetFirstInteractionNotInCellNucleus()==1)
     {
         // Adding row
         analysisManager->AddNtupleRow();
