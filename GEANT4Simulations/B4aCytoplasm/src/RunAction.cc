@@ -45,7 +45,7 @@ void RunAction::BeginOfRunAction(const G4Run* /*run*/)
   auto analysisManager = G4AnalysisManager::Instance();
 
   // Open an output file
-  G4String fileName = "B4.root";
+  G4String fileName = "Output_212Pb_C4_2_Cytoplasm.root";
   analysisManager->OpenFile(fileName);
 }
 

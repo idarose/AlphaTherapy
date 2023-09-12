@@ -361,17 +361,17 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     // Opening TTree files and creating TTreeReaders
 
     // Reader for solution simulation
-    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/B4.root", "READ"));
+    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
     auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
     TTreeReader myReaderSolutionSim(treeSolutionSim);
 
     // Reader for membrane simulation
-    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/B4aMembrane-build/B4.root", "READ"));
+    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Membrane.root", "READ"));
     auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
     TTreeReader myReaderMembraneSim(treeMembraneSim);
 
         // Reader for cytoplasm simulation
-    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/B4aCytoplasm-build/B4.root", "READ"));
+    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
     auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
     TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
 
@@ -410,11 +410,11 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     TTreeReaderArray<double> interactionTimeCytoplasmSim(myReaderCytoplasmSim, "InteractionTime");
 
     double j = myReaderCytoplasmSim.GetEntries();
-    std::cout <<"Events run in G4: " << 500000 << " Entries cytoplasm tree : " << myReaderCytoplasmSim.GetEntries() << " Ratio : " << j/500000. << std::endl;
+    std::cout <<"Events run in G4: " << 1000 << " Entries cytoplasm tree : " << myReaderCytoplasmSim.GetEntries() << " Ratio : " << j/1000. << std::endl;
 
-    double g = 500000.;
+    double g = 1000.;
     double e = myReaderSolutionSim.GetEntries();
-    std::cout << "Events run in G4: " << 500000 <<  " Entries in colution tree: " << myReaderSolutionSim.GetEntries() << " Ratio: " << e/g << std::endl;
+    std::cout << "Events run in G4: " << 1000 <<  " Entries in solution tree: " << myReaderSolutionSim.GetEntries() << " Ratio: " << e/g << std::endl;
     int timesThroughLoop = 0;
 
     std::cout << "Decays in solution " << numberDecays212PbInSolutionFirstHour << std::endl;
