@@ -3,9 +3,9 @@
 #SBATCH --job-name AlphaTherapy
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=idapro@fys.uio.no
-#SBATCH --time=0-01:00:00
+#SBATCH --time=0-00:20:00
 #SBATCH --mem-per-cpu=2000
-#SBATCH --ntasks=1 --cpus-per-task=30
+#SBATCH --ntasks=1 --cpus-per-task=5
 #SBATCH --array=1
 
 # export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6"

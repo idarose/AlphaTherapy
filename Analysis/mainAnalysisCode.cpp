@@ -238,15 +238,21 @@ void energyDepositionHistograms::GenerateEmptyHistograms(decayDynamics decayDyna
 {
     std::string generalHistogramName = "hEnergyDeps_212Pb_" + decayDynamicsInstance.GetCellLine() + "_" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_";
 
-    std::string histogramNameNucleus = generalHistogramName + "_Nucleus";
+    std::string histogramNameNucleus = generalHistogramName + "Nucleus";
+    std::string histogramNameMembrane = generalHistogramName + "Membrane";
+    std::string histogramNameCytoplasm = generalHistogramName + "Cytoplasm";
+    std::string histogramNameCellTotal = generalHistogramName + "CellTotal";
+    std::string histogramNameMembraneAndCytoplasm = generalHistogramName + "MembraneAndCytoplasm";
+    std::string histogramNameMembraneAndNucleus = generalHistogramName + "MembraneAndNucleus";
+    std::string histogramNameNucleusAndCytoplasm = generalHistogramName + "NucleusAndCytoplasm";
 
-    hEnergyDepsNucleus = new TH1D("hEnergyDepsNucleus", "Energy Deposition in Cell Nucleus / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsMembrane = new TH1D("hEnergyDepsMembrane", "Energy Depsition in Cell Membrane / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsCytoplasm = new TH1D("hEnergyDepsCytoplasm", "Energy Depsition in Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsCellTotal = new TH1D("hEnergyDepsCellTotal", "Energy Depsition in Cell / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsMembraneAndCytoplasm = new TH1D("hEnergyDepsMembraneCytoplasm", "Energy Depsition in Cell Membrane and Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsMembraneAndNucleus = new TH1D("hEnergyDepsMembraneAndNucleus", "Energy Depsition in Cell Membrane and Cell Nucleus / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsNucleusAndCytoplasm = new TH1D("hEnergyDepsNucleusAndCytoplasm", "Energy Depsition in Cell Nucleus and Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsNucleus = new TH1D(histogramNameNucleus.c_str(), "Energy Deposition in Cell Nucleus / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsMembrane = new TH1D(histogramNameMembrane.c_str(), "Energy Depsition in Cell Membrane / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsCytoplasm = new TH1D(histogramNameCytoplasm.c_str(), "Energy Depsition in Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsCellTotal = new TH1D(histogramNameCellTotal.c_str(), "Energy Depsition in Cell / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsMembraneAndCytoplasm = new TH1D(histogramNameMembraneAndCytoplasm.c_str(), "Energy Depsition in Cell Membrane and Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsMembraneAndNucleus = new TH1D(histogramNameMembraneAndNucleus.c_str(), "Energy Depsition in Cell Membrane and Cell Nucleus / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsNucleusAndCytoplasm = new TH1D(histogramNameNucleusAndCytoplasm.c_str(), "Energy Depsition in Cell Nucleus and Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
 }
 
 //------------------–----------
@@ -519,7 +525,7 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
             // If first interaction took place in first 24 hours update counter
             if(energyDepsMembraneSim.GetSize()>0)
             {
-                if(interactionTimeMembraneSim[0]/3600.0 < 1.0)
+                if(interactionTimeMembraneSim[0]/3600.0 < 24.0)
                 {
                     numberDecays212PbInMembraneTotalTime_counter ++;
                 }
@@ -606,7 +612,7 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
             // If first interaction took place in first 24 hours update counter
             if(energyDepsCytoplasmSim.GetSize()>0)
             {
-                if(interactionTimeCytoplasmSim[0]/3600.0 < 1.0)
+                if(interactionTimeCytoplasmSim[0]/3600.0 < 24.0)
                 {
                     numberDecays212PbInCytoplasmTotalTime_counter ++;
                 }

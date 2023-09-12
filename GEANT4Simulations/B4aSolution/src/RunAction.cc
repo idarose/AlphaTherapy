@@ -29,7 +29,7 @@ RunAction::RunAction(EventAction* eventAction)
     analysisManager->CreateNtupleDColumn(0, "KineticEnergy", fEventAction->GetKineticEnergyVec());
     analysisManager->CreateNtupleIColumn(0, "ParticleType", fEventAction->GetParticleTypeVec());
     analysisManager->CreateNtupleDColumn(0, "InteractionTime", fEventAction->GetInteractionTime());
-    // analysisManager->CreateNtupleIColumn(0, "FirstInteractionVolume", fEventAction->GetFirstInteractionVolume());
+    analysisManager->CreateNtupleIColumn(0, "FirstInteractionVolume", fEventAction->GetFirstInteractionVolume());
     analysisManager->FinishNtuple();
 }
 
