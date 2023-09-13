@@ -434,11 +434,12 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
         // Vector to store cell hits
         std::vector<cellHit> storedCellHits;
 
-        // Counter for number of decays
-        int numberDecays212PbInSolutionFirstHour_counter = 0;
-
         //------------------–----------
         // Looping through data for decays occurring in solution in first hour
+
+        // Counter variable
+        int numberDecays212PbInSolutionFirstHour_counter = 0;
+
         while(myReaderSolutionSim.Next())
         {
 
@@ -504,6 +505,7 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
                 }
             }
 
+            //------------------–----------
             // Break loop if number of decays have been reached
             if(numberDecays212PbInSolutionFirstHour_counter >= numberDecays212PbInSolutionFirstHour)
             {
@@ -511,10 +513,15 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
             }
         }
 
+
+
         //------------------–----------
         // Looping through data for decays occuring in Membrane in 24 hours
 
+        // Counter variable
         int numberDecays212PbInMembrane24h_counter = 0;
+
+
         while(myReaderMembraneSim.Next())
         {
             bool firstInteractionInMembraneFirst24h = false;
@@ -576,10 +583,15 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
             }
         }
 
+
+
         //------------------–----------
         // Looping through data for decays occuring in Cytoplasm in 24 hours
 
+        // Counter variable
         int numberDecays212PbInCytoplasm24h_counter = 0;
+
+
         while(myReaderCytoplasmSim.Next())
         {
 
@@ -639,7 +651,6 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
 
             }
 
-
             // Break loop if number of decays have been reached
             if(numberDecays212PbInCytoplasm24h_counter >= numberDecays212PbInCytoplasmTotalTime)
             {
@@ -647,6 +658,8 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
             }
         }
 
+
+        //------------------–----------
         // Looping over all stored cell energy depositions
         for(int i=0; i<storedCellHits.size(); i++)
         {
@@ -655,16 +668,25 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
         }
     };
 
+
+
+
+    //------------------–----------
+    // Filling histgrams
     for(int i=0; i<numberIterations; i++)
     {
         fillHistograms();
     }
 
 
+    //------------------–----------
     // Scaling histograms
     double scalingFactor = (numberCells*volumeRatio)*((double) numberIterations);
     energyDepHistograms.ScaleHistograms(1./scalingFactor);
 
+
+
+    //------------------–----------
     return energyDepHistograms;
 
 }
@@ -681,23 +703,23 @@ void mainAnalysisCode()
 
     //------------------–----------
     // Defining decay dynamics
-    decayDynamics decays_A5_C4_2 = decayDynamics(5,1.14,1.16,"C4-2");
-    decayDynamics decays_A10_C4_2 = decayDynamics(10,1.97,1.98,"C4-2");
-    decayDynamics decays_A25_C4_2 = decayDynamics(25,4.78,5.91,"C4-2");
-    decayDynamics decays_A50_C4_2 = decayDynamics(50,8.94,11.07,"C4-2");
-    decayDynamics decays_A75_C4_2 = decayDynamics(75,10.79,13.12,"C4-2");
-    decayDynamics decays_A100_C4_2 = decayDynamics(100,13.16,22.72,"C4-2");
-    decayDynamics decays_A150_C4_2 = decayDynamics(150,16.40,23.56,"C4-2");
+    decayDynamics decays_A5kBq_C4_2 = decayDynamics(5,1.14,1.16,"C4-2");
+    decayDynamics decays_A10kBq_C4_2 = decayDynamics(10,1.97,1.98,"C4-2");
+    decayDynamics decays_A25kBq_C4_2 = decayDynamics(25,4.78,5.91,"C4-2");
+    decayDynamics decays_A50kBq_C4_2 = decayDynamics(50,8.94,11.07,"C4-2");
+    decayDynamics decays_A75kBq_C4_2 = decayDynamics(75,10.79,13.12,"C4-2");
+    decayDynamics decays_A100kBq_C4_2 = decayDynamics(100,13.16,22.72,"C4-2");
+    decayDynamics decays_A150kBq_C4_2 = decayDynamics(150,16.40,23.56,"C4-2");
 
     //------------------–----------
     // Loading decay dynamics calculations
-    decays_A5_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
-    decays_A10_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
-    decays_A25_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
-    decays_A50_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
-    decays_A75_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
-    decays_A100_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
-    decays_A150_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
+    decays_A5kBq_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
+    decays_A10kBq_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
+    decays_A25kBq_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
+    decays_A50kBq_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
+    decays_A75kBq_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
+    decays_A100kBq_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
+    decays_A150kBq_C4_2.loadDataFromMathematicaCalculations("../Mathematica/Output");
 
     // std::cout << "Volume Ratio " << volumeRatio << std::endl;
     // std::cout << "Decays in 0.2 mL" << decays_A10_C4_2.GetNumberDecaysInSolutionFirstHour() << std::endl;
@@ -706,31 +728,28 @@ void mainAnalysisCode()
 
     int numberIterations = 1;
 
-    //------------------–----------
-    // // Creating "average energy deposition hisograms"
-    // energyDepositionHistograms Hist_A5_C4_2 = makeHistograms(decays_A5_C4_2, numberIterations, volumeRatio, numberCells);
-    // std::cout << "Activity 5kBq finished" << std::endl;
-    // energyDepositionHistograms Hist_A10_C4_2 = makeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
-    // std::cout << "Activity 10kBq finished" << std::endl;
-    // energyDepositionHistograms Hist_A25_C4_2 = makeHistograms(decays_A25_C4_2, numberIterations, volumeRatio, numberCells);
-    // std::cout << "Activity 25kBq finished" << std::endl;
-    // energyDepositionHistograms Hist_A50_C4_2 = makeHistograms(decays_A50_C4_2, numberIterations, volumeRatio, numberCells);
-    // std::cout << "Activity 50kBq finished" << std::endl;
-    // energyDepositionHistograms Hist_A75_C4_2 = makeHistograms(decays_A75_C4_2, numberIterations, volumeRatio, numberCells);
-    // std::cout << "Activity 75kBq finished" << std::endl;
-    // energyDepositionHistograms Hist_A100_C4_2 = makeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
-    // std::cout << "Activity 100kBq finished" << std::endl;
+    /*
+    // ------------------–----------
+    // Creating "average energy deposition hisograms"
+    energyDepositionHistograms Hist_A5_C4_2 = makeHistograms(decays_A5_C4_2, numberIterations, volumeRatio, numberCells);
+    std::cout << "Activity 5kBq finished" << std::endl;
+    energyDepositionHistograms Hist_A10_C4_2 = makeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
+    std::cout << "Activity 10kBq finished" << std::endl;
+    energyDepositionHistograms Hist_A25_C4_2 = makeHistograms(decays_A25_C4_2, numberIterations, volumeRatio, numberCells);
+    std::cout << "Activity 25kBq finished" << std::endl;
+    energyDepositionHistograms Hist_A50_C4_2 = makeHistograms(decays_A50_C4_2, numberIterations, volumeRatio, numberCells);
+    std::cout << "Activity 50kBq finished" << std::endl;
+    energyDepositionHistograms Hist_A75_C4_2 = makeHistograms(decays_A75_C4_2, numberIterations, volumeRatio, numberCells);
+    std::cout << "Activity 75kBq finished" << std::endl;
+    energyDepositionHistograms Hist_A100_C4_2 = makeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
+    std::cout << "Activity 100kBq finished" << std::endl;
     energyDepositionHistograms Hist_A150_C4_2 = makeHistograms(decays_A150_C4_2, numberIterations, volumeRatio, numberCells);
     std::cout << "Activity 150kBq finished" << std::endl;
 
 
-    double integral = Hist_A150_C4_2.GetEnergyDepNucleusHist()->Integral();
-    std::cout << "integral:" << integral << std::endl;
 
-    //------------------–----------
-    // Making outputfile
-    auto outputMainAnalysis = new TFile("outputMainAnalysisCode.root", "RECREATE");
-
+    // double integral = Hist_A150_C4_2.GetEnergyDepNucleusHist()->Integral();
+    // std::cout << "integral:" << integral << std::endl;
 
     //------------------–----------
     // Writing histograms to file
@@ -742,10 +761,22 @@ void mainAnalysisCode()
     // Hist_A100_C4_2.WriteHistogramsToFile();
     // Hist_A150_C4_2.WriteHistogramsToFile();
 
-
     //------------------–----------
     outputMainAnalysis->Write();
     outputMainAnalysis->Close();
+    */
+
+
+
+    //------------------–----------
+    // Making outputfile
+    energyDepositionHistograms Hist_A150kBq_C4_2 = makeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    auto outputMainAnalysis_150kBq = new TFile("outputMainAnalysisCode_150kBq.root", "RECREATE");
+    Hist_A150kBq_C4_2.WriteHistogramsToFile();
+    outputMainAnalysis_150kBq->Write();
+    outputMainAnalysis_150kBq->Close();
+
+
 
 }
 
