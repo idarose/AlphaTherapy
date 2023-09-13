@@ -30,12 +30,9 @@ class EventAction : public G4UserEventAction
     std::vector<G4double>& GetKineticEnergyVec() {return kineticEnergyVec;};
     std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
     std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
-    std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
-    std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
+    std::vector<G4double>& GetFirstInteractionTime() {return firstInteractionTimeVec;};
+    std::vector<G4int>& GetFirstInteractionVolume() {return firstInteractionVolumeVec;};
 
-
-    void SetFirstInteractionVolume(G4int volumeType) {firstInteractionVolume = volumeType;};
-    G4int& GetFirstInteractionVolume() {return firstInteractionVolume;};
 
     // Methods to add, reset and extract step number
     void AddStepNumber(){stepNumber++;};
