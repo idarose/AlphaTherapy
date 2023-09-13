@@ -30,7 +30,6 @@ class EventAction : public G4UserEventAction
     std::vector<G4double>& GetKineticEnergyVec() {return kineticEnergyVec;};
     std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
     std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
-
     std::vector<G4double>& GetFirstInteractionTime() {return firstInteractionTimeVec;};
     std::vector<G4int>& GetFirstInteractionVolume() {return firstInteractionVolumeVec;};
 

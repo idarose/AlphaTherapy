@@ -30,7 +30,8 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     kineticEnergyVec.clear();
     particleTypeVec.clear();
     interactionTimeVec.clear();
-    firstInteractionTimeVec
+    firstInteractionTimeVec.clear();
+    firstInteractionVolumeVec.clear();
 
     // Resetting step number
     ResetStepNumber();

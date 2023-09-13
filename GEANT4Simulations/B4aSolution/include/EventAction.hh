@@ -21,12 +21,15 @@ class EventAction : public G4UserEventAction
     void AddGap(G4double de, G4double dl);
 
     void StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime);
+    void SetFirstInteractionInfo(G4double firstInteractionTime, G4int firstInteractionVolume);
 
     // Functions for extracting vectores with interaction information
     std::vector<G4double>& GetEnergyDepVec() {return energyDepVec;};
     std::vector<G4int>& GetCellIDVec() {return cellIDVec;};
     std::vector<G4int>& GetVolumeTypeVec() {return volumeTypeVec;};
     std::vector<G4double>& GetKineticEnergyVec() {return kineticEnergyVec;};
+    std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
+    std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
     std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
     std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
 
@@ -47,6 +50,8 @@ class EventAction : public G4UserEventAction
     std::vector<G4double> kineticEnergyVec;
     std::vector<G4int> particleTypeVec;
     std::vector<G4double> interactionTimeVec;
+    std::vector<G4double> firstInteractionTimeVec;
+    std::vector<G4int> firstInteractionVolumeVec;
 
     // If = 1 first interaction in solution, if = 0 first interaction not in solution
     G4int firstInteractionVolume;

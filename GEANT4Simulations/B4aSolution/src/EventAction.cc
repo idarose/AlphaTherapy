@@ -30,13 +30,12 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     kineticEnergyVec.clear();
     particleTypeVec.clear();
     interactionTimeVec.clear();
-
+    firstInteractionTimeVec.clear();
+    firstInteractionVolumeVec.clear();
 
     // Resetting step number
     ResetStepNumber();
 
-    // Reset First interaction var
-    SetFirstInteractionVolume(0);
 
 }
 
@@ -46,15 +45,17 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
-    // //Adding a row in TTree file only if first interaction was in solution
-    if(firstInteractionVolume==1)
-    {
-        analysisManager->AddNtupleRow();
-    }
+    analysisManager->AddNtupleRow();
 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void EventAction::SetFirstInteractionInfo(G4double firstInteractionTime, G4int firstInteractionVolume)
+{
+    firstInteractionTimeVec.push_back(firstInteractionTime);
+    firstInteractionVolumeVec.push_back(firstInteractionVolume);
+}
 
 void EventAction::StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime)
 {
