@@ -30,6 +30,7 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     kineticEnergyVec.clear();
     particleTypeVec.clear();
     interactionTimeVec.clear();
+    firstInteractionTimeVec
 
     // Resetting step number
     ResetStepNumber();
@@ -42,14 +43,18 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
-    if(GetFirstInteractionNotInCellNucleus()==1)
-    {
-        // Adding row
-        analysisManager->AddNtupleRow();
-    }
+    // Adding row
+    analysisManager->AddNtupleRow();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void EventAction::SetFirstInteractionInfo(G4double firstInteractionTime, G4int firstInteractionVolume)
+{
+    firstInteractionTimeVec.push_back(firstInteractionTime);
+    firstInteractionVolumeVec.push_back(firstInteractionVolume);
+}
+
 
 void EventAction::StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime)
 {

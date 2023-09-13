@@ -208,10 +208,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
     G4double volumeCellTube = CLHEP::pi*std::pow(cellTubeRMin,2.0)*cellTubeHeight;
 
-    // G4cout << "Volume cell sample : " << volume_sample/(mm*mm*mm) << G4;
-    // G4
-    G4cout << "Ratio volumes : " << volumeCellTube/volume_sample << G4endl;
-
     numberCells = volumeCellTube*cellDensity_sample;
 
 

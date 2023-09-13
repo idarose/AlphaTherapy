@@ -32,6 +32,40 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     G4int volumeCopyNumber = step->GetPreStepPoint()->GetTouchableHandle()
       ->GetVolume()->GetCopyNo();
 
+
+    //------------------------
+    // Storing interaction time and volume type of first interaction
+    if(fEventAction->GetStepNumber() == 0)
+    {
+        //Checking if the interaction took place in the membrane of the cell
+        if(volumeCopyNumber <= numberCells && volumeCopyNumber>= 1)
+        {
+            fEventAction->SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s;, 1);
+        }
+
+        //Checking if the interaction took place in the cytoplasm of the cell
+        else if(volumeCopyNumber >= (numberCells+1) && volumeCopyNumber <= 2*numberCells)
+        {
+            fEventAction->SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s;, 2);
+        }
+
+        //Checking if the interaction took place in the nucleus of the cell
+        else if(volumeCopyNumber >= (2*numberCells+1) && volumeCopyNumber <= 3*numberCells)
+        {
+            fEventAction->void SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s;, 3);
+        }
+
+        // Checking if interaction took place in solution
+        else if(volumeCopyNumber == -3)
+        {
+            fEventAction->SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s;, 0);
+        }
+    }
+
+    // Add step number
+    fEventAction->AddStepNumber();
+
+
     /*
     Cell ID numbers work like this:
 
@@ -41,28 +75,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     The cell cytoplasm of a cell has a volume copy number equal to the cell ID number plus the number of cells.
     The cell nuleus has a volume copy number equal to the cell ID plus two times the number of cells.
     */
-
-
-    //------------------------
-    // Checking if first interaction took place inside a cell nucleus
-    if(fEventAction->GetStepNumber() == 0)
-    {
-        if(volumeCopyNumber >= (2*numberCells+1) && volumeCopyNumber <= 3*numberCells)
-        {
-            // First interaction in cell nucleus
-            fEventAction->SetFirstInteractionNotInCellNucleus(0);
-            G4cout << "In nucleus" << G4endl;
-        }
-        else
-        {
-            // First interaction not in cell nucleus
-            G4cout << "Not" << G4endl;
-            fEventAction->SetFirstInteractionNotInCellNucleus(1);
-        }
-    }
-
-    // Add step number
-    fEventAction->AddStepNumber();
 
     //----------------------------------
     //Checking if the interaction took place in the membrane of the cell

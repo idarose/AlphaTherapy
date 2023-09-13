@@ -20,6 +20,7 @@ class EventAction : public G4UserEventAction
     void AddGap(G4double de, G4double dl);
 
     void StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime);
+    void SetFirstInteractionInfo(G4double firstInteractionTime, G4int firstInteractionVolume);
 
 
     // Functions for extracting vectores with interaction information
@@ -30,8 +31,10 @@ class EventAction : public G4UserEventAction
     std::vector<G4int>& GetParticleTypeVec() {return particleTypeVec;};
     std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
 
-    void SetFirstInteractionNotInCellNucleus(G4int number) {firstInteractionNotInCellNucleus = number;};
-    G4int GetFirstInteractionNotInCellNucleus() {return firstInteractionNotInCellNucleus;};
+    std::vector<G4double>& GetFirstInteractionTime() {return firstInteractionTimeVec;};
+    std::vector<G4int>& GetFirstInteractionVolume() {return firstInteractionVolumeVec;};
+
+
 
     // Methods to keep track of step number
     void AddStepNumber() {stepNumber++;};
@@ -46,8 +49,8 @@ class EventAction : public G4UserEventAction
     std::vector<G4int> particleTypeVec;
     std::vector<G4double> interactionTimeVec;
 
-    // If = 1 first interaction not in cell nucleus, if = 0 first interaction in cell nucleus
-    G4int firstInteractionNotInCellNucleus;
+    std::vector<G4double> firstInteractionTimeVec;
+    std::vector<G4int> firstInteractionVolumeVec;
 
 
     G4int stepNumber = 0;
