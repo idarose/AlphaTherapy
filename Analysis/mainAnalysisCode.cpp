@@ -22,8 +22,11 @@ std::vector<double> importDataStringDouble(std::string filename)
     //  values in the form of a vector
     std::vector<double> input_data;
 
-    std::fstream myfile;
-    myfile.open(filename);
+    // std::fstream myfile;
+    // myfile.open(filename);
+
+    std::fstream myfile(filename, ios_base::in);
+
 
     if (myfile.is_open())
     {
@@ -361,20 +364,20 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     // Opening TTree files and creating TTreeReaders
 
     // Reader for solution simulation
-    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
-    // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/Output_212Pb_C4_2_Solution.root", "READ"));
+    // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
+    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/Output_212Pb_C4_2_Solution.root", "READ"));
     auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
     TTreeReader myReaderSolutionSim(treeSolutionSim);
 
     // Reader for membrane simulation
-    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Membrane.root", "READ"));
-    // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/B4aMembrane-build/Output_212Pb_C4_2_Membrane.root", "READ"));
+    // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Membrane.root", "READ"));
+    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/B4aMembrane-build/Output_212Pb_C4_2_Membrane.root", "READ"));
     auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
     TTreeReader myReaderMembraneSim(treeMembraneSim);
 
         // Reader for cytoplasm simulation
-    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
-    // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/B4aCytoplasm-build/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
+    // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
+    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/B4aCytoplasm-build/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
     auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
     TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
 
@@ -389,6 +392,8 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     TTreeReaderArray<double> kineticEnergySolutionSim(myReaderSolutionSim, "KineticEnergy");
     TTreeReaderArray<int> particleTypeSolutionSim(myReaderSolutionSim, "ParticleType");
     TTreeReaderArray<double> interactionTimeSolutionSim(myReaderSolutionSim, "InteractionTime");
+    TTreeReaderArray<double> firstInteractionTimeSolutionSim(myReaderSolutionSim, "FirstInteractionTime");
+    TTreeReaderArray<int> firstInteractionVolumeSolutionSim(myReaderSolutionSim, "FirstInteractionVolume");
 
     // Membrane
     TTreeReaderArray<double> energyDepsMembraneSim(myReaderMembraneSim, "EnergyDeps");
@@ -397,6 +402,8 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     TTreeReaderArray<double> kineticEnergyMembraneSim(myReaderMembraneSim, "KineticEnergy");
     TTreeReaderArray<int> particleTypeMembraneSim(myReaderMembraneSim, "ParticleType");
     TTreeReaderArray<double> interactionTimeMembraneSim(myReaderMembraneSim, "InteractionTime");
+    TTreeReaderArray<double> firstInteractionTimeMembraneSim(myReaderSolutionSim, "FirstInteractionTime");
+    TTreeReaderArray<int> firstInteractionVolumeMembraneSim(myReaderSolutionSim, "FirstInteractionVolume");
 
 
     // Cytoplasm
@@ -406,6 +413,8 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     TTreeReaderArray<double> kineticEnergyCytoplasmSim(myReaderCytoplasmSim, "KineticEnergy");
     TTreeReaderArray<int> particleTypeCytoplasmSim(myReaderCytoplasmSim, "ParticleType");
     TTreeReaderArray<double> interactionTimeCytoplasmSim(myReaderCytoplasmSim, "InteractionTime");
+    TTreeReaderArray<double> firstInteractionTimeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionTime");
+    TTreeReaderArray<int> firstInteractionVolumeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionVolume");
 
 
     double entries = myReaderSolutionSim.GetEntries();
@@ -421,6 +430,7 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
     //  Function for filling histograms
     auto fillHistograms = [&]()
     {
+
         // Vector to store cell hits
         std::vector<cellHit> storedCellHits;
 
@@ -428,54 +438,67 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
         int numberDecays212PbInSolutionFirstHour_counter = 0;
 
         //------------------–----------
-        // Looping through data for decays occuring in solution in first hour
+        // Looping through data for decays occurring in solution in first hour
         while(myReaderSolutionSim.Next())
         {
-            // test++;
-            // if(energyDepsSolutionSim.GetSize()>0)
-            // {
-            //     if(interactionTimeSolutionSim[0]/3600.0 < 1.0)
-            //     {
-            //         numberDecays212PbInSolutionFirstHour_counter++;
-            //     }
-            // }
 
-            // looping over all steps for one event/decay
-            for(int i=0; i<energyDepsSolutionSim.GetSize(); i++)
+            // bool for if the decay occurred in solution in first hour
+            bool firstInteractionInSolutionInFirstHour = false;
+
+            // Checking when and where first interaction occured
+            if(firstInteractionVolumeSolutionSim[0]==0)
             {
-
-                // Only add if actual energy deposition
-                if(energyDepsSolutionSim[i]>0.)
+                if(firstInteractionTimeSolutionSim[0]/3600. < 1.0)
                 {
 
-                    // Only add if interaction happened within first hour
-                    if(interactionTimeSolutionSim[i]/3600.0 < 1.0)
+                    // Sett bool true
+                    firstInteractionInSolutionInFirstHour = true;
+
+                    // Update counter
+                    numberDecays212PbInSolutionFirstHour_counter ++;
+                }
+            }
+
+            // Sorting through interactions
+            if(firstInteractionInSolutionInFirstHour)
+            {
+                // looping over all steps for one event/decay
+                for(int i=0; i<energyDepsSolutionSim.GetSize(); i++)
+                {
+
+                    // Only add if actual energy deposition
+                    if(energyDepsSolutionSim[i]>0.)
                     {
 
-                        // boolean: true if cell has not already been hit before in this event
-                        // false if already hit this event
-                        bool cellNotAlreadyHit = true;
-
-                        // Loop over all previous cell hits stored
-                        for(int ii=0; ii<storedCellHits.size(); ii++)
+                        // Only add if interaction happened within first hour
+                        if(interactionTimeSolutionSim[i]/3600.0 < 1.0)
                         {
 
-                            // Add energy deposition to cell that has already been hit before
-                            if(cellIDsCytoplasmSim[i]==storedCellHits[ii].GetCellID())
+                            // boolean: true if cell has not already been hit before in this event
+                            // false if already hit this event
+                            bool cellAlreadyHit = false;
+
+                            // Loop over all previous cell hits stored
+                            for(int ii=0; ii<storedCellHits.size(); ii++)
                             {
-                                storedCellHits[ii].AddEnergyDeposition(energyDepsCytoplasmSim[i],volumeTypesCytoplasmSim[i]);
 
-                                // Update boolean
-                                cellNotAlreadyHit = false;
+                                // Add energy deposition to cell that has already been hit before
+                                if(cellIDsSolutionSim[i]==storedCellHits[ii].GetCellID())
+                                {
+                                    storedCellHits[ii].AddEnergyDeposition(energyDepsSolutionSim[i],volumeTypesSolutionSim[i]);
+
+                                    // Update boolean
+                                    cellAlreadyHit = true;
+                                }
                             }
-                        }
 
-                        // Register a new cell hit, and add energy deposition
-                        if(cellNotAlreadyHit)
-                        {
-                            cellHit aNewCellHit = cellHit(cellIDsCytoplasmSim[i]);
-                            aNewCellHit.AddEnergyDeposition(energyDepsCytoplasmSim[i], volumeTypesCytoplasmSim[i]);
-                            storedCellHits.push_back(aNewCellHit);
+                            // Register a new cell hit, and add energy deposition
+                            if(!cellAlreadyHit)
+                            {
+                                cellHit aNewCellHit = cellHit(cellIDsSolutionSim[i]);
+                                aNewCellHit.AddEnergyDeposition(energyDepsSolutionSim[i], volumeTypesSolutionSim[i]);
+                                storedCellHits.push_back(aNewCellHit);
+                            }
                         }
                     }
                 }
@@ -491,130 +514,134 @@ energyDepositionHistograms makeHistograms(decayDynamics decayDynamicsInstance, i
         //------------------–----------
         // Looping through data for decays occuring in Membrane in 24 hours
 
-        int numberDecays212PbInMembraneTotalTime_counter = 0;
+        int numberDecays212PbInMembrane24h_counter = 0;
         while(myReaderMembraneSim.Next())
         {
+            bool firstInteractionInMembraneFirst24h = false;
 
-            // // If first interaction took place in first 24 hours update counter
-            // if(energyDepsMembraneSim.GetSize()>0)
-            // {
-            //     if(interactionTimeMembraneSim[0]/3600.0 < 24.0)
-            //     {
-            //         numberDecays212PbInMembraneTotalTime_counter ++;
-            //     }
-            // }
-
-            // looping over all steps for one event/decay
-            for(int i=0; i<energyDepsMembraneSim.GetSize(); i++)
+            if(firstInteractionTimeMembraneSim[0]/3600. < 24.)
             {
+                firstInteractionInMembraneFirst24h = true;
+                numberDecays212PbInMembrane24h_counter ++;
+            }
 
-                // Only add if actual energy deposition
-                if(energyDepsMembraneSim[i]>0.)
+            if(firstInteractionInMembraneFirst24h)
+            {
+                // looping over all steps for one event/decay
+                for(int i=0; i<energyDepsMembraneSim.GetSize(); i++)
                 {
 
-                    // Only add if interaction happened within first 24 hours
-                    if(interactionTimeMembraneSim[i]/3600.0 < 24.0)
+                    // Only add if actual energy deposition
+                    if(energyDepsMembraneSim[i]>0.)
                     {
 
-                        // boolean: true if cell has not already been hit before in this event
-                        // false if already hit this event
-                        bool cellNotAlreadyHit = true;
-
-                        // Loop over all previous cell hits stored
-                        for(int ii=0; ii<storedCellHits.size(); ii++)
+                        // Only add if interaction happened within first 24 hours
+                        if(interactionTimeMembraneSim[i]/3600.0 < 24.0)
                         {
 
-                            // Add energy deposition to cell that has already been hit before
-                            if(cellIDsCytoplasmSim[i]==storedCellHits[ii].GetCellID())
+                            // boolean: true if cell has not already been hit before in this event
+                            // false if already hit this event
+                            bool cellNotAlreadyHit = true;
+
+                            // Loop over all previous cell hits stored
+                            for(int ii=0; ii<storedCellHits.size(); ii++)
                             {
-                                storedCellHits[ii].AddEnergyDeposition(energyDepsCytoplasmSim[i],volumeTypesCytoplasmSim[i]);
 
-                                // Update boolean
-                                cellNotAlreadyHit = false;
+                                // Add energy deposition to cell that has already been hit before
+                                if(cellIDsMembraneSim[i]==storedCellHits[ii].GetCellID())
+                                {
+                                    storedCellHits[ii].AddEnergyDeposition(energyDepsMembraneSim[i],volumeTypesMembraneSim[i]);
+
+                                    // Update boolean
+                                    cellNotAlreadyHit = false;
+                                }
                             }
-                        }
 
-                        // Register a new cell hit, and add energy deposition
-                        if(cellNotAlreadyHit)
-                        {
-                            cellHit aNewCellHit = cellHit(cellIDsCytoplasmSim[i]);
-                            aNewCellHit.AddEnergyDeposition(energyDepsCytoplasmSim[i], volumeTypesCytoplasmSim[i]);
-                            storedCellHits.push_back(aNewCellHit);
+                            // Register a new cell hit, and add energy deposition
+                            if(cellNotAlreadyHit)
+                            {
+                                cellHit aNewCellHit = cellHit(cellIDsMembraneSim[i]);
+                                aNewCellHit.AddEnergyDeposition(energyDepsMembraneSim[i], volumeTypesMembraneSim[i]);
+                                storedCellHits.push_back(aNewCellHit);
+                            }
                         }
                     }
                 }
             }
 
             // Break loop if number of decays have been reached
-            if(numberDecays212PbInMembraneTotalTime_counter >= numberDecays212PbInMembraneTotalTime)
+            if(numberDecays212PbInMembrane24h_counter >= numberDecays212PbInMembraneTotalTime)
             {
                 break;
             }
         }
 
-
         //------------------–----------
         // Looping through data for decays occuring in Cytoplasm in 24 hours
 
-        int numberDecays212PbInCytoplasmTotalTime_counter = 0;
+        int numberDecays212PbInCytoplasm24h_counter = 0;
         while(myReaderCytoplasmSim.Next())
         {
-            // Vector to store all cell hits for one event/decay
 
+            bool firstInteractionInCytoplasmFirst24h = false;
 
-            // If first interaction took place in first 24 hours update counter
-            if(energyDepsCytoplasmSim.GetSize()>0)
+            if(firstInteractionVolumeCytoplasmSim[0] == 2)
             {
-                if(interactionTimeCytoplasmSim[0]/3600.0 < 24.0)
+                if(firstInteractionTimeCytoplasmSim[0]/3600. < 24.)
                 {
-                    numberDecays212PbInCytoplasmTotalTime_counter ++;
+                    firstInteractionInCytoplasmFirst24h = true;
+                    numberDecays212PbInCytoplasm24h_counter ++;
                 }
             }
 
-            // looping over all steps for one event/decay
-            for(int i=0; i<energyDepsCytoplasmSim.GetSize(); i++)
+            if(firstInteractionInCytoplasmFirst24h)
             {
-
-                // Only add if actual energy deposition
-                if(energyDepsCytoplasmSim[i]>0.)
+                // looping over all steps for one event/decay
+                for(int i=0; i<energyDepsCytoplasmSim.GetSize(); i++)
                 {
 
-                    // Only add if interaction happened within first 24 hours
-                    if(interactionTimeCytoplasmSim[i]/3600.0 < 24.0)
+                    // Only add if actual energy deposition
+                    if(energyDepsCytoplasmSim[i]>0.)
                     {
 
-                        // boolean: true if cell has not already been hit before in this event
-                        // false if already hit this event
-                        bool cellNotAlreadyHit = true;
-
-                        // Loop over all previous cell hits stored
-                        for(int ii=0; ii<storedCellHits.size(); ii++)
+                        // Only add if interaction happened within first 24 hours
+                        if(interactionTimeCytoplasmSim[i]/3600.0 < 24.0)
                         {
 
-                            // Add energy deposition to cell that has already been hit before
-                            if(cellIDsCytoplasmSim[i]==storedCellHits[ii].GetCellID())
+                            // boolean: true if cell has not already been hit before in this event
+                            // false if already hit this event
+                            bool cellNotAlreadyHit = true;
+
+                            // Loop over all previous cell hits stored
+                            for(int ii=0; ii<storedCellHits.size(); ii++)
                             {
-                                storedCellHits[ii].AddEnergyDeposition(energyDepsCytoplasmSim[i],volumeTypesCytoplasmSim[i]);
 
-                                // Update boolean
-                                cellNotAlreadyHit = false;
+                                // Add energy deposition to cell that has already been hit before
+                                if(cellIDsCytoplasmSim[i]==storedCellHits[ii].GetCellID())
+                                {
+                                    storedCellHits[ii].AddEnergyDeposition(energyDepsCytoplasmSim[i],volumeTypesCytoplasmSim[i]);
+
+                                    // Update boolean
+                                    cellNotAlreadyHit = false;
+                                }
                             }
-                        }
 
-                        // Register a new cell hit, and add energy deposition
-                        if(cellNotAlreadyHit)
-                        {
-                            cellHit aNewCellHit = cellHit(cellIDsCytoplasmSim[i]);
-                            aNewCellHit.AddEnergyDeposition(energyDepsCytoplasmSim[i], volumeTypesCytoplasmSim[i]);
-                            storedCellHits.push_back(aNewCellHit);
+                            // Register a new cell hit, and add energy deposition
+                            if(cellNotAlreadyHit)
+                            {
+                                cellHit aNewCellHit = cellHit(cellIDsCytoplasmSim[i]);
+                                aNewCellHit.AddEnergyDeposition(energyDepsCytoplasmSim[i], volumeTypesCytoplasmSim[i]);
+                                storedCellHits.push_back(aNewCellHit);
+                            }
                         }
                     }
                 }
+
             }
 
 
             // Break loop if number of decays have been reached
-            if(numberDecays212PbInCytoplasmTotalTime_counter >= numberDecays212PbInCytoplasmTotalTime)
+            if(numberDecays212PbInCytoplasm24h_counter >= numberDecays212PbInCytoplasmTotalTime)
             {
                 break;
             }
@@ -680,9 +707,9 @@ void mainAnalysisCode()
     int numberIterations = 1;
 
     //------------------–----------
-    // Creating "average energy deposition hisograms"
-    energyDepositionHistograms Hist_A5_C4_2 = makeHistograms(decays_A5_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 5kBq finished" << std::endl;
+    // // Creating "average energy deposition hisograms"
+    // energyDepositionHistograms Hist_A5_C4_2 = makeHistograms(decays_A5_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 5kBq finished" << std::endl;
     // energyDepositionHistograms Hist_A10_C4_2 = makeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 10kBq finished" << std::endl;
     // energyDepositionHistograms Hist_A25_C4_2 = makeHistograms(decays_A25_C4_2, numberIterations, volumeRatio, numberCells);
@@ -693,11 +720,11 @@ void mainAnalysisCode()
     // std::cout << "Activity 75kBq finished" << std::endl;
     // energyDepositionHistograms Hist_A100_C4_2 = makeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 100kBq finished" << std::endl;
-    // energyDepositionHistograms Hist_A150_C4_2 = makeHistograms(decays_A150_C4_2, numberIterations, volumeRatio, numberCells);
-    // std::cout << "Activity 150kBq finished" << std::endl;
+    energyDepositionHistograms Hist_A150_C4_2 = makeHistograms(decays_A150_C4_2, numberIterations, volumeRatio, numberCells);
+    std::cout << "Activity 150kBq finished" << std::endl;
 
 
-    double integral = Hist_A5_C4_2.GetEnergyDepNucleusHist()->Integral();
+    double integral = Hist_A150_C4_2.GetEnergyDepNucleusHist()->Integral();
     std::cout << "integral:" << integral << std::endl;
 
     //------------------–----------
@@ -707,7 +734,7 @@ void mainAnalysisCode()
 
     //------------------–----------
     // Writing histograms to file
-    Hist_A5_C4_2.WriteHistogramsToFile();
+    Hist_A150_C4_2.WriteHistogramsToFile();
     // Hist_A10_C4_2.WriteHistogramsToFile();
     // Hist_A25_C4_2.WriteHistogramsToFile();
     // Hist_A50_C4_2.WriteHistogramsToFile();
