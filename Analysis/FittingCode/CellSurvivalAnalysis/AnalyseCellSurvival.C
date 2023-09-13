@@ -61,85 +61,58 @@ void AnalyseCellSurvival()
     //------------------------------------------------------------------------------------------------
     //      Here, you shall read in the different histograms of energy depositions.
     //      These histograms are produced from your analysis of your GEANT4 simulation
-    TFile *inputFile = new TFile("../../outputMainAnalysisCode.root", "READ");
-
+    TFile *inputFile_5kBq = new TFile("../../outputMainAnalysisCode_5kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_5kBq_Nucleus = nullptr;
+    inputFile_5kBq->GetObject("hEnergyDeps_212Pb_C4-2_5kBq_Nucleus", hEnergyDeps_212Pb_C4_2_5kBq_Nucleus);
+    hEnergyDeps_212Pb_C4_2_5kBq_Nucleus->SetDirectory(0);
+    inputFile_5kBq->Close();
+
+    TFile *inputFile_10kBq = new TFile("../../outputMainAnalysisCode_10kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_10kBq_Nucleus = nullptr;
+    inputFile_10kBq->GetObject("hEnergyDeps_212Pb_C4-2_10kBq_Nucleus", hEnergyDeps_212Pb_C4_2_10kBq_Nucleus);
+    hEnergyDeps_212Pb_C4_2_10kBq_Nucleus->SetDirectory(0);
+    inputFile_10kBq->Close();
+
+    TFile *inputFile_25kBq = new TFile("../../outputMainAnalysisCode_25kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_25kBq_Nucleus = nullptr;
+    inputFile_25kBq->GetObject("hEnergyDeps_212Pb_C4-2_25kBq_Nucleus", hEnergyDeps_212Pb_C4_2_25kBq_Nucleus);
+    hEnergyDeps_212Pb_C4_2_25kBq_Nucleus->SetDirectory(0);
+    inputFile_25kBq->Close();
+
+    TFile *inputFile_50kBq = new TFile("../../outputMainAnalysisCode_50kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_50kBq_Nucleus = nullptr;
+    inputFile_50kBq->GetObject("hEnergyDeps_212Pb_C4-2_50kBq_Nucleus", hEnergyDeps_212Pb_C4_2_50kBq_Nucleus);
+    hEnergyDeps_212Pb_C4_2_50kBq_Nucleus->SetDirectory(0);
+    inputFile_50kBq->Close();
+
+    TFile *inputFile_75kBq = new TFile("../../outputMainAnalysisCode_75kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_75kBq_Nucleus = nullptr;
+    inputFile_75kBq->GetObject("hEnergyDeps_212Pb_C4-2_75kBq_Nucleus", hEnergyDeps_212Pb_C4_2_75kBq_Nucleus);
+    hEnergyDeps_212Pb_C4_2_75kBq_Nucleus->SetDirectory(0);
+    inputFile_75kBq->Close();
+
+    TFile *inputFile_100kBq = new TFile("../../outputMainAnalysisCode_100kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_100kBq_Nucleus = nullptr;
+    inputFile_100kBq->GetObject("hEnergyDeps_212Pb_C4-2_100kBq_Nucleus", hEnergyDeps_212Pb_C4_2_100kBq_Nucleus);
+    hEnergyDeps_212Pb_C4_2_100kBq_Nucleus->SetDirectory(0);
+    inputFile_100kBq->Close();
+
+    TFile *inputFile_150kBq = new TFile("../../outputMainAnalysisCode_150kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_150kBq_Nucleus = nullptr;
-
-
-    inputFile->GetObject("hEnergyDeps_212Pb_C4-2_5kBq_Nucleus", hEnergyDeps_212Pb_C4_2_5kBq_Nucleus);
-    inputFile->GetObject("hEnergyDeps_212Pb_C4-2_10kBq_Nucleus", hEnergyDeps_212Pb_C4_2_10kBq_Nucleus);
-    inputFile->GetObject("hEnergyDeps_212Pb_C4-2_25kBq_Nucleus", hEnergyDeps_212Pb_C4_2_25kBq_Nucleus);
-    inputFile->GetObject("hEnergyDeps_212Pb_C4-2_50kBq_Nucleus", hEnergyDeps_212Pb_C4_2_50kBq_Nucleus);
-    inputFile->GetObject("hEnergyDeps_212Pb_C4-2_75kBq_Nucleus", hEnergyDeps_212Pb_C4_2_75kBq_Nucleus);
-    inputFile->GetObject("hEnergyDeps_212Pb_C4-2_100kBq_Nucleus", hEnergyDeps_212Pb_C4_2_100kBq_Nucleus);
-    inputFile->GetObject("hEnergyDeps_212Pb_C4-2_150kBq_Nucleus", hEnergyDeps_212Pb_C4_2_150kBq_Nucleus);
+    inputFile_150kBq->GetObject("hEnergyDeps_212Pb_C4-2_150kBq_Nucleus", hEnergyDeps_212Pb_C4_2_150kBq_Nucleus);
+    hEnergyDeps_212Pb_C4_2_150kBq_Nucleus->SetDirectory(0);
+    inputFile_150kBq->Close();
 
     auto hEnergyDeps_212Pb_C4_2_0kBq_Nucleus = (TH1D*)hEnergyDeps_212Pb_C4_2_5kBq_Nucleus->Clone();
     hEnergyDeps_212Pb_C4_2_0kBq_Nucleus->Reset();
     hEnergyDeps_212Pb_C4_2_0kBq_Nucleus->SetName("hEnergyDeps_212Pb_C4-2_0kBq_Nucleus");
 
-    hEnergyDeps_212Pb_C4_2_0kBq_Nucleus->SetDirectory(0);
-    hEnergyDeps_212Pb_C4_2_5kBq_Nucleus->SetDirectory(0);
-    hEnergyDeps_212Pb_C4_2_10kBq_Nucleus->SetDirectory(0);
-    hEnergyDeps_212Pb_C4_2_25kBq_Nucleus->SetDirectory(0);
-    hEnergyDeps_212Pb_C4_2_50kBq_Nucleus->SetDirectory(0);
-    hEnergyDeps_212Pb_C4_2_75kBq_Nucleus->SetDirectory(0);
-    hEnergyDeps_212Pb_C4_2_100kBq_Nucleus->SetDirectory(0);
-    hEnergyDeps_212Pb_C4_2_150kBq_Nucleus->SetDirectory(0);
-
-    inputFile->Close();
 
     //------------------------------------------------------------------------------------------------
     //      This is just to make some dummy histograms for different activities
     //      You will not need this block of code when you have the histograms for each activity.
 
-    // hEnergyDeps->SetBinContent(1, 0.0);
-    // hEnergyDeps->Scale(1.0/15000.0);
-
-    // double integral = hEnergyDeps->Integral();
-    // std::cout << "integral: " << integral << std::endl;
-
-    // double globalScaling_histograms = 9.5e+01/2.3/100.0; // This is an arbitrary scaling factor so that for 150 kBq, almost all cells are hit
-
     std::vector<std::tuple<double, TH1D*>> vec_activities_histograms;
-
-    // auto hEnergyDeps_0kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_0kBq->Reset();
-    // hEnergyDeps_0kBq->SetName("hEnergyDeps_0kBq");
-
-    // auto hEnergyDeps_5kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_5kBq->Scale(globalScaling_histograms*5.0/10.0);
-    // hEnergyDeps_5kBq->SetName("hEnergyDeps_5kBq");
-
-    // auto hEnergyDeps_10kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_10kBq->Scale(globalScaling_histograms*10.0/10.0);
-    // hEnergyDeps_10kBq->SetName("hEnergyDeps_10kBq");
-
-    // auto hEnergyDeps_25kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_25kBq->Scale(globalScaling_histograms*25.0/10.0);
-    // hEnergyDeps_25kBq->SetName("hEnergyDeps_25kBq");
-
-    // auto hEnergyDeps_50kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_50kBq->Scale(globalScaling_histograms*50.0/10.0);
-    // hEnergyDeps_50kBq->SetName("hEnergyDeps_50kBq");
-
-    // auto hEnergyDeps_75kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_75kBq->Scale(globalScaling_histograms*75.0/10.0);
-    // hEnergyDeps_75kBq->SetName("hEnergyDeps_75kBq");
-
-    // auto hEnergyDeps_100kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_100kBq->Scale(globalScaling_histograms*100.0/10.0);
-    // hEnergyDeps_100kBq->SetName("hEnergyDeps_100kBq");
-
-    // auto hEnergyDeps_150kBq = (TH1D*)hEnergyDeps->Clone();
-    // hEnergyDeps_150kBq->Scale(globalScaling_histograms*150.0/10.0);
-    // hEnergyDeps_150kBq->SetName("hEnergyDeps_150kBq");
 
     vec_activities_histograms.push_back(std::make_tuple(0.0, hEnergyDeps_212Pb_C4_2_0kBq_Nucleus));
     vec_activities_histograms.push_back(std::make_tuple(5.0, hEnergyDeps_212Pb_C4_2_5kBq_Nucleus));
@@ -150,11 +123,6 @@ void AnalyseCellSurvival()
     vec_activities_histograms.push_back(std::make_tuple(100.0, hEnergyDeps_212Pb_C4_2_100kBq_Nucleus));
     vec_activities_histograms.push_back(std::make_tuple(150.0, hEnergyDeps_212Pb_C4_2_150kBq_Nucleus));
 
-    // for(int i=0; i<vec_activities_histograms.size(); i++)
-    // {
-    //     double integral = vec_activities_histograms->Integral();
-    //     std::cout
-    // }
 
     for(auto & entry : vec_activities_histograms)
     {
@@ -261,7 +229,7 @@ void AnalyseCellSurvival()
             }
 
             //------------------------------------------------
-            double cellSurvival = gr_cellSurvivability_vs_activitykBqPerMl.Eval(x[0], 0, "S");
+            double cellSurvival = gr_cellSurvivability_vs_activitykBqPerMl.Eval(x[0], 0, "");
 
             return cellSurvival;
 
