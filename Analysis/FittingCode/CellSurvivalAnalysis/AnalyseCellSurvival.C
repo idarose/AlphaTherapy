@@ -250,6 +250,7 @@ void AnalyseCellSurvival()
 
     gr_clonogenicSurvival_C4_2->Write();
     f_cellSurvivalVsDose_C4_2->Write();
+    gr_cellSurvivability_vs_activitykBqPerMl->Write();
 
     for(auto & entry : vec_activities_histograms)
     {
