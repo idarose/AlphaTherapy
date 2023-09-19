@@ -88,7 +88,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 
     //-------------------------------
-    // Distributing radionuclides randomly within the cell tube. There are methods in eventAction and steppingAction that sorts the decays happening in solution from decays happening inside cell
+    // Distributing radionuclides randomly within the cell tube
     if(initialRadionuclide_location==0)
     {
         //------------------------
@@ -141,7 +141,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     }
 
     //-------------------------------
-    // Generating unifmroly distibuted particles inside the cell cytoplasm. Conditions in eventAction and steppingAction discard events where first interaction is in cell nuclei
+    // Generating uniformly distibuted particles inside the cell cytoplasm
     if(initialRadionuclide_location==2)
     {
         G4double radius = std::pow(G4UniformRand(), 1.0/3.0)*(cellCytoplasmRMax);
