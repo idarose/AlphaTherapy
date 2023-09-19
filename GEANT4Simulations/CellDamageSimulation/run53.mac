@@ -1,10 +1,10 @@
 /run/initialize
 /run/printProgress 10000
 /Sim/setSeed 53
-/Sim/setOutputFileName Output_membrane_Thread53.root
+/Sim/setOutputFileName Output_cytoplasm_Thread53.root
 /Sim/SetInitialRadionuclide_Z 82
 /Sim/SetInitialRadionuclide_A 212
 /Sim/SetInitialRadionuclide_excitationEnergy 0.0
 /Sim/DefineInitialRadionuclide
-/Sim/SetInitialRadionuclide_location 1
+/Sim/SetInitialRadionuclide_location 2
 /run/beamOn 20000
