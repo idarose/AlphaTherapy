@@ -104,7 +104,7 @@ void makeRunFiles()
     // SOLUTION
     // int n = 60;
 
-    int initialVolume = 1;
+    int initialVolume = 0;
     int runs = 20000;
 
     for ( int i = 10; i <= 59; ++i )
