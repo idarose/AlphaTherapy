@@ -7,38 +7,12 @@
 void makeRunFiles()
 {
     /*
-    run10.mac
-  run11.mac
-  run12.mac
-  run13.mac
-  run14.mac
-  run15.mac
-  run16.mac
-  run17.mac
-  run18.mac
-  run19.mac
-  run20.mac
-  run21.mac
-  run22.mac
-  run23.mac
-  run24.mac
-  run25.mac
-  run26.mac
-  run27.mac
-  run28.mac
-  run29.mac
-  run30.mac
-  run31.mac
-  run32.mac
-  run33.mac
-  run34.mac
-  run35.mac
-  run36.mac
-  run37.mac
-  run38.mac
-  run39.mac
-  run40.mac
-  run41.mac
+    solution : Submitted batch job 9239362
+
+
+
+
+
 
     /run/initialize
     /run/printProgress 10000
@@ -104,7 +78,7 @@ void makeRunFiles()
     // SOLUTION
     // int n = 60;
 
-    int initialVolume = 0;
+    int initialVolume = 1;
     int runs = 20000;
 
     for ( int i = 10; i <= 59; ++i )
