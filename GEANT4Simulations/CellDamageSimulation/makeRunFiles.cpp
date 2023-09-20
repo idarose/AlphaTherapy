@@ -7,7 +7,9 @@
 void makeRunFiles()
 {
     /*
-    solution : Submitted batch job 9239362
+    solution : Submitted batch job 9239377
+    membrane > Submitted batch job 9239390
+    cytoplasm >
 
 
 
@@ -78,7 +80,7 @@ void makeRunFiles()
     // SOLUTION
     // int n = 60;
 
-    int initialVolume = 1;
+    int initialVolume = 2;
     int runs = 20000;
 
     for ( int i = 10; i <= 59; ++i )
