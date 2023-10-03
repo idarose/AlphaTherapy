@@ -733,9 +733,9 @@ void mainAnalysisCode()
 
     /* Submitted batch job 9373971, 6 runs
 
-    solution 10k : 21 s
-    solution 20k : 21 s
-    membrane 10k : 21 s
+    solution 10k : 41 s
+    solution 20k : 48 s
+    membrane 10k : 46 s
     membrane 20k : 21 s
     cytoplasm 10k : 21 s
     cytoplasm 20k : 21 s
