@@ -731,14 +731,14 @@ void mainAnalysisCode()
     */
 
 
-    /* Submitted batch job 9373820, 6 runs
+    /* Submitted batch job 9373971, 6 runs
 
-    solution 10k : 5 s
-    solution 20k :
-    membrane 10k :
-    membrane 20k :
-    cytoplasm 10k :
-    cytoplasm 20k :
+    solution 10k : 21 s
+    solution 20k : 21 s
+    membrane 10k : 21 s
+    membrane 20k : 21 s
+    cytoplasm 10k : 21 s
+    cytoplasm 20k : 21 s
     */
 
     // std::cout << "Solution: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98 <<  " Time using 50 jobs : " << 10.0*(decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98)*(60.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours" <<  std::endl;
