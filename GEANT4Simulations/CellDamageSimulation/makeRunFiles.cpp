@@ -8,8 +8,8 @@ void makeRunFiles()
 {
     /*
     solution : Submitted batch job 9239377
-    membrane > Submitted batch job 9239390
-    cytoplasm >
+    membrane : Submitted batch job 9239390
+    cytoplasm : Submitted batch job 9239395
 
 
 

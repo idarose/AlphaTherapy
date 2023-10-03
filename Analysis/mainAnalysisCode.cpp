@@ -724,17 +724,27 @@ void mainAnalysisCode()
 
     std::cout << "150kBq - For 10 iterations need number of events :" << std::endl;
 
+    /*
+    solution : Submitted batch job 9239377
+    membrane : Submitted batch job 9239390
+    cytoplasm : Submitted batch job 9239395
+    */
 
     // std::cout << "Solution: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98 <<  " Time using 50 jobs : " << 10.0*(decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98)*(60.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours" <<  std::endl;
-    std::cout << "Solution: " << 1000000.0 <<  " Time using 50 jobs : " << 1000000.0*(60.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours" <<  std::endl;
-
+    std::cout << "Solution: 20 000" <<  " Time using 1 job : " << 20000.0*(60.0/10000.0) << " seconds" <<  std::endl;
+    // = 120 seconds
+    // From slurm : 38.0 s
 
     // std::cout << "Membrane: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime() << " Time using 50 jobs :" << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime()*(52.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours"  << std::endl;
-    std::cout << "Membrane: " << 1000000.0 <<  " Time using 50 jobs : " << 1000000.0*(52.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours" <<  std::endl;
+    std::cout << "Membrane: 20 000" << " Time using 1 job : " << 20000.0*(52.0/10000.0) << " seconds" <<  std::endl;
+    // = 104 seconds
+    // From slurm 17.0 s
 
     // std::cout << "Cytoplasm: " << (10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/0.97) << " Time using 50 jobs :" << (10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/0.97)*(45.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours"  << std::endl;
 
-    std::cout << "Membrane: " << 1000000.0 <<  " Time using 50 jobs : " << 1000000.0*(45.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours" <<  std::endl;
+    std::cout << "Cytoplasm: 20 000" <<  " Time using 1 job : " << 20000.0*(45.0/10000.0) << " seconds" <<  std::endl;
+    // = 90 seconds
+    // From slurm 19.0 s
 
     // std::cout << "In total: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour() + 0.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime() + 10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime() << std::endl;
 
