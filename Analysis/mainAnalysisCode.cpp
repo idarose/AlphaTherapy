@@ -730,6 +730,17 @@ void mainAnalysisCode()
     cytoplasm : Submitted batch job 9239395
     */
 
+
+    /* Submitted batch job 9373820, 6 runs
+
+    solution 10k : 5 s
+    solution 20k :
+    membrane 10k :
+    membrane 20k :
+    cytoplasm 10k :
+    cytoplasm 20k :
+    */
+
     // std::cout << "Solution: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98 <<  " Time using 50 jobs : " << 10.0*(decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98)*(60.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours" <<  std::endl;
     std::cout << "Solution: 20 000" <<  " Time using 1 job : " << 20000.0*(60.0/10000.0) << " seconds" <<  std::endl;
     // = 120 seconds
@@ -759,10 +770,11 @@ void mainAnalysisCode()
     Membrane: 1e+06 Time using 50 jobs : 0.025 hours
     */
 
+    /*
 
     int numberIterations = 1;
 
-    /*
+
     // ------------------–----------
     // Creating "average energy deposition hisograms"
     EnergyDepositionHistograms Hist_A5_C4_2 = MakeHistograms(decays_A5_C4_2, numberIterations, volumeRatio, numberCells);
@@ -798,7 +810,7 @@ void mainAnalysisCode()
     //------------------–----------
     outputMainAnalysis->Write();
     outputMainAnalysis->Close();
-    */
+
 
 
 
@@ -810,7 +822,7 @@ void mainAnalysisCode()
     // outputMainAnalysis_150kBq->Write();
     // outputMainAnalysis_150kBq->Close();
 
-
+    */
 
 }
 
