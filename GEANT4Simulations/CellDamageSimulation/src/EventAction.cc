@@ -1,5 +1,6 @@
 #include "EventAction.hh"
 #include "RunAction.hh"
+#include "PrimaryGeneratorAction.hh"
 
 #include "G4AnalysisManager.hh"
 #include "G4RunManager.hh"
@@ -11,7 +12,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction()
+EventAction::EventAction(PrimaryGeneratorAction* primaryGeneratorAction) : fPrimaryGeneratorAction(primaryGeneratorAction)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -44,8 +45,16 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
-    // Adding row
-    analysisManager->AddNtupleRow();
+
+    // If simulating decays in solution, only store decays happening within first two hours
+    if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==0)
+    {
+        if(firstInteractionTimeVec[0]/3600. < 2.0)
+        {
+            // Adding row
+            analysisManager->AddNtupleRow();
+        }
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

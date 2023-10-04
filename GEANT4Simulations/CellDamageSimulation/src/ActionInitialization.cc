@@ -23,16 +23,18 @@ ActionInitialization::~ActionInitialization()
 
 void ActionInitialization::BuildForMaster() const
 {
-  auto eventAction = new EventAction;
-  SetUserAction(new RunAction(eventAction));
+    auto primaryGeneratorAction = new PrimaryGeneratorAction(fDetConstruction);
+    auto eventAction = new EventAction(primaryGeneratorAction);
+    SetUserAction(new RunAction(eventAction));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void ActionInitialization::Build() const
 {
-    SetUserAction(new PrimaryGeneratorAction(fDetConstruction));
-    auto eventAction = new EventAction;
+    auto primaryGeneratorAction = new PrimaryGeneratorAction(fDetConstruction);
+    SetUserAction(primaryGeneratorAction);
+    auto eventAction = new EventAction(primaryGeneratorAction);
     SetUserAction(new RunAction(eventAction));
     SetUserAction(eventAction);
     SetUserAction(new SteppingAction(fDetConstruction,eventAction));

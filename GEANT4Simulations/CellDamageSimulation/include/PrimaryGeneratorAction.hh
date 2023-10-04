@@ -32,6 +32,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         void SetInitialRadionuclide_location(G4int value);
         void DefineInitialRadionuclide();
 
+        int GetInitialRadionuclide_location(){return initialRadionuclide_location;};
+
         G4int       initialRadionuclide_Z;
         G4int       initialRadionuclide_A;
         G4double    initialRadionuclide_excitationEnergy;

@@ -722,38 +722,32 @@ void mainAnalysisCode()
     decays_A150kBq_C4_2.LoadDataFromMathematicaCalculations("../Mathematica/Output");
 
 
-    std::cout << "150kBq - For 10 iterations need number of events :" << std::endl;
+    // std::cout << "150kBq - For 10 iterations need number of events :" << std::endl;
+
+
 
     /*
-    solution : Submitted batch job 9239377
-    membrane : Submitted batch job 9239390
-    cytoplasm : Submitted batch job 9239395
+    solution 10k : 41 s, 100k : 69 s
+    solution 20k : 48 s, 200k : 124 s
+    membrane 10k : 46 s, 100k : 96 s
+    membrane 20k : 54 s, 200k : 169 s
+    cytoplasm 10k : 48 s, 100k : 91 s
+    cytoplasm 20k : 53 s, 200k : 223 s
     */
 
-
-    /* Submitted batch job 9373971, 6 runs
-
-    solution 10k : 41 s
-    solution 20k : 48 s
-    membrane 10k : 46 s
-    membrane 20k : 21 s
-    cytoplasm 10k : 21 s
-    cytoplasm 20k : 21 s
-    */
-
-    // std::cout << "Solution: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98 <<  " Time using 50 jobs : " << 10.0*(decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98)*(60.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours" <<  std::endl;
-    std::cout << "Solution: 20 000" <<  " Time using 1 job : " << 20000.0*(60.0/10000.0) << " seconds" <<  std::endl;
+    std::cout << "Solution: " << decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98 << std::endl;
+    // std::cout << "Solution: 20 000" <<  " Time using 1 job : " << 20000.0*(60.0/10000.0) << " seconds" <<  std::endl;
     // = 120 seconds
     // From slurm : 38.0 s
 
     // std::cout << "Membrane: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime() << " Time using 50 jobs :" << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime()*(52.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours"  << std::endl;
-    std::cout << "Membrane: 20 000" << " Time using 1 job : " << 20000.0*(52.0/10000.0) << " seconds" <<  std::endl;
+    // std::cout << "Membrane: 20 000" << " Time using 1 job : " << 20000.0*(52.0/10000.0) << " seconds" <<  std::endl;
     // = 104 seconds
     // From slurm 17.0 s
 
     // std::cout << "Cytoplasm: " << (10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/0.97) << " Time using 50 jobs :" << (10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/0.97)*(45.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours"  << std::endl;
 
-    std::cout << "Cytoplasm: 20 000" <<  " Time using 1 job : " << 20000.0*(45.0/10000.0) << " seconds" <<  std::endl;
+    // std::cout << "Cytoplasm: 20 000" <<  " Time using 1 job : " << 20000.0*(45.0/10000.0) << " seconds" <<  std::endl;
     // = 90 seconds
     // From slurm 19.0 s
 
