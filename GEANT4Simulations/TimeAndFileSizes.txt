@@ -1,0 +1,28 @@
+TIME USED FOR CALCULATIONS USING SUPERCOMPUTER SAGA, AND THE CORRESPONING FILE SIZES
+
+
+
+
+---------- 200 000 number of events -------------
+
+-- Filesizes --
+Solution : 207 MB
+Membrane : 1.1 GB
+Cytoplasm : 1.1 GB
+
+-- Timing --
+Solution : 124 s
+Membrane : 169 s
+Cytoplasm : 223 s
+
+
+
+
+---------- General Timing information -------------
+solution 10k : 41 s, 100k : 69 s
+solution 20k : 48 s, 200k : 124 s
+membrane 10k : 46 s, 100k : 96 s
+membrane 20k : 54 s, 200k : 169 s
+cytoplasm 10k : 48 s, 100k : 91 s
+cytoplasm 20k : 53 s, 200k : 223 s
+
