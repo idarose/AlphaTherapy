@@ -6,7 +6,7 @@
 #SBATCH --time=0-01:00:00
 #SBATCH --mem-per-cpu=2000
 #SBATCH --ntasks=1 --cpus-per-task=40
-#SBATCH --array=1-6
+#SBATCH --array=1-3
 
 # export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6"
 # export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6_212Pb_212Bi"
@@ -21,7 +21,7 @@ EXECUTABLE=exampleB4a
 
 OUTPUTFILE=$SLURM_ARRAY_TASK_ID
 #OUTPUTFILE=Sim$SLURM_ARRAY_TASK_ID
-OUTPUTFILE="${OUTPUTFILE}_TerminalOutput.txt"
+OUTPUTFILE="TerminalOutput_${OUTPUTFILE}.txt"
 
 MACRO=run$SLURM_ARRAY_TASK_ID
 MACRO="${MACRO}.mac"
