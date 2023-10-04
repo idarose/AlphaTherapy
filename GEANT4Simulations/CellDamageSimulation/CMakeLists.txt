@@ -51,59 +51,6 @@ set(EXAMPLEB4A_SCRIPTS
   run1.mac
   run2.mac
   run3.mac
-  run4.mac
-  run5.mac
-  run6.mac
-  run10.mac
-  run11.mac
-  run12.mac
-  run13.mac
-  run14.mac
-  run15.mac
-  run16.mac
-  run17.mac
-  run18.mac
-  run19.mac
-  run20.mac
-  run21.mac
-  run22.mac
-  run23.mac
-  run24.mac
-  run25.mac
-  run26.mac
-  run27.mac
-  run28.mac
-  run29.mac
-  run30.mac
-  run31.mac
-  run32.mac
-  run33.mac
-  run34.mac
-  run35.mac
-  run36.mac
-  run37.mac
-  run38.mac
-  run39.mac
-  run40.mac
-  run41.mac
-  run42.mac
-  run43.mac
-  run44.mac
-  run45.mac
-  run46.mac
-  run47.mac
-  run48.mac
-  run49.mac
-  run50.mac
-  run51.mac
-  run52.mac
-  run53.mac
-  run54.mac
-  run55.mac
-  run56.mac
-  run57.mac
-  run58.mac
-  run59.mac
   vis.mac
   jobScript.sh
   )
