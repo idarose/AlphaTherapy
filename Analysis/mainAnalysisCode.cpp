@@ -336,83 +336,80 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
     double EMax = 20.0;
 
     //------------------–----------
-    // Making energy deposition histogram instance
+    // Generating empty histograms
     EnergyDepositionHistograms energyDepHistograms = EnergyDepositionHistograms(NBins, EMin, EMax);
     energyDepHistograms.GenerateEmptyHistograms(decayDynamicsInstance);
 
 
 
     //------------------–----------
-    // Opening TTree files and creating TTreeReaders
-
-    // Reader for solution simulation
-    // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
-    std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/Output_212Pb_C4_2_Solution.root", "READ"));
-    auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
-    TTreeReader myReaderSolutionSim(treeSolutionSim);
-
-    // Reader for membrane simulation
-    // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Membrane.root", "READ"));
-    std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/B4aMembrane-build/Output_212Pb_C4_2_Membrane.root", "READ"));
-    auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
-    TTreeReader myReaderMembraneSim(treeMembraneSim);
-
-        // Reader for cytoplasm simulation
-    // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
-    std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/B4aCytoplasm-build/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
-    auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
-    TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
-
-
-    //------------------–----------
-    // Accessing brances of tree
-
-    // Solution
-    TTreeReaderArray<double> energyDepsSolutionSim(myReaderSolutionSim, "EnergyDeps");
-    TTreeReaderArray<int> volumeTypesSolutionSim(myReaderSolutionSim, "VolumeTypes");
-    TTreeReaderArray<int> cellIDsSolutionSim(myReaderSolutionSim, "CellIDs");
-    TTreeReaderArray<double> kineticEnergySolutionSim(myReaderSolutionSim, "KineticEnergy");
-    TTreeReaderArray<int> particleTypeSolutionSim(myReaderSolutionSim, "ParticleType");
-    TTreeReaderArray<double> interactionTimeSolutionSim(myReaderSolutionSim, "InteractionTime");
-    TTreeReaderArray<double> firstInteractionTimeSolutionSim(myReaderSolutionSim, "FirstInteractionTime");
-    TTreeReaderArray<int> firstInteractionVolumeSolutionSim(myReaderSolutionSim, "FirstInteractionVolume");
-
-    // Membrane
-    TTreeReaderArray<double> energyDepsMembraneSim(myReaderMembraneSim, "EnergyDeps");
-    TTreeReaderArray<int> volumeTypesMembraneSim(myReaderMembraneSim, "VolumeTypes");
-    TTreeReaderArray<int> cellIDsMembraneSim(myReaderMembraneSim, "CellIDs");
-    TTreeReaderArray<double> kineticEnergyMembraneSim(myReaderMembraneSim, "KineticEnergy");
-    TTreeReaderArray<int> particleTypeMembraneSim(myReaderMembraneSim, "ParticleType");
-    TTreeReaderArray<double> interactionTimeMembraneSim(myReaderMembraneSim, "InteractionTime");
-    TTreeReaderArray<double> firstInteractionTimeMembraneSim(myReaderSolutionSim, "FirstInteractionTime");
-    TTreeReaderArray<int> firstInteractionVolumeMembraneSim(myReaderSolutionSim, "FirstInteractionVolume");
-
-
-    // Cytoplasm
-    TTreeReaderArray<double> energyDepsCytoplasmSim(myReaderCytoplasmSim, "EnergyDeps");
-    TTreeReaderArray<int> volumeTypesCytoplasmSim(myReaderCytoplasmSim, "VolumeTypes");
-    TTreeReaderArray<int> cellIDsCytoplasmSim(myReaderCytoplasmSim, "CellIDs");
-    TTreeReaderArray<double> kineticEnergyCytoplasmSim(myReaderCytoplasmSim, "KineticEnergy");
-    TTreeReaderArray<int> particleTypeCytoplasmSim(myReaderCytoplasmSim, "ParticleType");
-    TTreeReaderArray<double> interactionTimeCytoplasmSim(myReaderCytoplasmSim, "InteractionTime");
-    TTreeReaderArray<double> firstInteractionTimeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionTime");
-    TTreeReaderArray<int> firstInteractionVolumeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionVolume");
-
-
-    double entries = myReaderSolutionSim.GetEntries();
-
-    double neededEventsSol = numberDecays212PbInSolutionFirstHour*2.8/0.98;
-    double neededEventsCyt = numberDecays212PbInCytoplasmTotalTime*1/0.97;
-    // std::cout << "Solution : Activity " << decayDynamicsInstance.GetActivity() << " Needed Events = " << neededEventsSol << std::endl;
-    // std::cout << "Cytoplasm : Activity " << decayDynamicsInstance.GetActivity() << " Needed Events = " << neededEventsCyt << std::endl;
-
-    // std::cout << "Activity : " << decayDynamicsInstance.GetActivity() << " Decays in solution " << numberDecays212PbInSolutionFirstHour << std::endl;
-
-    //------------------–----------
     //  Function for filling histograms
-    auto FillHistograms = [&]()
+    auto FillHistograms = [&](std::string filepathSolutionSim_i, std::string filepathMembraneSim_i, std::string filepathCytoplasmSim_i)
     {
 
+
+        //------------------–----------
+        // Opening TTree files and creating TTreeReaders
+
+        // Reader for solution simulation
+        // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
+        // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/Output_212Pb_C4_2_Solution.root", "READ"));
+        std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(filepathSolutionSim_i.c_str(), "READ"));
+        auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
+        TTreeReader myReaderSolutionSim(treeSolutionSim);
+
+        // Reader for membrane simulation
+        // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Membrane.root", "READ"));
+        // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open("../GEANT4Simulations/B4aMembrane-build/Output_212Pb_C4_2_Membrane.root", "READ"));
+        std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
+        auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
+        TTreeReader myReaderMembraneSim(treeMembraneSim);
+
+            // Reader for cytoplasm simulation
+        // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
+        // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open("../GEANT4Simulations/B4aCytoplasm-build/Output_212Pb_C4_2_Cytoplasm.root", "READ"));
+        std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
+        auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
+        TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
+
+
+        //------------------–----------
+        // Accessing brances of tree
+
+        // Solution
+        TTreeReaderArray<double> energyDepsSolutionSim(myReaderSolutionSim, "EnergyDeps");
+        TTreeReaderArray<int> volumeTypesSolutionSim(myReaderSolutionSim, "VolumeTypes");
+        TTreeReaderArray<int> cellIDsSolutionSim(myReaderSolutionSim, "CellIDs");
+        TTreeReaderArray<double> kineticEnergySolutionSim(myReaderSolutionSim, "KineticEnergy");
+        TTreeReaderArray<int> particleTypeSolutionSim(myReaderSolutionSim, "ParticleType");
+        TTreeReaderArray<double> interactionTimeSolutionSim(myReaderSolutionSim, "InteractionTime");
+        TTreeReaderArray<double> firstInteractionTimeSolutionSim(myReaderSolutionSim, "FirstInteractionTime");
+        TTreeReaderArray<int> firstInteractionVolumeSolutionSim(myReaderSolutionSim, "FirstInteractionVolume");
+
+        // Membrane
+        TTreeReaderArray<double> energyDepsMembraneSim(myReaderMembraneSim, "EnergyDeps");
+        TTreeReaderArray<int> volumeTypesMembraneSim(myReaderMembraneSim, "VolumeTypes");
+        TTreeReaderArray<int> cellIDsMembraneSim(myReaderMembraneSim, "CellIDs");
+        TTreeReaderArray<double> kineticEnergyMembraneSim(myReaderMembraneSim, "KineticEnergy");
+        TTreeReaderArray<int> particleTypeMembraneSim(myReaderMembraneSim, "ParticleType");
+        TTreeReaderArray<double> interactionTimeMembraneSim(myReaderMembraneSim, "InteractionTime");
+        TTreeReaderArray<double> firstInteractionTimeMembraneSim(myReaderSolutionSim, "FirstInteractionTime");
+        TTreeReaderArray<int> firstInteractionVolumeMembraneSim(myReaderSolutionSim, "FirstInteractionVolume");
+
+
+        // Cytoplasm
+        TTreeReaderArray<double> energyDepsCytoplasmSim(myReaderCytoplasmSim, "EnergyDeps");
+        TTreeReaderArray<int> volumeTypesCytoplasmSim(myReaderCytoplasmSim, "VolumeTypes");
+        TTreeReaderArray<int> cellIDsCytoplasmSim(myReaderCytoplasmSim, "CellIDs");
+        TTreeReaderArray<double> kineticEnergyCytoplasmSim(myReaderCytoplasmSim, "KineticEnergy");
+        TTreeReaderArray<int> particleTypeCytoplasmSim(myReaderCytoplasmSim, "ParticleType");
+        TTreeReaderArray<double> interactionTimeCytoplasmSim(myReaderCytoplasmSim, "InteractionTime");
+        TTreeReaderArray<double> firstInteractionTimeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionTime");
+        TTreeReaderArray<int> firstInteractionVolumeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionVolume");
+
+
+
+        //------------------–----------
         // Vector to store cell hits
         std::vector<CellHit> storedCellHits;
 
@@ -651,13 +648,20 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
     };
 
 
+    std::string filepathSimulationOutput = "../GEANT4Simulations/CellDamageSimulation-build/";
 
+    std::string filepathSolutionIteration_i;
+    std::string filepathMembraneIteration_i;
+    std::string filepathCytoplasmIteration_i;
 
     //------------------–----------
     // Filling histgrams
     for(int i=0; i<numberIterations; i++)
     {
-        FillHistograms();
+        filepathSolutionIteration_i = filepathSimulationOutput + "Output_Solution_" + std::to_string(i) + ".root";
+        filepathMembraneIteration_i = filepathSimulationOutput + "Output_Membrane_" + std::to_string(i) + ".root";
+        filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Cytoplasm_" + std::to_string(i) + ".root";
+        FillHistograms(filepathSolutionIteration_i, filepathMembraneIteration_i, filepathCytoplasmIteration_i);
     }
 
 
@@ -717,65 +721,39 @@ void mainAnalysisCode()
     cytoplasm 20k : 53 s, 200k : 223 s
     */
 
-    std::cout << "Solution: " << decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/0.98 << std::endl;
-    // std::cout << "Solution: 20 000" <<  " Time using 1 job : " << 20000.0*(60.0/10000.0) << " seconds" <<  std::endl;
-    // = 120 seconds
-    // From slurm : 38.0 s
-
-    // std::cout << "Membrane: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime() << " Time using 50 jobs :" << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime()*(52.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours"  << std::endl;
-    // std::cout << "Membrane: 20 000" << " Time using 1 job : " << 20000.0*(52.0/10000.0) << " seconds" <<  std::endl;
-    // = 104 seconds
-    // From slurm 17.0 s
-
-    // std::cout << "Cytoplasm: " << (10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/0.97) << " Time using 50 jobs :" << (10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/0.97)*(45.0/10000.0)*(1.0/3600.)*(1.0/50.0) << " hours"  << std::endl;
-
-    // std::cout << "Cytoplasm: 20 000" <<  " Time using 1 job : " << 20000.0*(45.0/10000.0) << " seconds" <<  std::endl;
-    // = 90 seconds
-    // From slurm 19.0 s
-
-    // std::cout << "In total: " << 10.0*decays_A150kBq_C4_2.GetNumberDecaysInSolutionFirstHour() + 0.0*decays_A150kBq_C4_2.GetNumberDecaysInMembraneTotalTime() + 10.0*decays_A150kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime() << std::endl;
-
-    // std::cout << "Volume Ratio " << volumeRatio << std::endl;
-    // std::cout << "Decays in 0.2 mL" << decays_A10_C4_2.GetNumberDecaysInSolutionFirstHour() << std::endl;
-    // std::cout << "Decays in cell tube " << decays_A10_C4_2.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
 
 
-    /*
-    Solution: 1e+06 Time using 50 jobs : 0.0333333 hours
-    Membrane: 1e+06 Time using 50 jobs : 0.0288889 hours
-    Membrane: 1e+06 Time using 50 jobs : 0.025 hours
-    */
-
-    /*
 
     int numberIterations = 1;
 
 
     // ------------------–----------
     // Creating "average energy deposition hisograms"
-    EnergyDepositionHistograms Hist_A5_C4_2 = MakeHistograms(decays_A5_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 5kBq finished" << std::endl;
-    EnergyDepositionHistograms Hist_A10_C4_2 = MakeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 10kBq finished" << std::endl;
-    EnergyDepositionHistograms Hist_A25_C4_2 = MakeHistograms(decays_A25_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 25kBq finished" << std::endl;
-    EnergyDepositionHistograms Hist_A50_C4_2 = MakeHistograms(decays_A50_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 50kBq finished" << std::endl;
-    EnergyDepositionHistograms Hist_A75_C4_2 = MakeHistograms(decays_A75_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 75kBq finished" << std::endl;
-    EnergyDepositionHistograms Hist_A100_C4_2 = MakeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 100kBq finished" << std::endl;
-    EnergyDepositionHistograms Hist_A150_C4_2 = MakeHistograms(decays_A150_C4_2, numberIterations, volumeRatio, numberCells);
-    std::cout << "Activity 150kBq finished" << std::endl;
+    EnergyDepositionHistograms Hist_A5_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 5kBq finished" << std::endl;
+    // EnergyDepositionHistograms Hist_A10_C4_2 = MakeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 10kBq finished" << std::endl;
+    // EnergyDepositionHistograms Hist_A25_C4_2 = MakeHistograms(decays_A25_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 25kBq finished" << std::endl;
+    // EnergyDepositionHistograms Hist_A50_C4_2 = MakeHistograms(decays_A50_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 50kBq finished" << std::endl;
+    // EnergyDepositionHistograms Hist_A75_C4_2 = MakeHistograms(decays_A75_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 75kBq finished" << std::endl;
+    // EnergyDepositionHistograms Hist_A100_C4_2 = MakeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 100kBq finished" << std::endl;
+    // EnergyDepositionHistograms Hist_A150_C4_2 = MakeHistograms(decays_A150_C4_2, numberIterations, volumeRatio, numberCells);
+    // std::cout << "Activity 150kBq finished" << std::endl;
 
 
 
     // double integral = Hist_A150_C4_2.GetEnergyDepNucleusHist()->Integral();
     // std::cout << "integral:" << integral << std::endl;
 
+    auto outputMainAnalysis_TestIterationFiles = new TFile("outputMainAnalysis_TestIterationFiles.root", "RECREATE");
+
     //------------------–----------
     // Writing histograms to file
-    Hist_A150_C4_2.WriteHistogramsToFile();
+    Hist_A5_C4_2.WriteHistogramsToFile();
     // Hist_A10_C4_2.WriteHistogramsToFile();
     // Hist_A25_C4_2.WriteHistogramsToFile();
     // Hist_A50_C4_2.WriteHistogramsToFile();
@@ -784,8 +762,8 @@ void mainAnalysisCode()
     // Hist_A150_C4_2.WriteHistogramsToFile();
 
     //------------------–----------
-    outputMainAnalysis->Write();
-    outputMainAnalysis->Close();
+    outputMainAnalysis_TestIterationFiles->Write();
+    outputMainAnalysis_TestIterationFiles->Close();
 
 
 
@@ -798,7 +776,7 @@ void mainAnalysisCode()
     // outputMainAnalysis_150kBq->Write();
     // outputMainAnalysis_150kBq->Close();
 
-    */
+
 
 }
 
