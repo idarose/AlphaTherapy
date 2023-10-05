@@ -279,13 +279,6 @@ void EnergyDepositionHistograms::AddCellHitsToHistograms(CellHit cellHits)
 //------------------–----------
 void EnergyDepositionHistograms::ScaleHistograms(double factor)
 {
-
-
-    // double binCon = hEnergyDepsMembrane->GetBinContent(723);
-    // double error = std::pow(binCon, 1.0/2.0);
-    // std::cout << "Bin content: " << binCon << " Error: " << error << std::endl;
-    // std::cout << "Bin error (%): " << 100.0*error/binCon  << std::endl;
-
     hEnergyDepsMembrane->Scale(factor);
     hEnergyDepsCytoplasm->Scale(factor);
     hEnergyDepsNucleus->Scale(factor);
@@ -293,23 +286,12 @@ void EnergyDepositionHistograms::ScaleHistograms(double factor)
     hEnergyDepsMembraneAndCytoplasm->Scale(factor);
     hEnergyDepsMembraneAndNucleus->Scale(factor);
     hEnergyDepsNucleusAndCytoplasm->Scale(factor);
-
-    // std:: cout << "Scaling factor = " << factor << " Scaling factor * error = " << error*factor << std::endl;
-    // double binCon2 = hEnergyDepsMembrane->GetBinContent(723);
-    // double error2 = hEnergyDepsMembrane->GetBinError(723);
-    // double error2 = std::pow(binCon2, 1.0/2.0);
-    // std::cout << "Bin content: " << binCon2 << " Error: " << error2 << std::endl;
-    // std::cout << "Bin error2 (%): " << 100.0*error2/binCon2 << std::endl;
-
-    // std::cout << "error_scaled / error_Unscaled = " << error2/error << std::endl;
-
 }
 
 //------------------–----------
 void EnergyDepositionHistograms::WriteHistogramsToFile()
 {
-    // outputFile->cd();
-
+    //------------------–----------
     hEnergyDepsMembrane->Write();
     hEnergyDepsCytoplasm->Write();
     hEnergyDepsNucleus->Write();
@@ -320,19 +302,19 @@ void EnergyDepositionHistograms::WriteHistogramsToFile()
 
     //------------------–----------
     hEnergyDepsMembrane->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembrane->GetYaxis()->SetTitle("Hits / Cell");
+    hEnergyDepsMembrane->GetYaxis()->SetTitle("Fraction of Cells hit");
     hEnergyDepsCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCytoplasm->GetYaxis()->SetTitle("Hits / Cell");
+    hEnergyDepsCytoplasm->GetYaxis()->SetTitle("Fraction of Cells hit");
     hEnergyDepsNucleus->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleus->GetYaxis()->SetTitle("Hits / Cell");
+    hEnergyDepsNucleus->GetYaxis()->SetTitle("Fraction of Cells hit");
     hEnergyDepsCellTotal->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCellTotal->GetYaxis()->SetTitle("Hits / Cell");
+    hEnergyDepsCellTotal->GetYaxis()->SetTitle("Fraction of Cells hit");
     hEnergyDepsMembraneAndCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembraneAndCytoplasm->GetYaxis()->SetTitle("Hits / Cell");
+    hEnergyDepsMembraneAndCytoplasm->GetYaxis()->SetTitle("Fraction of Cells hit");
     hEnergyDepsMembraneAndNucleus->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembraneAndNucleus->GetYaxis()->SetTitle("Hits / Cell");
+    hEnergyDepsMembraneAndNucleus->GetYaxis()->SetTitle("Fraction of Cells hit");
     hEnergyDepsNucleusAndCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleusAndCytoplasm->GetYaxis()->SetTitle("Hits / Cell");
+    hEnergyDepsNucleusAndCytoplasm->GetYaxis()->SetTitle("Fraction of Cells hit");
 
 
 }

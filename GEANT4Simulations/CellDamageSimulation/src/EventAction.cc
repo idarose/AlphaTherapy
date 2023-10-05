@@ -55,6 +55,16 @@ void EventAction::EndOfEventAction(const G4Event* event)
             analysisManager->AddNtupleRow();
         }
     }
+    else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==1)
+    {
+        // Adding row
+        analysisManager->AddNtupleRow();
+    }
+    else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==2)
+    {
+        // Adding row
+        analysisManager->AddNtupleRow();
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
