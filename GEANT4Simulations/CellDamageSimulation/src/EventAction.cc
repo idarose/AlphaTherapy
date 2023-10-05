@@ -58,7 +58,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
     else
     {
         // Adding row
-        analysisManager->AddNtupleRow()
+        analysisManager->AddNtupleRow();
     }
 }
 
