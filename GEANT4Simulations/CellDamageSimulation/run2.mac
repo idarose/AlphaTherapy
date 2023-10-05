@@ -1,6 +1,6 @@
 /run/initialize
 /run/printProgress 10000
-/Sim/setSeed 1
+/Sim/setSeed 2
 /Sim/setOutputFileName Output_Membrane_200k.root
 /Sim/SetInitialRadionuclide_Z 82
 /Sim/SetInitialRadionuclide_A 212
