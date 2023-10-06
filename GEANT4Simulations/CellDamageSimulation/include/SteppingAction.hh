@@ -7,12 +7,13 @@
 
 class DetectorConstruction;
 class EventAction;
+class PrimaryGeneratorAction;
 
 class SteppingAction : public G4UserSteppingAction
 {
 public:
   SteppingAction(DetectorConstruction* detConstruction,
-                 EventAction* eventAction);
+                 EventAction* eventAction, PrimaryGeneratorAction* primaryGeneratorAction);
   ~SteppingAction() override;
 
   void UserSteppingAction(const G4Step* step) override;
@@ -25,6 +26,9 @@ private:
   G4int volumeTypeMembrane = 1;
   G4int volumeTypeCytoplasm = 2;
   G4int volumeTypeNucleus = 3;
+
+
+  PrimaryGeneratorAction* fPrimaryGeneratorAction;
 
   G4int numberCells;
 };

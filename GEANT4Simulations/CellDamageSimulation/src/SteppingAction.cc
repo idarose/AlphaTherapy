@@ -2,6 +2,7 @@
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
 #include "G4SystemOfUnits.hh"
+#include "PrimaryGeneratorAction.hh"
 
 #include "G4Step.hh"
 #include "G4RunManager.hh"
@@ -11,9 +12,9 @@
 
 
 SteppingAction::SteppingAction(DetectorConstruction* detConstruction,
-                               EventAction* eventAction)
+                               EventAction* eventAction, PrimaryGeneratorAction* primaryGeneratorAction)
   : fDetConstruction(detConstruction),
-    fEventAction(eventAction)
+    fEventAction(eventAction), fPrimaryGeneratorAction(primaryGeneratorAction)
 {
     numberCells = fDetConstruction->GetNumberCells();
 }
@@ -31,6 +32,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     //Getting the volume copy number for the interaction
     G4int volumeCopyNumber = step->GetPreStepPoint()->GetTouchableHandle()
       ->GetVolume()->GetCopyNo();
+
+
+    //Getting the interaction time
+    G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
+
 
 
     //------------------------
@@ -66,6 +72,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     fEventAction->AddStepNumber();
 
 
+
+
+    //----------------------------------
     /*
     Cell ID numbers work like this:
 
@@ -76,76 +85,101 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     The cell nuleus has a volume copy number equal to the cell ID plus two times the number of cells.
     */
 
-    //----------------------------------
-    //Checking if the interaction took place in the membrane of the cell
-    if(volumeCopyNumber <= numberCells && volumeCopyNumber>= 1)
-    {
-        //Getting the energy deposited for the interaction, in MeV
-        G4double energyDeposition = step->GetTotalEnergyDeposit()/MeV;
 
-        //Getting the particle type number for the interaction
-        G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
-
-        //Getting the kinetic energy of the particle for the interaction, in MeV
-        G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
-
-        //Getting the interaction time
-        G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
-
-        // Calculating cell ID number
-        G4int cellID = volumeCopyNumber;
-
-
-        // Storing information
-        fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime);
-    }
 
     //----------------------------------
-    //Checking if the interaction took place in the cytoplasm of the cell
-    if(volumeCopyNumber >= (numberCells+1) && volumeCopyNumber <= 2*numberCells)
+    // Lambda function for filling vectors in EventAction with interaction information
+    auto FillVectors = [&]()
     {
-        //Getting the energy deposited for the interaction, in MeV
-        G4double energyDeposition = step->GetTotalEnergyDeposit()/MeV;
+        //----------------------------------
+        //Checking if the interaction took place in the membrane of the cell
+        if(volumeCopyNumber <= numberCells && volumeCopyNumber>= 1)
+        {
+            //Getting the energy deposited for the interaction, in MeV
+            G4double energyDeposition = step->GetTotalEnergyDeposit()/MeV;
 
-        //Getting the particle type number for the interaction
-        G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
+            //Getting the particle type number for the interaction
+            G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
 
-        //Getting the kinetic energy of the particle for the interaction, in MeV
-        G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
+            //Getting the kinetic energy of the particle for the interaction, in MeV
+            G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
 
-        //Getting the interaction time
-        G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
+            // //Getting the interaction time
+            // G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
 
-        // Calculating cell ID number
-        G4int cellID = volumeCopyNumber - numberCells;
+            // Calculating cell ID number
+            G4int cellID = volumeCopyNumber;
 
-        // Storing information
-        fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeCytoplasm, kineticEnergy, particleType, interactionTime);
-    }
+            // Storing information
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime);
+        }
+
+        //----------------------------------
+        //Checking if the interaction took place in the cytoplasm of the cell
+        if(volumeCopyNumber >= (numberCells+1) && volumeCopyNumber <= 2*numberCells)
+        {
+            //Getting the energy deposited for the interaction, in MeV
+            G4double energyDeposition = step->GetTotalEnergyDeposit()/MeV;
+
+            //Getting the particle type number for the interaction
+            G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
+
+            //Getting the kinetic energy of the particle for the interaction, in MeV
+            G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
+
+            // //Getting the interaction time
+            // G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
+
+            // Calculating cell ID number
+            G4int cellID = volumeCopyNumber - numberCells;
+
+            // Storing information
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeCytoplasm, kineticEnergy, particleType, interactionTime);
+        }
+
+        //----------------------------------
+        //Checking if the interaction took place in the nucleus
+        else if(volumeCopyNumber >= (2*numberCells+1) && volumeCopyNumber <= 3*numberCells)
+        {
+            //Getting the energy deposited for the interaction, in MeV
+            G4double energyDeposition = step->GetTotalEnergyDeposit()/MeV;
+
+            //Getting the particle type number for the interaction
+            G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
+
+            //Getting the kinetic energy of the particle for the interaction, in MeV
+            G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
+
+            // //Getting the interaction time
+            // G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
+
+            // Calculating cell ID number
+            G4int cellID = volumeCopyNumber - 2*numberCells;
+
+            // Storing information
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeNucleus, kineticEnergy, particleType, interactionTime);
+        }
+    };
+
+
 
     //----------------------------------
-    //Checking if the interaction took place in the nucleus
-    else if(volumeCopyNumber >= (2*numberCells+1) && volumeCopyNumber <= 3*numberCells)
+    // Filling vectors
+
+    // If initial radionuclide position is in solution, only store interactions taking place
+    // within first hour
+    if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==0)
     {
-        //Getting the energy deposited for the interaction, in MeV
-        G4double energyDeposition = step->GetTotalEnergyDeposit()/MeV;
-
-        //Getting the particle type number for the interaction
-        G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
-
-        //Getting the kinetic energy of the particle for the interaction, in MeV
-        G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
-
-        //Getting the interaction time
-        G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
-
-        // Calculating cell ID number
-        G4int cellID = volumeCopyNumber - 2*numberCells;
-
-        // Storing information
-        fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeNucleus, kineticEnergy, particleType, interactionTime);
+        if(interactionTime/3600. <= 1.0)
+        {
+            FillVectors();
+        }
     }
-
+    // Else, store every interaction
+    else
+    {
+        FillVectors();
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

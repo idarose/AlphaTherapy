@@ -6,13 +6,12 @@
 
 #include <vector>
 
-class PrimaryGeneratorAction;
 
 
 class EventAction : public G4UserEventAction
 {
   public:
-    EventAction(PrimaryGeneratorAction* primaryGeneratorAction);
+    EventAction();
     ~EventAction() override;
 
     void  BeginOfEventAction(const G4Event* event) override;
@@ -53,8 +52,6 @@ class EventAction : public G4UserEventAction
     std::vector<G4double> firstInteractionTimeVec;
     std::vector<G4int> firstInteractionVolumeVec;
 
-
-    PrimaryGeneratorAction* fPrimaryGeneratorAction;
 
 
     G4int stepNumber = 0;
