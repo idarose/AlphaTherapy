@@ -7,4 +7,4 @@
 /Sim/SetInitialRadionuclide_excitationEnergy 0.0
 /Sim/DefineInitialRadionuclide
 /Sim/SetInitialRadionuclide_location 0
-/run/beamOn 385000
+/run/beamOn 200

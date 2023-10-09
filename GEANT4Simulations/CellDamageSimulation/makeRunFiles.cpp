@@ -17,6 +17,8 @@ void GenerateFiles(int initialVolume, int runs)
         int runNumber = i + initialVolume*10;
         ss << prefix << runNumber << ext;
 
+        int seedVal = runNumber + 1;
+
         // open the file. If not c++11 use  ss.str().c_str()  instead
         std::ofstream file( ss.str() );
         if ( !file )

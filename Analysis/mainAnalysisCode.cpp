@@ -354,8 +354,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // Reader for solution simulation
         // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
         // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/Output_212Pb_C4_2_Solution.root", "READ"));
-        // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(filepathSolutionSim_i.c_str(), "READ"));
-        std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/CellDamageSimulation-build/Output_Test_20k.root", "READ"));
+        // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/CellDamageSimulation-build/Output_Test_20k.root", "READ"));
+        std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(filepathSolutionSim_i.c_str(), "READ"));
         auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
         TTreeReader myReaderSolutionSim(treeSolutionSim);
 
@@ -649,7 +649,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
     };
 
 
-    std::string filepathSimulationOutput = "../GEANT4Simulations/CellDamageSimulation-build/";
+    std::string filepathSimulationOutput = "../GEANT4Simulations/OutputFromSaga/";
 
     std::string filepathSolutionIteration_i;
     std::string filepathMembraneIteration_i;
@@ -659,9 +659,9 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
     // Filling histgrams
     for(int i=0; i<numberIterations; i++)
     {
-        filepathSolutionIteration_i = filepathSimulationOutput + "Output_Solution_" + std::to_string(i) + ".root";
-        filepathMembraneIteration_i = filepathSimulationOutput + "Output_Membrane_" + std::to_string(i) + ".root";
-        filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Cytoplasm_" + std::to_string(i) + ".root";
+        filepathSolutionIteration_i = filepathSimulationOutput + "Output_Solution_Thread_" + std::to_string(i) + ".root";
+        filepathMembraneIteration_i = filepathSimulationOutput + "Output_Membrane_Thread_" + std::to_string(i) + ".root";
+        filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
         FillHistograms(filepathSolutionIteration_i, filepathMembraneIteration_i, filepathCytoplasmIteration_i);
     }
 
@@ -686,7 +686,7 @@ void mainAnalysisCode()
     double volumeRatio = volumeCellTube/VolumeSample;
     int numberCells = 1000000;
 
-    std::cout << "Number cells: " << numberCells*volumeRatio << std::endl;
+    // std::cout << "Number cells: " << numberCells*volumeRatio << std::endl;
 
     //------------------–----------
     // Defining decay dynamics
@@ -725,7 +725,7 @@ void mainAnalysisCode()
 
 
 
-    int numberIterations = 0;
+    int numberIterations = 10;
 
 
     // ------------------–----------
@@ -750,7 +750,7 @@ void mainAnalysisCode()
     // double integral = Hist_A150_C4_2.GetEnergyDepNucleusHist()->Integral();
     // std::cout << "integral:" << integral << std::endl;
 
-    auto outputMainAnalysis_TestIterationFiles = new TFile("outputMainAnalysis_TestIterationFiles.root", "RECREATE");
+    auto outputMainAnalysis_Test10Iterations150kBq = new TFile("outputMainAnalysis_Test10Iterations150kBq.root", "RECREATE");
 
     //------------------–----------
     // Writing histograms to file
@@ -763,8 +763,8 @@ void mainAnalysisCode()
     // Hist_A150_C4_2.WriteHistogramsToFile();
 
     //------------------–----------
-    outputMainAnalysis_TestIterationFiles->Write();
-    outputMainAnalysis_TestIterationFiles->Close();
+    outputMainAnalysis_Test10Iterations150kBq->Write();
+    outputMainAnalysis_Test10Iterations150kBq->Close();
 
 
 
