@@ -43,7 +43,7 @@ void GenerateFiles(int initialVolume, int runs)
         }
 
         // write something to the newly created file
-        file << "/run/initialize\n" << "/run/printProgress 10000\n" << "/Sim/setSeed " << runNumber << "\n/Sim/setOutputFileName Output_" << output << "_Thread_" << i << ".root\n" << "/Sim/SetInitialRadionuclide_Z 82\n" << "/Sim/SetInitialRadionuclide_A 212\n" << "/Sim/SetInitialRadionuclide_excitationEnergy 0.0\n" << "/Sim/DefineInitialRadionuclide\n" << "/Sim/SetInitialRadionuclide_location "<< initialVolume <<"\n" << "/run/beamOn " << runs << "\n";
+        file << "/run/initialize\n" << "/run/printProgress 10000\n" << "/Sim/setSeed " << seedVal << "\n/Sim/setOutputFileName Output_" << output << "_Thread_" << i << ".root\n" << "/Sim/SetInitialRadionuclide_Z 82\n" << "/Sim/SetInitialRadionuclide_A 212\n" << "/Sim/SetInitialRadionuclide_excitationEnergy 0.0\n" << "/Sim/DefineInitialRadionuclide\n" << "/Sim/SetInitialRadionuclide_location "<< initialVolume <<"\n" << "/run/beamOn " << runs << "\n";
         if ( !file )
         {
             std::cerr << "Error: failed to write to file " << ss.str() << '\n';
