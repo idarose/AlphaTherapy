@@ -35,36 +35,39 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
 
     //Getting the interaction time
-    G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
-
-
+    G4double interactionTime = step->GetPostStepPoint()->GetGlobalTime()/s;
+    // if(fEventAction->GetStepNumber() < 10)
+    // {
+    // G4cout << "Step : " << fEventAction->GetStepNumber() << " Time : " << interactionTime << G4endl;
+    // }
 
     //------------------------
     // Storing interaction time and volume type of first interaction
     if(fEventAction->GetStepNumber() == 0)
     {
+        // G4cout << interactionTime << G4endl;
         //Checking if the interaction took place in the membrane of the cell
         if(volumeCopyNumber <= numberCells && volumeCopyNumber>= 1)
         {
-            fEventAction->SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s, 1);
+            fEventAction->SetFirstInteractionInfo(interactionTime, 1);
         }
 
         //Checking if the interaction took place in the cytoplasm of the cell
         else if(volumeCopyNumber >= (numberCells+1) && volumeCopyNumber <= 2*numberCells)
         {
-            fEventAction->SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s, 2);
+            fEventAction->SetFirstInteractionInfo(interactionTime, 2);
         }
 
         //Checking if the interaction took place in the nucleus of the cell
         else if(volumeCopyNumber >= (2*numberCells+1) && volumeCopyNumber <= 3*numberCells)
         {
-            fEventAction->SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s, 3);
+            fEventAction->SetFirstInteractionInfo(interactionTime, 3);
         }
 
         // Checking if interaction took place in solution
         else if(volumeCopyNumber == -3)
         {
-            fEventAction->SetFirstInteractionInfo(step->GetPreStepPoint()->GetGlobalTime()/s, 0);
+            fEventAction->SetFirstInteractionInfo(interactionTime, 0);
         }
     }
 

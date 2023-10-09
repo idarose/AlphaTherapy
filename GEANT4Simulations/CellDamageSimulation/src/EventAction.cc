@@ -44,8 +44,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     auto analysisManager = G4AnalysisManager::Instance();
 
+
     // Adding row
     analysisManager->AddNtupleRow();
+
+    // G4cout << firstInteractionTimeVec[0] << G4endl;
 
     // // If simulating decays in solution, only store decays happening within first two hours
     // if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==0)

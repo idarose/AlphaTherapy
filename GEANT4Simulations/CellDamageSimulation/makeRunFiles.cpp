@@ -4,6 +4,52 @@
 #include <sstream>
 #include <iomanip>
 
+
+void GenerateFiles(int initialVolume, int runs)
+{
+    std::string prefix("run");
+
+    std::string ext(".mac");
+
+    for ( int i = 0; i <= 9; ++i )
+    {
+        std::stringstream ss;
+        int runNumber = i + initialVolume*10;
+        ss << prefix << runNumber << ext;
+
+        // open the file. If not c++11 use  ss.str().c_str()  instead
+        std::ofstream file( ss.str() );
+        if ( !file )
+        {
+            std::cerr << "Error: failed to create file " << ss.str() << '\n';
+            break;
+        }
+
+        std:string output;
+
+        if(initialVolume==0)
+        {
+            output = "Solution";
+        }
+        else if(initialVolume==1)
+        {
+            output = "Membrane";
+        }
+        else if(initialVolume==2)
+        {
+            output = "Cytoplasm";
+        }
+
+        // write something to the newly created file
+        file << "/run/initialize\n" << "/run/printProgress 10000\n" << "/Sim/setSeed " << runNumber << "\n/Sim/setOutputFileName Output_" << output << "_Thread_" << i << ".root\n" << "/Sim/SetInitialRadionuclide_Z 82\n" << "/Sim/SetInitialRadionuclide_A 212\n" << "/Sim/SetInitialRadionuclide_excitationEnergy 0.0\n" << "/Sim/DefineInitialRadionuclide\n" << "/Sim/SetInitialRadionuclide_location "<< initialVolume <<"\n" << "/run/beamOn " << runs << "\n";
+        if ( !file )
+        {
+            std::cerr << "Error: failed to write to file " << ss.str() << '\n';
+            break;
+        }
+    }
+}
+
 void makeRunFiles()
 {
     /*
@@ -72,53 +118,8 @@ void makeRunFiles()
 
     */
 
-    std::string prefix("run");
-
-    std::string ext(".mac");
-
-
-    // SOLUTION
-    // int n = 60;
-
-    int initialVolume = 2;
-    int runs = 20000;
-
-    for ( int i = 10; i <= 59; ++i )
-    {
-        std::stringstream ss;
-        ss << prefix << i << ext;
-
-        // open the file. If not c++11 use  ss.str().c_str()  instead
-        std::ofstream file( ss.str() );
-        if ( !file )
-        {
-            std::cerr << "Error: failed to create file " << ss.str() << '\n';
-            break;
-        }
-
-        std:string output;
-
-        if(initialVolume==0)
-        {
-            output = "solution";
-        }
-        else if(initialVolume==1)
-        {
-            output = "membrane";
-        }
-        else if(initialVolume==2)
-        {
-            output = "cytoplasm";
-        }
-
-        // write something to the newly created file
-        file << "/run/initialize\n" << "/run/printProgress 10000\n" << "/Sim/setSeed " << i << "\n/Sim/setOutputFileName Output_" << output << "_Thread" << i << ".root\n" << "/Sim/SetInitialRadionuclide_Z 82\n" << "/Sim/SetInitialRadionuclide_A 212\n" << "/Sim/SetInitialRadionuclide_excitationEnergy 0.0\n" << "/Sim/DefineInitialRadionuclide\n" << "/Sim/SetInitialRadionuclide_location "<< initialVolume <<"\n" << "/run/beamOn " << runs << "\n";
-        if ( !file )
-        {
-            std::cerr << "Error: failed to write to file " << ss.str() << '\n';
-            break;
-        }
-    }
-
+    GenerateFiles(0, 385000);
+    GenerateFiles(1, 71590);
+    GenerateFiles(2, 52000);
 
 }

@@ -48,9 +48,36 @@ set(EXAMPLEB4A_SCRIPTS
   init_vis.mac
   plotHisto.C
   plotNtuple.C
+  run0.mac
   run1.mac
   run2.mac
   run3.mac
+  run4.mac
+  run5.mac
+  run6.mac
+  run7.mac
+  run8.mac
+  run9.mac
+  run10.mac
+  run11.mac
+  run12.mac
+  run13.mac
+  run14.mac
+  run15.mac
+  run16.mac
+  run17.mac
+  run18.mac
+  run19.mac
+  run20.mac
+  run21.mac
+  run22.mac
+  run23.mac
+  run24.mac
+  run25.mac
+  run26.mac
+  run27.mac
+  run28.mac
+  run29.mac
   vis.mac
   jobScript.sh
   )

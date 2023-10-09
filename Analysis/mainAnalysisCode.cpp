@@ -354,7 +354,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // Reader for solution simulation
         // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/OutputFromSaga/Output_212Pb_C4_2_Solution.root", "READ"));
         // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/B4aSolution-build/Output_212Pb_C4_2_Solution.root", "READ"));
-        std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(filepathSolutionSim_i.c_str(), "READ"));
+        // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(filepathSolutionSim_i.c_str(), "READ"));
+        std::shared_ptr<TFile> myFileSolutionSim(TFile::Open("../GEANT4Simulations/CellDamageSimulation-build/Output_Test_20k.root", "READ"));
         auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
         TTreeReader myReaderSolutionSim(treeSolutionSim);
 
@@ -428,6 +429,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             // Checking when and where first interaction occured
             if(firstInteractionVolumeSolutionSim[0]==0)
             {
+
                 if(firstInteractionTimeSolutionSim[0]/3600. < 1.0)
                 {
 
@@ -491,7 +493,6 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                 break;
             }
         }
-
 
 
         //------------------–----------
@@ -724,12 +725,12 @@ void mainAnalysisCode()
 
 
 
-    int numberIterations = 1;
+    int numberIterations = 0;
 
 
     // ------------------–----------
     // Creating "average energy deposition hisograms"
-    EnergyDepositionHistograms Hist_A5_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    // EnergyDepositionHistograms Hist_A5_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 5kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A10_C4_2 = MakeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 10kBq finished" << std::endl;
@@ -741,7 +742,7 @@ void mainAnalysisCode()
     // std::cout << "Activity 75kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A100_C4_2 = MakeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 100kBq finished" << std::endl;
-    // EnergyDepositionHistograms Hist_A150_C4_2 = MakeHistograms(decays_A150_C4_2, numberIterations, volumeRatio, numberCells);
+    EnergyDepositionHistograms Hist_A150_C4_2 = MakeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 150kBq finished" << std::endl;
 
 
@@ -753,7 +754,7 @@ void mainAnalysisCode()
 
     //------------------–----------
     // Writing histograms to file
-    Hist_A5_C4_2.WriteHistogramsToFile();
+    // Hist_A5_C4_2.WriteHistogramsToFile();
     // Hist_A10_C4_2.WriteHistogramsToFile();
     // Hist_A25_C4_2.WriteHistogramsToFile();
     // Hist_A50_C4_2.WriteHistogramsToFile();
