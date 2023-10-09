@@ -180,14 +180,14 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     }
     // If initial position in membrane or cytoplasm, only store interactions taking place
     // within first 48 hours
-    if else(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==1)
+    else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==1)
     {
         if(interactionTime/3600. <= 48.0)
         {
             FillVectors();
         }
     }
-    if else(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==2)
+    else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==2)
     {
         if(interactionTime/3600. <= 48.0)
         {
