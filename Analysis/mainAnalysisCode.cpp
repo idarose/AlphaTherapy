@@ -643,6 +643,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // Looping over all stored cell energy depositions
         for(int i=0; i<storedCellHits.size(); i++)
         {
+
             // Adding energy cell energy depositions to histograms
             energyDepHistograms.AddCellHitsToHistograms(storedCellHits[i]);
         }
@@ -663,6 +664,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         filepathMembraneIteration_i = filepathSimulationOutput + "Output_Membrane_Thread_" + std::to_string(i) + ".root";
         filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
         FillHistograms(filepathSolutionIteration_i, filepathMembraneIteration_i, filepathCytoplasmIteration_i);
+        std::cout << " Activity " << decayDynamicsInstance.GetActivity() <<", progress: " << ((double) i)/((double) numberIterations) * 100.0 << "%" << std::endl;
     }
 
 
@@ -730,11 +732,11 @@ void mainAnalysisCode()
 
     // ------------------–----------
     // Creating "average energy deposition hisograms"
-    // EnergyDepositionHistograms Hist_A5_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    EnergyDepositionHistograms Hist_A5kBq_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 5kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A10_C4_2 = MakeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 10kBq finished" << std::endl;
-    // EnergyDepositionHistograms Hist_A25_C4_2 = MakeHistograms(decays_A25_C4_2, numberIterations, volumeRatio, numberCells);
+    // EnergyDepositionHistograms Hist_A25kBq_C4_2 = MakeHistograms(decays_A25kBq_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 25kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A50_C4_2 = MakeHistograms(decays_A50_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 50kBq finished" << std::endl;
@@ -742,29 +744,34 @@ void mainAnalysisCode()
     // std::cout << "Activity 75kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A100_C4_2 = MakeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 100kBq finished" << std::endl;
-    EnergyDepositionHistograms Hist_A150_C4_2 = MakeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    // EnergyDepositionHistograms Hist_A150kBq_C4_2 = MakeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 150kBq finished" << std::endl;
 
 
 
-    // double integral = Hist_A150_C4_2.GetEnergyDepNucleusHist()->Integral();
-    // std::cout << "integral:" << integral << std::endl;
 
-    auto outputMainAnalysis_Test10Iterations150kBq = new TFile("outputMainAnalysis_Test10Iterations150kBq.root", "RECREATE");
+
+    auto outputMainAnalysis_Test10Iterations5kBq = new TFile("outputMainAnalysis_Test10Iterations5kBq.root", "RECREATE");
 
     //------------------–----------
     // Writing histograms to file
-    // Hist_A5_C4_2.WriteHistogramsToFile();
+    Hist_A5kBq_C4_2.WriteHistogramsToFile();
     // Hist_A10_C4_2.WriteHistogramsToFile();
-    // Hist_A25_C4_2.WriteHistogramsToFile();
+    // Hist_A25kBq_C4_2.WriteHistogramsToFile();
     // Hist_A50_C4_2.WriteHistogramsToFile();
     // Hist_A75_C4_2.WriteHistogramsToFile();
     // Hist_A100_C4_2.WriteHistogramsToFile();
-    // Hist_A150_C4_2.WriteHistogramsToFile();
+    // Hist_A150kBq_C4_2.WriteHistogramsToFile();
+
+
+
+    double integral = Hist_A5kBq_C4_2.GetEnergyDepNucleusHist()->Integral();
+    std::cout << "integral:" << integral << std::endl;
+
 
     //------------------–----------
-    outputMainAnalysis_Test10Iterations150kBq->Write();
-    outputMainAnalysis_Test10Iterations150kBq->Close();
+    outputMainAnalysis_Test10Iterations5kBq->Write();
+    outputMainAnalysis_Test10Iterations5kBq->Close();
 
 
 
