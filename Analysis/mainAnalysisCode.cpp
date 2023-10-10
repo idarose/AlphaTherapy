@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <iostream>
+#include <ctime>
 
 #include <tuple>
 
@@ -664,7 +665,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         filepathMembraneIteration_i = filepathSimulationOutput + "Output_Membrane_Thread_" + std::to_string(i) + ".root";
         filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
         FillHistograms(filepathSolutionIteration_i, filepathMembraneIteration_i, filepathCytoplasmIteration_i);
-        std::cout << " Activity " << decayDynamicsInstance.GetActivity() <<", progress: " << ((double) i)/((double) numberIterations) * 100.0 << "%" << std::endl;
+        std::cout << " Activity " << decayDynamicsInstance.GetActivity() <<", progress: " << ((double) i+1)/((double) numberIterations) * 100.0 << "%" << std::endl;
     }
 
 
@@ -727,11 +728,12 @@ void mainAnalysisCode()
 
 
 
-    int numberIterations = 10;
+    int numberIterations = 1;
 
 
     // ------------------–----------
     // Creating "average energy deposition hisograms"
+
     EnergyDepositionHistograms Hist_A5kBq_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 5kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A10_C4_2 = MakeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
@@ -744,14 +746,18 @@ void mainAnalysisCode()
     // std::cout << "Activity 75kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A100_C4_2 = MakeHistograms(decays_A100_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 100kBq finished" << std::endl;
-    // EnergyDepositionHistograms Hist_A150kBq_C4_2 = MakeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    clock_t start = clock();
+    EnergyDepositionHistograms Hist_A150kBq_C4_2 = MakeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    clock_t end = clock();
+    double elapsed_time = double(end - start) / CLOCKS_PER_SEC;
+    std::cout << "Elapsed time: " << elapsed_time << " seconds" << std::endl;
     // std::cout << "Activity 150kBq finished" << std::endl;
 
 
 
 
 
-    auto outputMainAnalysis_Test10Iterations5kBq = new TFile("outputMainAnalysis_Test10Iterations5kBq.root", "RECREATE");
+    auto outputMainAnalysis_Test10Iterations150kBq = new TFile("outputMainAnalysis_Test10Iterations150kBq.root", "RECREATE");
 
     //------------------–----------
     // Writing histograms to file
@@ -765,13 +771,18 @@ void mainAnalysisCode()
 
 
 
-    double integral = Hist_A5kBq_C4_2.GetEnergyDepNucleusHist()->Integral();
+    double integral = Hist_A150kBq_C4_2.GetEnergyDepNucleusHist()->Integral();
     std::cout << "integral:" << integral << std::endl;
 
 
     //------------------–----------
-    outputMainAnalysis_Test10Iterations5kBq->Write();
-    outputMainAnalysis_Test10Iterations5kBq->Close();
+    outputMainAnalysis_Test10Iterations150kBq->Write();
+    outputMainAnalysis_Test10Iterations150kBq->Close();
+
+
+    /*
+    5kBq Elapsed time: 698.492 seconds
+    */
 
 
 
