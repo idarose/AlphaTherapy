@@ -31,6 +31,9 @@ void AnalyseCellSurvival()
     //------------------------------------------------
     //      Define the biological data <activity_kBqPerMl, cellSurvival, cellSurvivalUncertainty_stdDev>
     std::vector<std::tuple<double, double, double>> data_cellSurvival_C4_2;
+    std::vector<std::tuple<double, double, double>> data_cellSurvival_PC3PIP;
+    std::vector<std::tuple<double, double, double>> data_cellSurvival_PC3Flu;
+
     data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
     data_cellSurvival_C4_2.push_back(make_tuple(5.0,    0.86,   0.117));
     data_cellSurvival_C4_2.push_back(make_tuple(10.0,   0.69,   0.014));
@@ -39,6 +42,7 @@ void AnalyseCellSurvival()
     data_cellSurvival_C4_2.push_back(make_tuple(75.0,   0.13,   0.031));
     data_cellSurvival_C4_2.push_back(make_tuple(100.0,  0.08,   0.035));
     data_cellSurvival_C4_2.push_back(make_tuple(150.0,  0.04,   0.024));
+
 
     //------------------------------------------------------------------------------------------------
     //      Construct the TGraphErrors object corresponding to the biological data

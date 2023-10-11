@@ -728,13 +728,13 @@ void mainAnalysisCode()
 
 
 
-    int numberIterations = 1;
+    int numberIterations = 2;
 
 
     // ------------------–----------
     // Creating "average energy deposition hisograms"
 
-    EnergyDepositionHistograms Hist_A5kBq_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    // EnergyDepositionHistograms Hist_A5kBq_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 5kBq finished" << std::endl;
     // EnergyDepositionHistograms Hist_A10_C4_2 = MakeHistograms(decays_A10_C4_2, numberIterations, volumeRatio, numberCells);
     // std::cout << "Activity 10kBq finished" << std::endl;
@@ -750,24 +750,24 @@ void mainAnalysisCode()
     EnergyDepositionHistograms Hist_A150kBq_C4_2 = MakeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
     clock_t end = clock();
     double elapsed_time = double(end - start) / CLOCKS_PER_SEC;
-    std::cout << "Elapsed time: " << elapsed_time << " seconds" << std::endl;
+    std::cout << "Elapsed time 150kBq 2 iter. : " << elapsed_time << " seconds" << std::endl;
     // std::cout << "Activity 150kBq finished" << std::endl;
 
 
 
 
 
-    auto outputMainAnalysis_Test10Iterations150kBq = new TFile("outputMainAnalysis_Test10Iterations150kBq.root", "RECREATE");
+    auto outputMainAnalysisCode = new TFile("outputMainAnalysisCode_150kBq_V2.root", "RECREATE");
 
     //------------------–----------
     // Writing histograms to file
-    Hist_A5kBq_C4_2.WriteHistogramsToFile();
+    // Hist_A5kBq_C4_2.WriteHistogramsToFile();
     // Hist_A10_C4_2.WriteHistogramsToFile();
     // Hist_A25kBq_C4_2.WriteHistogramsToFile();
     // Hist_A50_C4_2.WriteHistogramsToFile();
     // Hist_A75_C4_2.WriteHistogramsToFile();
     // Hist_A100_C4_2.WriteHistogramsToFile();
-    // Hist_A150kBq_C4_2.WriteHistogramsToFile();
+    Hist_A150kBq_C4_2.WriteHistogramsToFile();
 
 
 
@@ -776,12 +776,48 @@ void mainAnalysisCode()
 
 
     //------------------–----------
-    outputMainAnalysis_Test10Iterations150kBq->Write();
-    outputMainAnalysis_Test10Iterations150kBq->Close();
+    outputMainAnalysisCode->Write();
+    outputMainAnalysisCode->Close();
 
 
     /*
+
+    2 Iterations:
+    5 : 148.2 s
+    10 : 324.8 s
+    25 : 858.4 s
+    50 : 1 825 s
+    75 : 2 230 s
+    100 : 3 151 s
+    150 : 3 213 s
+
+    1 Iteration :
+    5 : 74.1 s
+    10 : 162.4 s
+    25 : 429.2 s
+    50 : 912.5 s
+    75 : 1 115 s
+    100 : 1 575.5 s
+    150 : 1 606.5 s
+
+    100 Iterations:
+    5 : 2.05 h
+    10 : 4.5 h
+    25 : 11.9 h
+    50 : 25.3 h
+    75 : 30.9 h
+    100 : 43.8 h
+    150 : 44.6 h
+
+
+    10 I:
     5kBq Elapsed time: 698.492 seconds
+    1 I:
+    69.9 s
+
+    1 I:
+    150 kBq Elapsed time 491.3 seconds
+    10 I: 4 913 s = 1.36 h
     */
 
 
