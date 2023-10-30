@@ -182,14 +182,14 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     // within first 48 hours
     else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==1)
     {
-        if(interactionTime/3600. <= 24.0)
+        if(interactionTime/3600. <= 25.0)
         {
             FillVectors();
         }
     }
     else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==2)
     {
-        if(interactionTime/3600. <= 24.0)
+        if(interactionTime/3600. <= 25.0)
         {
             FillVectors();
         }
