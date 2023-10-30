@@ -126,10 +126,46 @@ void EnergyDepositionHistograms::LoadHistogramsFromAnalysis(CellSurvival cellSur
 
         std::cout << "activity: " << activity << ",\t integral: " << integral << std::endl;
     }
+}
+
+void LinearQuadraticModelFit()
+{
+
+    // ------------------------------
+    // Lambda function to calculate the cell survival fraction for an energydepostion histogram
+    auto CalculateCellSurvivalFraction = [&](TH1D* hEnergyDeposition, double* par)
+    {
+        double alpha = par[0];
+        double beta = par[1];
+
+        double fractionOfComponentsHit = hEnergyDeposition->Integral();
+        double fractionOfComponentsMissed = (1.0 - fractionOfComponentsHit);
+
+        // All cells that are missed are immidiately added as survived
+        double fractionOfTotalCellsSurviving = fractionOfComponentsMissed;
+
+
+        // ------------------------------
+        // Looping over everyy bin in the histogram
+        for(int i=0; i<hEnergyDeposition->GetNbinsX(); i++)
+        {
+            double energyDeposition = hEnergyDeposition->GetBinCenter(i+1);
+            double fractionOfTotalCells = hEnergyDeposition->GetBinContent(i+1);
+
+            double cellSurvivalFraction = TMath::Exp(-(alpha*energyDeposition + beta*TMath::Power(energyDeposition,2.0)));
+
+            fractionOfTotalCells_survivingFraction = cellSurvivalfraction*fractionOfTotalCells;
+
+            fractionOfTotalCellsSurviving += fractionOfTotalCells_survivingFraction;
+        }
+
+        // ------------------------------
+        return fractionOfTotalCellsSurviving;
+    }
+
 
 
 }
-
 
 
 
@@ -146,7 +182,7 @@ void mainFittingCode()
 
     CellSurvival cellSurvival_PC3_Flu = CellSurvival(data_cellSurvival_PC3_Flu);
 
-    EnergyDepositionHistograms energyDepHistograms_PC3_Flu =    EnergyDepositionHistograms("PC3_Flu");
+    EnergyDepositionHistograms energyDepHistograms_PC3_Flu = EnergyDepositionHistograms("PC3_Flu");
     energyDepHistograms_PC3_Flu.LoadHistogramsFromAnalysis(cellSurvival_PC3_Flu);
 
 };
