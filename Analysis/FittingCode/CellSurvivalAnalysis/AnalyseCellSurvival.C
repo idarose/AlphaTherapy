@@ -47,7 +47,7 @@ void AnalyseCellSurvival()
 
 
     //PC3 Flu
-    data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
+    // data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
     // data_cellSurvival_C4_2.push_back(make_tuple(5.0,    0.86,   0.117));
     data_cellSurvival_C4_2.push_back(make_tuple(10.0,    0.955,    0.0955));
     data_cellSurvival_C4_2.push_back(make_tuple(25.0,    0.724,    0.0724));
@@ -176,6 +176,15 @@ void AnalyseCellSurvival()
     inputFile_150kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_150kBq_Nucleus", hEnergyDeps_212Pb_C4_2_150kBq_Nucleus);
     hEnergyDeps_212Pb_C4_2_150kBq_Nucleus->SetDirectory(0);
     inputFile_150kBq->Close();
+
+    // TFile *inputFile_1000kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_1000kBq.root", "READ");
+    // TH1D* hEnergyDeps_212Pb_C4_2_1000kBq_Nucleus = nullptr;
+    // inputFile_1000kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_1000kBq_Nucleus", hEnergyDeps_212Pb_C4_2_150kBq_Nucleus);
+    // hEnergyDeps_212Pb_C4_2_1000kBq_Nucleus->SetDirectory(0);
+    // inputFile_1000kBq->Close();
+
+    // std::cout << "1000 kBq: "<< hEnergyDeps_212Pb_C4_2_1000kBq_Nucleus->Integral() << std::endl;
+
 
     // auto hEnergyDeps_212Pb_C4_2_0kBq_Nucleus = (TH1D*)hEnergyDeps_212Pb_C4_2_10kBq_Nucleus->Clone();
     // hEnergyDeps_212Pb_C4_2_0kBq_Nucleus->Reset();
@@ -321,7 +330,7 @@ void AnalyseCellSurvival()
 
 
     //------------------------------------------------------------------------------------------------
-    TFile *outputFile = new TFile("Output_AnalyseCellSurvival_PC3_Flu.root", "RECREATE");
+    TFile *outputFile = new TFile("Output_AnalyseCellSurvival_PC3_Flu_Test.root", "RECREATE");
 
     gr_clonogenicSurvival_C4_2->Write();
     f_cellSurvivalVsDose_C4_2->Write();

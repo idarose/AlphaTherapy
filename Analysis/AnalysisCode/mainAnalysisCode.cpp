@@ -140,6 +140,7 @@ class CellHit
         CellHit(int cellID_in);
 
         void AddEnergyDeposition(double energyDep_in, double volumeType_in);
+        void HitByAlphaParticle();
 
         double GetSumEnergyDepositions(){return energyDepMembrane + energyDepCytoplasm + energyDepNucleus;};
 
@@ -149,9 +150,12 @@ class CellHit
 
         int GetCellID(){return cellID;};
 
+
     private:
         int cellID;
         int volumeType;
+
+        int numberHitsAlphas;
 
         double energyDepMembrane;
         double energyDepCytoplasm;
@@ -168,6 +172,7 @@ CellHit::CellHit(int cellID_in)
     energyDepMembrane = 0.0;
     energyDepCytoplasm = 0.0;
     energyDepNucleus = 0.0;
+    numberHitsAlphas = 0;
 }
 
 
@@ -186,6 +191,11 @@ void CellHit::AddEnergyDeposition(double energyDep_in, double volumeType_in)
     {
         energyDepNucleus += energyDep_in;
     }
+}
+
+void CellHit::HitByAlphaParticle()
+{
+    numberHitsAlphas ++;
 }
 
 
@@ -484,6 +494,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                             {
                                 CellHit aNewCellHit = CellHit(cellIDsSolutionSim[i]);
                                 aNewCellHit.AddEnergyDeposition(energyDepsSolutionSim[i], volumeTypesSolutionSim[i]);
+
                                 storedCellHits.push_back(aNewCellHit);
                             }
                         }
@@ -769,6 +780,10 @@ void mainAnalysisCode()
     DecayDynamics decays_A75kBq_PC3_Flu = DecayDynamics(75, 0., 0., "PC3_Flu");
     DecayDynamics decays_A100kBq_PC3_Flu = DecayDynamics(100, 0., 0., "PC3_Flu");
     DecayDynamics decays_A150kBq_PC3_Flu = DecayDynamics(150, 0., 0., "PC3_Flu");
+    DecayDynamics decays_A1000kBq_PC3_Flu = DecayDynamics(1000,0.,0., "PC3_Flu");
+    DecayDynamics decays_A300kBq_PC3_Flu = DecayDynamics(300,0.,0., "PC3_Flu");
+    DecayDynamics decays_A500kBq_PC3_Flu = DecayDynamics(500,0.,0., "PC3_Flu");
+
 
 
 
@@ -798,6 +813,12 @@ void mainAnalysisCode()
     decays_A75kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
     decays_A100kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
     decays_A150kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    decays_A1000kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    decays_A300kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    decays_A500kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+
+    std::cout << "50 : " << decays_A50kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
+    std::cout << "100 : " << decays_A100kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
 
 
     // EnergyDepositionHistograms Hist_A50kBq_PC3_PIP = MakeHistograms(decays_A50kBq_PC3_PIP, numberIterations, volumeRatio, numberCells);
@@ -824,9 +845,9 @@ void mainAnalysisCode()
     */
 
 
-    // EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = MakeHistograms(decays_A150kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
-    // auto output = new TFile("../OutputAnalysisCode/Output_PC3_Flu_150kBq.root", "RECREATE");
-    // Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
+    // EnergyDepositionHistograms Hist_A500kBq_PC3_Flu = MakeHistograms(decays_A500kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
+    // auto output = new TFile("../OutputAnalysisCode/Output_PC3_Flu_500kBq.root", "RECREATE");
+    // Hist_A500kBq_PC3_Flu.WriteHistogramsToFile();
     // output->Write();
     // output->Close();
 }
