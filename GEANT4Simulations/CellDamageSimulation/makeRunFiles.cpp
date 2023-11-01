@@ -120,7 +120,7 @@ void makeRunFiles()
 
     */
 
-    GenerateFiles(0, 1300000);
+    GenerateFiles(0, 5000000);
     GenerateFiles(1, 350000);
     GenerateFiles(2, 25000);
 

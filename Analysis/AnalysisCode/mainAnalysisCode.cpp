@@ -495,6 +495,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             // Break loop if number of decays have been reached
             if(numberDecays212PbInSolutionFirstHour_counter >= numberDecays212PbInSolutionFirstHour)
             {
+                std::cout << "Needed : " << numberDecays212PbInSolutionFirstHour << " Counted : " << numberDecays212PbInSolutionFirstHour_counter << " At entry : " << myReaderSolutionSim.GetCurrentEntry() << std::endl;
                 whileLoopSolutionSimWasBroken = true;
                 break;
             }
@@ -571,7 +572,6 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             // Break loop if number of decays have been reached
             if(numberDecays212PbInMembrane25Hours_counter >= numberDecays212PbInMembrane25Hours)
             {
-                std::cout << "Ratio membrane : " << ((double)numberDecays212PbInMembrane25Hours_counter)/((myReaderMembraneSim.GetCurrentEntry()));
                 whileLoopMembraneSimWasBroken = true;
                 break;
             }
@@ -654,7 +654,6 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             if(numberDecays212PbInCytoplasm25Hours_counter >= numberDecays212PbInCytoplasm25Hours)
             {
                 whileLoopCytoplasmSimWasBroken = true;
-                std::cout << "Ratio cytoplasm : " << ((double)numberDecays212PbInCytoplasm25Hours_counter)/((myReaderCytoplasmSim.GetCurrentEntry()));
                 break;
             }
         }
@@ -686,9 +685,9 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
     for(int i=0; i<10; i++)
     {
-        fileSolution = "../../GEANT4Simulations/OutputFromSaga/Output_Solution_Thread_" + std::to_string(i) + ".root";
-        fileMembrane = "../../GEANT4Simulations/OutputFromSaga/Output_Membrane_Thread_" + std::to_string(i) + ".root";
-        fileCytoplasm = "../../GEANT4Simulations/OutputFromSaga/Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
+        fileSolution = "/Volumes/SamsungT7/Output_Solution_Thread_" + std::to_string(i) + ".root";
+        fileMembrane = "/Volumes/SamsungT7/Output_Membrane_Thread_" + std::to_string(i) + ".root";
+        fileCytoplasm = "/Volumes/SamsungT7/Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
 
         chSolution->Add(fileSolution.c_str());
         chMembrane->Add(fileMembrane.c_str());
@@ -709,7 +708,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // filepathMembraneIteration_i = filepathSimulationOutput + "Output_Membrane_Thread_" + std::to_string(i) + ".root";
         // filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
         FillHistograms(chSolution, chMembrane, chCytoplasm);
-        std::cout << " Activity " << decayDynamicsInstance.GetActivity() <<", progress: " << ((double) i+1)/((double) numberIterations) * 100.0 << "%" << std::endl;
+        std::cout << " Activity " << decayDynamicsInstance.GetActivity() <<", finished iteration number: " << i+1 << std::endl;
     }
 
 
@@ -735,6 +734,7 @@ void mainAnalysisCode()
 
     int numberIterations = 1;
 
+    std::cout << volumeRatio << std::endl;
 
 
     //------------------–----------
@@ -800,12 +800,34 @@ void mainAnalysisCode()
     decays_A150kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
 
 
-    EnergyDepositionHistograms Hist_A5kBq_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
-    auto output = new TFile("../OutputAnalysisCode/Output_C4_2_5kBq.root", "RECREATE");
-    Hist_A5kBq_C4_2.WriteHistogramsToFile();
-    output->Write();
-    output->Close();
+    // EnergyDepositionHistograms Hist_A50kBq_PC3_PIP = MakeHistograms(decays_A50kBq_PC3_PIP, numberIterations, volumeRatio, numberCells);
+    // auto output = new TFile("../OutputAnalysisCode/Output_PC3_PIP_50kBq.root", "RECREATE");
+    // Hist_A50kBq_PC3_PIP.WriteHistogramsToFile();
+    // output->Write();
+    // output->Close();
+
+    /*
+    Needed : 128 268 Counted : 128 269 At entry : 2 068 965
+    Activity 50, finished iteration number: 1
 
 
+    Needed : 192 403 Counted : 192 403 At entry : 3 102 831
+    Activity 75, finished iteration number: 1
+
+
+    Needed : 256 537 Counted : 256 537 At entry : 4 136 555
+    Activity 100, finished iteration number: 1
+
+    Needed : 384805 Counted : 384806 At entry : 6206037
+    Activity 150, finished iteration number: 1
+
+    */
+
+
+    // EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = MakeHistograms(decays_A150kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
+    // auto output = new TFile("../OutputAnalysisCode/Output_PC3_Flu_150kBq.root", "RECREATE");
+    // Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
+    // output->Write();
+    // output->Close();
 }
 
