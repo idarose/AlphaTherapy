@@ -19,6 +19,8 @@
 #include  <random>
 #include  <iterator>
 
+#include <TF1.h>
+
 
 // Methods to extract random element from a vector
 template<typename Iter, typename RandomGenerator>
@@ -34,6 +36,10 @@ Iter select_randomly(Iter start, Iter end) {
     static std::mt19937 gen(rd());
     return select_randomly(start, end, gen);
 }
+
+
+
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -80,11 +86,13 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-    //Generating new pericle for new event
+    //Generating new paricle for new event
 
     //Making particle a 212Pb nucleus
     // G4ParticleDefinition* ion_212Pb = G4IonTable::GetIonTable()->GetIon(82,212,0.0);
     // fParticleGun->SetParticleDefinition(ion_212Pb);
+
+
 
 
     //-------------------------------
@@ -203,6 +211,18 @@ void PrimaryGeneratorAction::DefineInitialRadionuclide()
 {
     ion = G4IonTable::GetIonTable()->GetIon(initialRadionuclide_Z, initialRadionuclide_A, initialRadionuclide_excitationEnergy);
     fParticleGun->SetParticleDefinition(ion);
+}
+
+//----------------------------------------------------------------------------
+void PrimaryGeneratorAction::SetCellLine(std::string value)
+{
+    cellLine = value;
+}
+
+//----------------------------------------------------------------------------
+void PrimaryGeneratorAction::SetSampleActivity(G4int value)
+{
+    sampleActivity = value;
 }
 
 //----------------------------------------------------------------------------

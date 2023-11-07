@@ -56,6 +56,8 @@ class PrimaryGeneratorMessenger: public G4UImessenger
     G4UIcmdWithADouble*         fInitialRadionuclide_excitationEnergy;
     G4UIcmdWithAnInteger*       fInitialRadionuclide_location;
     G4UIcmdWithoutParameter*    fInitialRadionuclide_define;
+    G4UIcmdWithAString*         fCellLine_name;
+    G4UIcmdWithAnInteger*       fSampleActivity;
 };
 
 

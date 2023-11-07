@@ -783,6 +783,8 @@ void mainAnalysisCode()
     DecayDynamics decays_A1000kBq_PC3_Flu = DecayDynamics(1000,0.,0., "PC3_Flu");
     DecayDynamics decays_A300kBq_PC3_Flu = DecayDynamics(300,0.,0., "PC3_Flu");
     DecayDynamics decays_A500kBq_PC3_Flu = DecayDynamics(500,0.,0., "PC3_Flu");
+    DecayDynamics decays_A200kBq_PC3_Flu = DecayDynamics(200,0.,0., "PC3_Flu");
+    DecayDynamics decays_A250kBq_PC3_Flu = DecayDynamics(250,0.,0., "PC3_Flu");
 
 
 
@@ -816,9 +818,11 @@ void mainAnalysisCode()
     decays_A1000kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
     decays_A300kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
     decays_A500kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    decays_A200kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    decays_A250kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
 
-    std::cout << "50 : " << decays_A50kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
-    std::cout << "100 : " << decays_A100kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
+    // std::cout << "50 : " << decays_A50kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
+    // std::cout << "100 : " << decays_A100kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
 
 
     // EnergyDepositionHistograms Hist_A50kBq_PC3_PIP = MakeHistograms(decays_A50kBq_PC3_PIP, numberIterations, volumeRatio, numberCells);
@@ -845,10 +849,10 @@ void mainAnalysisCode()
     */
 
 
-    // EnergyDepositionHistograms Hist_A500kBq_PC3_Flu = MakeHistograms(decays_A500kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
-    // auto output = new TFile("../OutputAnalysisCode/Output_PC3_Flu_500kBq.root", "RECREATE");
-    // Hist_A500kBq_PC3_Flu.WriteHistogramsToFile();
-    // output->Write();
-    // output->Close();
+    EnergyDepositionHistograms Hist_A100kBq_PC3_Flu = MakeHistograms(decays_A100kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
+    auto output = new TFile("../OutputAnalysisCode/Output_PC3_Flu_100kBq.root", "RECREATE");
+    Hist_A100kBq_PC3_Flu.WriteHistogramsToFile();
+    output->Write();
+    output->Close();
 }
 

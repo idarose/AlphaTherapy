@@ -74,6 +74,15 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pga
   fInitialRadionuclide_define = new G4UIcmdWithoutParameter("/Sim/DefineInitialRadionuclide",this);
   fInitialRadionuclide_define->SetGuidance("Define the initial radionuclide to be simulated (command must be executed after Z, A and excitationEnergy have been set).");
   fInitialRadionuclide_define->AvailableForStates(G4State_Idle);
+
+  fCellLine_name = new G4UIcmdWithAString("/Sim/SetCellLine",this);
+  fCellLine_name->SetGuidance("Set the name of the cell line to be simulated.");
+  fCellLine_name->AvailableForStates(G4State_Idle);
+
+  fSampleActivity = new G4UIcmdWithAnInteger("/Sim/SetSampleActivity",this);
+  fSampleActivity->SetGuidance("Set the activity of the cell sample in kBq/mL.");
+  fSampleActivity->AvailableForStates(G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -85,6 +94,8 @@ PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
   delete fInitialRadionuclide_A;
   delete fInitialRadionuclide_excitationEnergy;
   delete fInitialRadionuclide_define;
+  delete fCellLine_name;
+  delete fSampleActivity;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -105,6 +116,12 @@ void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newVa
   }
   if( command == fInitialRadionuclide_define ) {
     fPrimaryGeneratorAction->DefineInitialRadionuclide();
+  }
+  if(command == fCellLine_name) {
+    fPrimaryGeneratorAction->SetCellLine(fCellLine_name->GetNewStringValue(newValue));
+  }
+  if(command == fSampleActivity) {
+    fPrimaryGeneratorAction->SetSampleActivity(fSampleActivity->GetNewIntValue(newValue));
   }
 }
 

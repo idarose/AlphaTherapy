@@ -31,6 +31,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         void SetInitialRadionuclide_excitationEnergy(G4double value);
         void SetInitialRadionuclide_location(G4int value);
         void DefineInitialRadionuclide();
+        void SetCellLine(std::string value);
+        void SetSampleActivity(G4int value);
 
         int GetInitialRadionuclide_location(){return initialRadionuclide_location;};
 
@@ -38,20 +40,23 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4int       initialRadionuclide_A;
         G4double    initialRadionuclide_excitationEnergy;
         G4int       initialRadionuclide_location;
+        std::string cellLine;
+        G4int       sampleActivity;
 
     private:
         G4ParticleGun* fParticleGun = nullptr; // G4 particle gun
-        DetectorConstruction* fDetConstruction;
-        PrimaryGeneratorMessenger* fPrimaryGeneratorMessenger;
+        DetectorConstruction*       fDetConstruction;
+        PrimaryGeneratorMessenger*  fPrimaryGeneratorMessenger;
 
-        G4int numberCells;
-        std::vector<G4ThreeVector> cellPositions;
+        G4int                       numberCells;
+        std::vector<G4ThreeVector>  cellPositions;
 
         G4double cellTubeRMin;
         G4double cellTubeHeight;
         G4double cellCytoplasmRMax;
         G4double cellRMax;
         G4double thickness_cellMembrane;
+
 
         G4ParticleDefinition* ion;
 };

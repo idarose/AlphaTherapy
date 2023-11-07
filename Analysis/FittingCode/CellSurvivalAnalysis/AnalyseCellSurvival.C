@@ -35,26 +35,26 @@ void AnalyseCellSurvival()
     std::vector<std::tuple<double, double, double>> data_cellSurvival_PC3_Flu;
 
 
-    // C4-2
-    // data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
-    // data_cellSurvival_C4_2.push_back(make_tuple(5.0,    0.86,   0.117));
-    // data_cellSurvival_C4_2.push_back(make_tuple(10.0,    0.69,    0.014));
-    // data_cellSurvival_C4_2.push_back(make_tuple(25.0,    0.51,    0.096));
-    // data_cellSurvival_C4_2.push_back(make_tuple(50.0,    0.26,    0.035));
-    // data_cellSurvival_C4_2.push_back(make_tuple(75.0,    0.13,    0.031));
-    // data_cellSurvival_C4_2.push_back(make_tuple(100.0,    0.08,    0.035));
-    // data_cellSurvival_C4_2.push_back(make_tuple(150.0,    0.04,    0.024));
+    C4-2
+    data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
+    data_cellSurvival_C4_2.push_back(make_tuple(5.0,    0.86,   0.117));
+    data_cellSurvival_C4_2.push_back(make_tuple(10.0,    0.69,    0.014));
+    data_cellSurvival_C4_2.push_back(make_tuple(25.0,    0.51,    0.096));
+    data_cellSurvival_C4_2.push_back(make_tuple(50.0,    0.26,    0.035));
+    data_cellSurvival_C4_2.push_back(make_tuple(75.0,    0.13,    0.031));
+    data_cellSurvival_C4_2.push_back(make_tuple(100.0,    0.08,    0.035));
+    data_cellSurvival_C4_2.push_back(make_tuple(150.0,    0.04,    0.024));
 
 
-    //PC3 Flu
-    // data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
-    // data_cellSurvival_C4_2.push_back(make_tuple(5.0,    0.86,   0.117));
-    data_cellSurvival_C4_2.push_back(make_tuple(10.0,    0.955,    0.0955));
-    data_cellSurvival_C4_2.push_back(make_tuple(25.0,    0.724,    0.0724));
-    data_cellSurvival_C4_2.push_back(make_tuple(50.0,    0.733,    0.0733));
-    data_cellSurvival_C4_2.push_back(make_tuple(75.0,    0.798,    0.0798));
-    data_cellSurvival_C4_2.push_back(make_tuple(100.0,    0.720,    0.0720));
-    data_cellSurvival_C4_2.push_back(make_tuple(150.0,    0.680,    0.0698));
+    // //PC3 Flu
+    // // data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
+    // // data_cellSurvival_C4_2.push_back(make_tuple(5.0,    0.86,   0.117));
+    // data_cellSurvival_C4_2.push_back(make_tuple(10.0,    0.955,    0.0955));
+    // data_cellSurvival_C4_2.push_back(make_tuple(25.0,    0.724,    0.0724));
+    // data_cellSurvival_C4_2.push_back(make_tuple(50.0,    0.733,    0.0733));
+    // data_cellSurvival_C4_2.push_back(make_tuple(75.0,    0.798,    0.0798));
+    // data_cellSurvival_C4_2.push_back(make_tuple(100.0,    0.720,    0.0720));
+    // data_cellSurvival_C4_2.push_back(make_tuple(150.0,    0.680,    0.0698));
 
     // //PC3 PIP
     // // data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
@@ -141,49 +141,43 @@ void AnalyseCellSurvival()
     // hEnergyDeps_212Pb_C4_2_5kBq_Nucleus->SetDirectory(0);
     // inputFile_5kBq->Close();
 
-    TFile *inputFile_10kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_10kBq.root", "READ");
+    TFile *inputFile_10kBq = new TFile("../../OutputAnalysisCode/Output_PC3_PIP_10kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_10kBq_Nucleus = nullptr;
-    inputFile_10kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_10kBq_Nucleus", hEnergyDeps_212Pb_C4_2_10kBq_Nucleus);
+    inputFile_10kBq->GetObject("hEnergyDeps_212Pb_PC3_PIP_10kBq_Nucleus", hEnergyDeps_212Pb_C4_2_10kBq_Nucleus);
     hEnergyDeps_212Pb_C4_2_10kBq_Nucleus->SetDirectory(0);
     inputFile_10kBq->Close();
 
-    TFile *inputFile_25kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_25kBq.root", "READ");
+    TFile *inputFile_25kBq = new TFile("../../OutputAnalysisCode/Output_PC3_PIP_25kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_25kBq_Nucleus = nullptr;
-    inputFile_25kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_25kBq_Nucleus", hEnergyDeps_212Pb_C4_2_25kBq_Nucleus);
+    inputFile_25kBq->GetObject("hEnergyDeps_212Pb_PC3_PIP_25kBq_Nucleus", hEnergyDeps_212Pb_C4_2_25kBq_Nucleus);
     hEnergyDeps_212Pb_C4_2_25kBq_Nucleus->SetDirectory(0);
     inputFile_25kBq->Close();
 
-    TFile *inputFile_50kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_50kBq.root", "READ");
+    TFile *inputFile_50kBq = new TFile("../../OutputAnalysisCode/Output_PC3_PIP_50kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_50kBq_Nucleus = nullptr;
-    inputFile_50kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_50kBq_Nucleus", hEnergyDeps_212Pb_C4_2_50kBq_Nucleus);
+    inputFile_50kBq->GetObject("hEnergyDeps_212Pb_PC3_PIP_50kBq_Nucleus", hEnergyDeps_212Pb_C4_2_50kBq_Nucleus);
     hEnergyDeps_212Pb_C4_2_50kBq_Nucleus->SetDirectory(0);
     inputFile_50kBq->Close();
 
-    TFile *inputFile_75kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_75kBq.root", "READ");
+    TFile *inputFile_75kBq = new TFile("../../OutputAnalysisCode/Output_PC3_PIP_75kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_75kBq_Nucleus = nullptr;
-    inputFile_75kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_75kBq_Nucleus", hEnergyDeps_212Pb_C4_2_75kBq_Nucleus);
+    inputFile_75kBq->GetObject("hEnergyDeps_212Pb_PC3_PIP_75kBq_Nucleus", hEnergyDeps_212Pb_C4_2_75kBq_Nucleus);
     hEnergyDeps_212Pb_C4_2_75kBq_Nucleus->SetDirectory(0);
     inputFile_75kBq->Close();
 
-    TFile *inputFile_100kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_100kBq.root", "READ");
+    TFile *inputFile_100kBq = new TFile("../../OutputAnalysisCode/Output_PC3_PIP_100kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_100kBq_Nucleus = nullptr;
-    inputFile_100kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_100kBq_Nucleus", hEnergyDeps_212Pb_C4_2_100kBq_Nucleus);
+    inputFile_100kBq->GetObject("hEnergyDeps_212Pb_PC3_PIP_100kBq_Nucleus", hEnergyDeps_212Pb_C4_2_100kBq_Nucleus);
     hEnergyDeps_212Pb_C4_2_100kBq_Nucleus->SetDirectory(0);
     inputFile_100kBq->Close();
 
-    TFile *inputFile_150kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_150kBq.root", "READ");
+    TFile *inputFile_150kBq = new TFile("../../OutputAnalysisCode/Output_PC3_PIP_150kBq.root", "READ");
     TH1D* hEnergyDeps_212Pb_C4_2_150kBq_Nucleus = nullptr;
-    inputFile_150kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_150kBq_Nucleus", hEnergyDeps_212Pb_C4_2_150kBq_Nucleus);
+    inputFile_150kBq->GetObject("hEnergyDeps_212Pb_PC3_PIP_150kBq_Nucleus", hEnergyDeps_212Pb_C4_2_150kBq_Nucleus);
     hEnergyDeps_212Pb_C4_2_150kBq_Nucleus->SetDirectory(0);
     inputFile_150kBq->Close();
 
-    // TFile *inputFile_1000kBq = new TFile("../../OutputAnalysisCode/Output_PC3_Flu_1000kBq.root", "READ");
-    // TH1D* hEnergyDeps_212Pb_C4_2_1000kBq_Nucleus = nullptr;
-    // inputFile_1000kBq->GetObject("hEnergyDeps_212Pb_PC3_Flu_1000kBq_Nucleus", hEnergyDeps_212Pb_C4_2_150kBq_Nucleus);
-    // hEnergyDeps_212Pb_C4_2_1000kBq_Nucleus->SetDirectory(0);
-    // inputFile_1000kBq->Close();
 
-    // std::cout << "1000 kBq: "<< hEnergyDeps_212Pb_C4_2_1000kBq_Nucleus->Integral() << std::endl;
 
 
     // auto hEnergyDeps_212Pb_C4_2_0kBq_Nucleus = (TH1D*)hEnergyDeps_212Pb_C4_2_10kBq_Nucleus->Clone();
@@ -330,7 +324,7 @@ void AnalyseCellSurvival()
 
 
     //------------------------------------------------------------------------------------------------
-    TFile *outputFile = new TFile("Output_AnalyseCellSurvival_PC3_Flu_Test.root", "RECREATE");
+    TFile *outputFile = new TFile("Output_AnalyseCellSurvival_PC3_PC3.root", "RECREATE");
 
     gr_clonogenicSurvival_C4_2->Write();
     f_cellSurvivalVsDose_C4_2->Write();
