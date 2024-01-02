@@ -17,25 +17,23 @@ else()
 endif()
 
 #----------------------------------------------------------------------------
-# Setup Geant4 include directories and compile definitions
-# Setup include directory for this project
-#
-include(${Geant4_USE_FILE})
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-
-#----------------------------------------
 # Find ROOT (required package)
 #
 find_package(ROOT REQUIRED)
 
 
 #----------------------------------------------------------------------------
+# Setup Geant4 include directories and compile definitions
+# Setup include directory for this project
+#
+include(${Geant4_USE_FILE})
+include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIRS})
+
+
+#----------------------------------------------------------------------------
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
-include_directories(${ROOT_INCLUDE_DIRS})
-
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 

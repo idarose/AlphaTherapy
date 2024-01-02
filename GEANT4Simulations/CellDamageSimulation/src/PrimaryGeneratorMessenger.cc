@@ -46,7 +46,9 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pga
    fInitialRadionuclide_Z(0),
    fInitialRadionuclide_A(0),
    fInitialRadionuclide_excitationEnergy(0),
-   fInitialRadionuclide_define(0)
+   fInitialRadionuclide_define(0),
+   fSampleActivity(0),
+   fPDF(0)
 {
   fDirectory = new G4UIdirectory("/Sim/");
   fDirectory->SetGuidance("UI commands of Sim");
@@ -75,14 +77,17 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pga
   fInitialRadionuclide_define->SetGuidance("Define the initial radionuclide to be simulated (command must be executed after Z, A and excitationEnergy have been set).");
   fInitialRadionuclide_define->AvailableForStates(G4State_Idle);
 
-  fCellLine_name = new G4UIcmdWithAString("/Sim/SetCellLine",this);
-  fCellLine_name->SetGuidance("Set the name of the cell line to be simulated.");
-  fCellLine_name->AvailableForStates(G4State_Idle);
-
-  fSampleActivity = new G4UIcmdWithAnInteger("/Sim/SetSampleActivity",this);
-  fSampleActivity->SetGuidance("Set the activity of the cell sample in kBq/mL.");
+  fSampleActivity = new G4UIcmdWithAnInteger("/Sim/SetSampleActivity", this);
+  fSampleActivity->SetGuidance("Set the sample activity in kBq/mL.");
   fSampleActivity->AvailableForStates(G4State_Idle);
 
+  fCellLineName = new G4UIcmdWithAString("/Sim/SetCellLineName",this);
+  fCellLineName->SetGuidance("Set the name of the cell line.");
+  fCellLineName->AvailableForStates(G4State_Idle);
+
+  fPDF = new G4UIcmdWithoutParameter("/Sim/SetPDFDecayRadionuclide",this);
+  fPDF->SetGuidance("Define the probability distribution function for the decay of the radionuclide. (command must be executed after sample activity and cell line name have been set).");
+  fPDF->AvailableForStates(G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -94,14 +99,15 @@ PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
   delete fInitialRadionuclide_A;
   delete fInitialRadionuclide_excitationEnergy;
   delete fInitialRadionuclide_define;
-  delete fCellLine_name;
   delete fSampleActivity;
+  delete fCellLineName;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
+
   if( command == fInitialRadionuclide_Z ) {
     fPrimaryGeneratorAction->SetInitialRadionuclide_Z(fInitialRadionuclide_Z->GetNewIntValue(newValue));
   }
@@ -117,12 +123,16 @@ void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newVa
   if( command == fInitialRadionuclide_define ) {
     fPrimaryGeneratorAction->DefineInitialRadionuclide();
   }
-  if(command == fCellLine_name) {
-    fPrimaryGeneratorAction->SetCellLine(fCellLine_name->GetNewStringValue(newValue));
-  }
-  if(command == fSampleActivity) {
+  if( command == fSampleActivity ) {
     fPrimaryGeneratorAction->SetSampleActivity(fSampleActivity->GetNewIntValue(newValue));
+  }
+  if(command == fCellLineName ) {
+    fPrimaryGeneratorAction->SetCellLineName(newValue);
+  }
+  if(command == fPDF ) {
+    fPrimaryGeneratorAction->SetPDF();
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+

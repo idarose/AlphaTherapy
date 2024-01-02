@@ -14,12 +14,12 @@
 #include "Randomize.hh"
 #include "G4IonTable.hh"
 
+
 // https://stackoverflow.com/questions/6942273/how-to-get-a-random-element-from-a-c-container
 
 #include  <random>
 #include  <iterator>
-
-#include <TF1.h>
+#include  <TFile.h>
 
 
 // Methods to extract random element from a vector
@@ -38,8 +38,32 @@ Iter select_randomly(Iter start, Iter end) {
 }
 
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+TF1* LoadPDF(G4int initialRadionuclide_location, G4int sampleActivity, std::string cellLineName)
+{
+    std::string filePath;
+    TF1* fPDF = nullptr;
 
+    if(initialRadionuclide_location == 0)
+    {
+        filePath = "../PDFsDecayPb212/PDF_" + cellLineName + "_Solution_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+
+        TFile* inputFile = new TFile(filePath.c_str(), "READ");
+        inputFile->GetObject("pdfSolution", fPDF);
+        inputFile->Close();
+    }
+    if(initialRadionuclide_location == 1 || initialRadionuclide_location == 2)
+    {
+        filePath = "../PDFsDecayPb212/PDF_" + cellLineName + "_Cells_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+
+        TFile* inputFile = new TFile(filePath.c_str(), "READ");
+        inputFile->GetObject("pdfCells", fPDF);
+        inputFile->Close();
+    }
+
+    return fPDF;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -72,6 +96,9 @@ initialRadionuclide_excitationEnergy(0)
     cellRMax = thickness_cellMembrane + cellCytoplasmRMax;
 
     fPrimaryGeneratorMessenger = new PrimaryGeneratorMessenger(this);
+
+    // G4cout << "JOHOO! " << initialRadionuclide_location << " , " << sampleActivity << " , " << cellLineName << G4endl;
+    // pdf = LoadPDF(initialRadionuclide_location, sampleActivity, cellLineName);
 }
 
 
@@ -82,18 +109,25 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
     delete fParticleGun;
 }
 
+
+// //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+// void PrimaryGeneratorAction::SetPDF
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-    //Generating new paricle for new event
+    //Generating new pericle for new event
 
     //Making particle a 212Pb nucleus
     // G4ParticleDefinition* ion_212Pb = G4IonTable::GetIonTable()->GetIon(82,212,0.0);
     // fParticleGun->SetParticleDefinition(ion_212Pb);
 
+    G4double timeDecaySeconds = pdf->GetRandom()*3600.;
+    fParticleGun->SetParticleTime(timeDecaySeconds*s);
 
-
+    // G4cout << "Random: " << timeDecaySeconds << G4endl;
 
     //-------------------------------
     // Distributing radionuclides randomly within the cell tube
@@ -211,19 +245,27 @@ void PrimaryGeneratorAction::DefineInitialRadionuclide()
 {
     ion = G4IonTable::GetIonTable()->GetIon(initialRadionuclide_Z, initialRadionuclide_A, initialRadionuclide_excitationEnergy);
     fParticleGun->SetParticleDefinition(ion);
+    ion->SetPDGLifeTime(0.*ns);
 }
 
 //----------------------------------------------------------------------------
-void PrimaryGeneratorAction::SetCellLine(std::string value)
-{
-    cellLine = value;
-}
 
-//----------------------------------------------------------------------------
 void PrimaryGeneratorAction::SetSampleActivity(G4int value)
 {
     sampleActivity = value;
 }
 
+
 //----------------------------------------------------------------------------
 
+void PrimaryGeneratorAction::SetCellLineName(std::string value)
+{
+    cellLineName = value;
+}
+
+//----------------------------------------------------------------------------
+
+void PrimaryGeneratorAction::SetPDF()
+{
+    pdf = LoadPDF(initialRadionuclide_location, sampleActivity, cellLineName);
+}
