@@ -48,7 +48,8 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pga
    fInitialRadionuclide_excitationEnergy(0),
    fInitialRadionuclide_define(0),
    fSampleActivity(0),
-   fPDF(0)
+   fCellLineName(0),
+   fDecayCurve(0)
 {
   fDirectory = new G4UIdirectory("/Sim/");
   fDirectory->SetGuidance("UI commands of Sim");
@@ -85,9 +86,9 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pga
   fCellLineName->SetGuidance("Set the name of the cell line.");
   fCellLineName->AvailableForStates(G4State_Idle);
 
-  fPDF = new G4UIcmdWithoutParameter("/Sim/SetPDFDecayRadionuclide",this);
-  fPDF->SetGuidance("Define the probability distribution function for the decay of the radionuclide. (command must be executed after sample activity and cell line name have been set).");
-  fPDF->AvailableForStates(G4State_Idle);
+  fDecayCurve = new G4UIcmdWithoutParameter("/Sim/SetDecayCurveRadionuclide",this);
+  fDecayCurve->SetGuidance("Load number of decays as a function of time in the given analysisregion for the radionuclide chosen. (command must be executed after sample activity and cell line name have been set).");
+  fDecayCurve->AvailableForStates(G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -101,6 +102,7 @@ PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
   delete fInitialRadionuclide_define;
   delete fSampleActivity;
   delete fCellLineName;
+  delete fDecayCurve;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -129,8 +131,8 @@ void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newVa
   if(command == fCellLineName ) {
     fPrimaryGeneratorAction->SetCellLineName(newValue);
   }
-  if(command == fPDF ) {
-    fPrimaryGeneratorAction->SetPDF();
+  if(command == fDecayCurve ) {
+    fPrimaryGeneratorAction->SetDecayCurveRadionuclide();
   }
 }
 

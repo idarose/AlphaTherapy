@@ -3,125 +3,192 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 
-
-void GenerateFiles(int initialVolume, int runs)
+//------------------–----------
+std::tuple<std::vector<int>,std::vector<double>, std::vector<double>, std::vector<double>> ImportData(std::string filename)
 {
-    std::string prefix("run");
+    //----------------------
+    //  Imports data from file where both columns contains data
+    //  of type in double. Returns a tuple with two vectors corresponding
+    //  to the two columns
 
-    std::string ext(".mac");
+    std::vector<int> activity;
+    std::vector<double> decaysSolution;
+    std::vector<double> decaysMembrane;
+    std::vector<double> decaysCytoplasm;
 
-    for ( int i = 0; i <= 9; ++i )
+    std::tuple<std::vector<int>,std::vector<double>, std::vector<double>, std::vector<double>> data;
+
+    std::fstream myfile(filename, ios_base::in);
+
+
+    if (myfile.is_open())
     {
-        std::stringstream ss;
-        int runNumber = i + initialVolume*10;
-        ss << prefix << runNumber << ext;
+        std::string line;
 
-        int seedVal = runNumber + 1;
+        int c1;
+        double c2;
+        double c3;
+        double c4;
 
-        // open the file. If not c++11 use  ss.str().c_str()  instead
-        std::ofstream file( ss.str() );
-        if ( !file )
+        while(std::getline(myfile,line))
         {
-            std::cerr << "Error: failed to create file " << ss.str() << '\n';
-            break;
+            std::stringstream mystream(line);
+            mystream >> c1 >> c2 >> c3 >> c4;
+            // std::cout << c2 << std::endl;
+            activity.push_back(c1);
+            decaysSolution.push_back(c2);
+            decaysMembrane.push_back(c3);
+            decaysCytoplasm.push_back(c4);
         }
+    }
+    else
+    {
+        std::cout << "Unable to open file " << filename << std::endl;
+    }
+    myfile.close();
 
-        std:string output;
+    data = std::make_tuple(activity,decaysSolution,decaysMembrane,decaysCytoplasm);
 
-        if(initialVolume==0)
+    return data;
+
+}
+
+
+void GenerateFiles(int initialVolume, int runs, int activity, std::string cellLineName, int caseNumber)
+{
+    // Defining simulation region
+    std:string region;
+    if(initialVolume==0)
         {
-            output = "Solution";
+            region = "Solution";
         }
         else if(initialVolume==1)
         {
-            output = "Membrane";
+            region = "Membrane";
         }
         else if(initialVolume==2)
         {
-            output = "Cytoplasm";
+            region = "Cytoplasm";
         }
 
-        // write something to the newly created file
-        file << "/run/initialize\n" << "/run/printProgress 10000\n" << "/Sim/setSeed " << seedVal << "\n/Sim/setOutputFileName Output_" << output << "_Thread_" << i << ".root\n" << "/Sim/SetInitialRadionuclide_Z 82\n" << "/Sim/SetInitialRadionuclide_A 212\n" << "/Sim/SetInitialRadionuclide_excitationEnergy 0.0\n" << "/Sim/DefineInitialRadionuclide\n" << "/Sim/SetInitialRadionuclide_location "<< initialVolume <<"\n" << "/run/beamOn " << runs << "\n";
-        if ( !file )
-        {
-            std::cerr << "Error: failed to write to file " << ss.str() << '\n';
-            break;
-        }
+    // Making output file names
+    std::string prefix("Run_");
+    std::string ext(".mac");
+
+    std::stringstream ss;
+    ss << prefix << cellLineName << "_" << caseNumber << ext;
+
+    std::cout << ss.str() << std::endl;
+
+    int seedVal = runs + caseNumber;
+
+    // open the file. If not c++11 use  ss.str().c_str()  instead
+    std::ofstream file( ss.str() );
+    if ( !file )
+    {
+        std::cerr << "Error: failed to create file " << ss.str() << '\n';
     }
+    // write something to the newly created file
+    file << "/run/initialize\n" << "/run/printProgress 10000\n" << "/Sim/setSeed " << seedVal << "\n/Sim/setOutputFileName Output_Pb212_" << cellLineName << "_Activity" << activity << "kBq_" << region << "_Thread_0.root\n" << "/Sim/SetInitialRadionuclide_Z 82\n" << "/Sim/SetInitialRadionuclide_A 212\n" << "/Sim/SetInitialRadionuclide_excitationEnergy 0.0\n" << "/Sim/DefineInitialRadionuclide\n" << "/Sim/SetInitialRadionuclide_location "<< initialVolume <<"\n" << "/Sim/SetSampleActivity " << activity << "\n/Sim/SetCellLineName " << cellLineName << "\n/Sim/SetDecayCurveRadionuclide\n" << "/run/beamOn " << runs << "\n";
+
+    if ( !file )
+    {
+        std::cerr << "Error: failed to write to file " << ss.str() << '\n';
+    }
+
 }
 
 void makeRunFiles()
 {
-    /*
-    solution : Submitted batch job 9239377
-    membrane : Submitted batch job 9239390
-    cytoplasm : Submitted batch job 9239395
+    std::tuple<std::vector<int>,std::vector<double>, std::vector<double>, std::vector<double>> data_C4_2 = ImportData("../Output_NumberDecays_C4_2.csv");
+    std::tuple<std::vector<int>,std::vector<double>, std::vector<double>, std::vector<double>> data_PC3_PIP = ImportData("../Output_NumberDecays_PC3_PIP.csv");
+    std::tuple<std::vector<int>,std::vector<double>, std::vector<double>, std::vector<double>> data_PC3_Flu = ImportData("../Output_NumberDecays_PC3_Flu.csv");
+
+    int activity;
+    double decaysSolution;
+    double decaysMembrane;
+    double decaysCytoplasm;
+
+    int caseNum = 0;
+
+    for(int i = 0; i < std::get<0>(data_C4_2).size(); i++)
+    {
+        //-------------------------
+        // Making files for C4-2
+        activity = std::get<0>(data_C4_2)[i];
+        decaysSolution = std::ceil(std::get<1>(data_C4_2)[i]);
+        decaysMembrane = std::ceil(std::get<2>(data_C4_2)[i]);
+        decaysCytoplasm = std::ceil(std::get<3>(data_C4_2)[i]);
+
+        GenerateFiles(0, decaysSolution, activity, "C4_2", caseNum);
+        GenerateFiles(1, decaysMembrane, activity, "C4_2", caseNum+1);
+        GenerateFiles(2, decaysCytoplasm, activity, "C4_2", caseNum+2);
+
+        caseNum += 3;
+    }
+
+    caseNum = 0;
+    for(int i = 0; i < std::get<0>(data_PC3_PIP).size(); i++)
+    {
+        //-------------------------
+        // Making files for PC3 PIP
+        activity = std::get<0>(data_PC3_PIP)[i];
+        decaysSolution = std::ceil(std::get<1>(data_PC3_PIP)[i]);
+        decaysMembrane = std::ceil(std::get<2>(data_PC3_PIP)[i]);
+        decaysCytoplasm = std::ceil(std::get<3>(data_PC3_PIP)[i]);
+
+        GenerateFiles(0, decaysSolution, activity, "PC3_PIP", caseNum);
+        GenerateFiles(1, decaysMembrane, activity, "PC3_PIP", caseNum+1);
+        GenerateFiles(2, decaysCytoplasm, activity, "PC3_PIP", caseNum+2);
+
+        caseNum += 3;
+    }
 
 
+    for(int i = 0; i < std::get<0>(data_PC3_Flu).size(); i++)
+    {
+        //-------------------------
+        // Making files for PC3 Flu
+        activity = std::ceil(std::get<0>(data_PC3_Flu)[i]);
+        decaysSolution = std::ceil(std::get<1>(data_PC3_Flu)[i]);
 
 
-
-
-    /run/initialize
-    /run/printProgress 10000
-    /Sim/setSeed 1
-    /Sim/setOutputFileName Output_thread1.root
-
-    /Sim/SetInitialRadionuclide_Z 82
-    /Sim/SetInitialRadionuclide_A 212
-    /Sim/SetInitialRadionuclide_excitationEnergy 0.0
-    /Sim/DefineInitialRadionuclide
-
-    /Sim/SetInitialRadionuclide_location 0
-
-    /run/beamOn 10000
-
-
-    # slurm-9224236_1.out. 10000 runs, 40 threads, 60.0 s
-
-
-    /run/initialize
-    /run/printProgress 10000
-    /Sim/setSeed 2
-    /Sim/setOutputFileName Output_thread2.root
-
-    /Sim/SetInitialRadionuclide_Z 82
-    /Sim/SetInitialRadionuclide_A 212
-    /Sim/SetInitialRadionuclide_excitationEnergy 0.0
-    /Sim/DefineInitialRadionuclide
-
-    /Sim/SetInitialRadionuclide_location 1
-
-    /run/beamOn 10000
-
-
-    #slurm-9224531_1.out. 10000 runs, 40 threads, 52.0 s
-
-
-
-    /run/initialize
-    /run/printProgress 10000
-    /Sim/setSeed 2
-    /Sim/setOutputFileName Output_thread2.root
-
-    /Sim/SetInitialRadionuclide_Z 82
-    /Sim/SetInitialRadionuclide_A 212
-    /Sim/SetInitialRadionuclide_excitationEnergy 0.0
-    /Sim/DefineInitialRadionuclide
-
-    /Sim/SetInitialRadionuclide_location 2
-
-    /run/beamOn 10000
-
-
-    #slurm-9224531_1.out. 10000 runs, 40 threads, 45.0 s
-
-    */
-
-    GenerateFiles(0, 5000000);
-    GenerateFiles(1, 350000);
-    GenerateFiles(2, 25000);
-
+        GenerateFiles(0, decaysSolution, activity, "PC3_Flu", i);
+    }
 }
+
+
+/*
+run0.mac
+  run1.mac
+  run2.mac
+  run3.mac
+  run4.mac
+  run5.mac
+  run6.mac
+  run7.mac
+  run8.mac
+  run9.mac
+  run10.mac
+  run11.mac
+  run12.mac
+  run13.mac
+  run14.mac
+  run15.mac
+  run16.mac
+  run17.mac
+  run18.mac
+  run19.mac
+  run20.mac
+  run21.mac
+  run22.mac
+  run23.mac
+  run24.mac
+  run25.mac
+  run26.mac
+  run27.mac
+  run28.mac
+  run29.mac
+  */

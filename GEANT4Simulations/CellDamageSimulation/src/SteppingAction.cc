@@ -36,10 +36,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     //Getting the interaction time
     G4double interactionTime = step->GetPostStepPoint()->GetGlobalTime()/s;
-    // if(fEventAction->GetStepNumber() < 10)
-    // {
-    // G4cout << "Step : " << fEventAction->GetStepNumber() << " Time : " << interactionTime << G4endl;
-    // }
 
     //------------------------
     // Storing interaction time and volume type of first interaction
@@ -107,9 +103,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             //Getting the kinetic energy of the particle for the interaction, in MeV
             G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
 
-            // //Getting the interaction time
-            // G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
-
             // Calculating cell ID number
             G4int cellID = volumeCopyNumber;
 
@@ -129,9 +122,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
             //Getting the kinetic energy of the particle for the interaction, in MeV
             G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
-
-            // //Getting the interaction time
-            // G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
 
             // Calculating cell ID number
             G4int cellID = volumeCopyNumber - numberCells;
@@ -170,26 +160,26 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     // Filling vectors
 
     // If initial radionuclide position is in solution, only store interactions taking place
-    // within first hour
+    // between hour 1 and hour 2
     if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==0)
     {
-        if(interactionTime/3600. <= 1.0)
+        if(interactionTime/3600. >= 1.0 && interactionTime/3600. <= 2.0)
         {
             FillVectors();
         }
     }
     // If initial position in membrane or cytoplasm, only store interactions taking place
-    // within first 48 hours
+    // between hour 1 and hour 26
     else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==1)
     {
-        if(interactionTime/3600. <= 25.0)
+        if(interactionTime/3600. >= 1.0 && interactionTime/3600. <= 26.0)
         {
             FillVectors();
         }
     }
     else if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==2)
     {
-        if(interactionTime/3600. <= 25.0)
+        if(interactionTime/3600. >= 1.0 && interactionTime/3600. <= 26.0)
         {
             FillVectors();
         }

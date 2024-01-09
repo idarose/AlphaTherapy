@@ -225,7 +225,7 @@ void AnalyseCellSurvival()
         // std::cout << "beta: " << beta << std::endl;
 
         //------------------------------------------------
-        double fractionOfComponentsHit = h_energyDeposition->Integral();
+        double fractionOfComponentsHit = h_energyDeposition->Integral(0.,26.);
         double fractionOfComponentsMissed = (1.0 - fractionOfComponentsHit);
 
         //------------------------------------------------

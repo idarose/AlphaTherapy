@@ -40,29 +40,49 @@ Iter select_randomly(Iter start, Iter end) {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TF1* LoadPDF(G4int initialRadionuclide_location, G4int sampleActivity, std::string cellLineName)
+void PrimaryGeneratorAction::LoadDecayCurveRadionuclide(G4int initialRadionuclide_location, G4int sampleActivity, std::string cellLineName)
 {
+    // Method to load file containing number of decays in solution and inside cells
+    // as a function of time. This curve is used to draw random decay times in
+    // GeneratingPrimaries().
+
     std::string filePath;
-    TF1* fPDF = nullptr;
+    TF1* fDecayCurveRadionuclide = nullptr;
 
     if(initialRadionuclide_location == 0)
     {
-        filePath = "../PDFsDecayPb212/PDF_" + cellLineName + "_Solution_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+        filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_" + cellLineName + "_Solution_Activity_" + std::to_string(sampleActivity) + "kBq.root";
 
         TFile* inputFile = new TFile(filePath.c_str(), "READ");
-        inputFile->GetObject("pdfSolution", fPDF);
+        inputFile->GetObject("fDecaysSolution", fDecayCurveRadionuclide);
         inputFile->Close();
+
+        minTime = 1.;
+        maxTime = 2.;
     }
     if(initialRadionuclide_location == 1 || initialRadionuclide_location == 2)
     {
-        filePath = "../PDFsDecayPb212/PDF_" + cellLineName + "_Cells_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+        filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_"  + cellLineName + "_Cells_Activity_" + std::to_string(sampleActivity) + "kBq.root";
 
         TFile* inputFile = new TFile(filePath.c_str(), "READ");
-        inputFile->GetObject("pdfCells", fPDF);
+        inputFile->GetObject("fDecaysCells", fDecayCurveRadionuclide);
         inputFile->Close();
+
+        minTime = 1.;
+        maxTime = 26.;
     }
 
-    return fPDF;
+    if(fDecayCurveRadionuclide)
+    {
+        G4cout << " DecayCurvePointer was initialized!" << G4endl;
+        fDecayCurve = fDecayCurveRadionuclide;
+        maxValueDecayCurve = 1.01*fDecayCurve->GetMaximum();
+    }
+    else
+    {
+        G4cout << " DecayCurvePointer was NOT initialized!" << G4endl;
+    }
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -97,8 +117,6 @@ initialRadionuclide_excitationEnergy(0)
 
     fPrimaryGeneratorMessenger = new PrimaryGeneratorMessenger(this);
 
-    // G4cout << "JOHOO! " << initialRadionuclide_location << " , " << sampleActivity << " , " << cellLineName << G4endl;
-    // pdf = LoadPDF(initialRadionuclide_location, sampleActivity, cellLineName);
 }
 
 
@@ -109,30 +127,40 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
     delete fParticleGun;
 }
 
-
-// //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-// void PrimaryGeneratorAction::SetPDF
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-    //Generating new pericle for new event
+    //Generating new particle for new event
 
-    //Making particle a 212Pb nucleus
-    // G4ParticleDefinition* ion_212Pb = G4IonTable::GetIonTable()->GetIon(82,212,0.0);
-    // fParticleGun->SetParticleDefinition(ion_212Pb);
+    bool foundDecayTime = false;
 
-    G4double timeDecaySeconds = pdf->GetRandom()*3600.;
-    fParticleGun->SetParticleTime(timeDecaySeconds*s);
+    auto GenerateDecayTime = [&]()
+    {
+        double r = G4UniformRand()*maxValueDecayCurve;
+        double x = minTime + (maxTime - minTime)*G4UniformRand();
+        double y = fDecayCurve->Eval(x);
+        if(r<=y)
+        {
+            fParticleGun->SetParticleTime(x*3600.*s);
+            foundDecayTime = true;
+        }
+    };
 
-    // G4cout << "Random: " << timeDecaySeconds << G4endl;
 
     //-------------------------------
-    // Distributing radionuclides randomly within the cell tube
+    // Distributing radionuclides randomly within the cell tube (aka. solution)
     if(initialRadionuclide_location==0)
     {
+        //------------------------
+        // Generating decay time
+
+        while(!foundDecayTime)
+        {
+            GenerateDecayTime();
+        }
+
+
         //------------------------
         //Generating random postion for particle inside cell Tube
         G4double r_particle = std::pow(G4UniformRand(), 1.0/2.0) * cellTubeRMin;
@@ -151,9 +179,18 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     }
 
     //-------------------------------
-    // Distributing radionuclides randomly within the cell memebrane
+    // Distributing radionuclides randomly within the cell membrane
     if(initialRadionuclide_location==1)
     {
+        //------------------------
+        // Generating decay time
+
+        while(!foundDecayTime)
+        {
+            GenerateDecayTime();
+        }
+
+        //-----------------------
         //Generating random radius
         G4double T = (std::pow(cellRMax, 3.0) - std::pow(cellCytoplasmRMax, 3.0))*G4UniformRand() + std::pow(cellCytoplasmRMax, 3.0);
         G4double radius = std::pow(T, 1.0/3.0);
@@ -186,6 +223,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     // Generating uniformly distibuted particles inside the cell cytoplasm
     if(initialRadionuclide_location==2)
     {
+        //------------------------
+        // Generating decay time
+
+        while(!foundDecayTime)
+        {
+            GenerateDecayTime();
+        }
+
+        //-----------------------
+        //Generating random radius
         G4double radius = std::pow(G4UniformRand(), 1.0/3.0)*(cellCytoplasmRMax);
         G4double theta = std::acos(1 - 2.0*G4UniformRand());
         G4double phi = 2*G4UniformRand()*CLHEP::pi;
@@ -199,7 +246,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         G4ThreeVector centerOfCell = *select_randomly(cellPositions.begin(), cellPositions.end());
 
 
-        // Generating position inside memebrane of this cell
+        // Generating position inside membrane of this cell
         G4ThreeVector particlePosRelativeToCenterCell = G4ThreeVector(x_particle,y_particle,z_particle);
 
         // Finding the absolute position
@@ -265,7 +312,7 @@ void PrimaryGeneratorAction::SetCellLineName(std::string value)
 
 //----------------------------------------------------------------------------
 
-void PrimaryGeneratorAction::SetPDF()
+void PrimaryGeneratorAction::SetDecayCurveRadionuclide()
 {
-    pdf = LoadPDF(initialRadionuclide_location, sampleActivity, cellLineName);
+    LoadDecayCurveRadionuclide(initialRadionuclide_location, sampleActivity, cellLineName);
 }

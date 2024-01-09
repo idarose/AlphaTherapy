@@ -48,22 +48,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     // Adding row
     analysisManager->AddNtupleRow();
 
-    // G4cout << firstInteractionTimeVec[0] << G4endl;
-
-    // // If simulating decays in solution, only store decays happening within first two hours
-    // if(fPrimaryGeneratorAction->GetInitialRadionuclide_location()==0)
-    // {
-    //     if(firstInteractionTimeVec[0]/3600. < 1.0)
-    //     {
-    //         // Adding row
-    //         analysisManager->AddNtupleRow();
-    //     }
-    // }
-    // else
-    // {
-    //     // Adding row
-    //     analysisManager->AddNtupleRow();
-    // }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

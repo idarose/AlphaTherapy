@@ -6,7 +6,9 @@
 #include "G4ThreeVector.hh"
 #include <vector>
 #include <TF1.h>
+#include "G4Types.hh"
 
+#include "G4AutoLock.hh"
 
 class G4ParticleGun;
 class G4Event;
@@ -34,8 +36,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         void DefineInitialRadionuclide();
         void SetSampleActivity(G4int value);
         void SetCellLineName(std::string value);
-
-        void SetPDF();
+        void SetDecayCurveRadionuclide();
+        void LoadDecayCurveRadionuclide(G4int initialRadionuclide_location, G4int sampleActivity, std::string cellLineName);
 
         int GetInitialRadionuclide_location(){return initialRadionuclide_location;};
 
@@ -46,6 +48,10 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4int       initialRadionuclide_location;
         G4int       sampleActivity;
         std::string cellLineName;
+        TF1*        fDecayCurve;
+        G4double    maxValueDecayCurve;
+        G4double    minTime;
+        G4double    maxTime;
 
     private:
         G4ParticleGun* fParticleGun = nullptr; // G4 particle gun
@@ -62,8 +68,6 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4double thickness_cellMembrane;
 
         G4ParticleDefinition* ion;
-
-        TF1* pdf;
 };
 
 

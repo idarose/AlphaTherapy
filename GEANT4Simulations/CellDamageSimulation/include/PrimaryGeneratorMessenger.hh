@@ -58,7 +58,7 @@ class PrimaryGeneratorMessenger: public G4UImessenger
     G4UIcmdWithoutParameter*    fInitialRadionuclide_define;
     G4UIcmdWithAnInteger*       fSampleActivity;
     G4UIcmdWithAString*         fCellLineName;
-    G4UIcmdWithoutParameter*    fPDF;
+    G4UIcmdWithoutParameter*    fDecayCurve;
 };
 
 

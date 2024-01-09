@@ -201,7 +201,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
     //-------------------------------
     //Number of cells to be placed
-    G4double numberCells_sample = 1000000;
+    G4double numberCells_sample = 0.5*std::pow(10.0,6.0);
     G4double milliLiter_sample = 0.2;
     G4double volume_sample = milliLiter_sample*1000*mm*mm*mm;
     G4double cellDensity_sample = numberCells_sample/volume_sample;

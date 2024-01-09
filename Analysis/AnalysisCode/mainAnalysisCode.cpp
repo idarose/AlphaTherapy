@@ -58,13 +58,13 @@ class DecayDynamics
     //  Assumes the output file from Mathematica is structured in a specific way
 
     public:
-        DecayDynamics(int activitySample_in, double U0InternalizedPerCell_in, double U0SurfaceBoundPerCell_in, std::string cellLine_in);
+        DecayDynamics(int activitySample_in, double U0PerCell_in, double U0InternalizedPerCell_in, std::string cellLine_in);
 
         void LoadDataFromMathematicaCalculations(std::string filepathToMathematicaOutput);
 
-        double GetNumberDecaysInSolutionFirstHour(){return numberDecays212PbInSolutionFirstHour;};
-        double GetNumberDecaysInMembraneTotalTime(){return numberDecays212PbInMembraneTotalTime;};
-        double GetNumberDecaysInCytoplasmTotalTime(){return numberDecays212PbInCytoplasmTotalTime;};
+        double GetNumberDecaysInSolutionFirstHour(){return numberDecays212PbInSolution1hTo2h;};
+        double GetNumberDecaysInMembraneTotalTime(){return numberDecays212PbInMembrane1h2To26h;};
+        double GetNumberDecaysInCytoplasmTotalTime(){return numberDecays212PbInCytoplasm1hTo26h;};
 
         int GetActivity(){return activitySample;};
         std::string GetCellLine(){return cellLine;};
@@ -72,22 +72,22 @@ class DecayDynamics
     private:
 
         // These number of decays are calculated in Mathematica for a sample of 0.2mL in volume
-        double numberDecays212PbInSolutionFirstHour;
-        double numberDecays212PbInMembraneTotalTime;
-        double numberDecays212PbInCytoplasmTotalTime;
+        double numberDecays212PbInSolution1hTo2h;
+        double numberDecays212PbInMembrane1h2To26h;
+        double numberDecays212PbInCytoplasm1hTo26h;
 
-        double U0InternalizedPerCell;
-        double U0SurfaceBoundPerCell;
+        double U0PerCell; // Number radionuclides absorbed per cell
+        double U0InternalizedPerCell; // Number of absorbed radionuclides that are found in cytoplasm
         int activitySample;  // Given in kBq/1mL
         std::string cellLine;
 };
 
 
-DecayDynamics::DecayDynamics(int activitySample_in, double U0InternalizedPerCell_in, double U0SurfaceBoundPerCell_in, std::string cellLine_in)
+DecayDynamics::DecayDynamics(int activitySample_in, double U0PerCell_in, double U0InternalizedPerCell_in, std::string cellLine_in)
 {
     activitySample = activitySample_in;
+    U0PerCell = U0PerCell_in;
     U0InternalizedPerCell = U0InternalizedPerCell_in;
-    U0SurfaceBoundPerCell = U0SurfaceBoundPerCell_in;
     cellLine = cellLine_in;
 
 }
@@ -99,28 +99,28 @@ void DecayDynamics::LoadDataFromMathematicaCalculations(std::string filepathToMa
     //----------------------
     // Loads data from calculations, assuming output files are structured as shown in the file "212PbDecayDynamics.nb"
 
-    std::string filepathSolutionData = filepathToMathematicaOutput + "/" + cellLine + "/Solution/Activity_" + std::to_string(activitySample) + "kBq/Decays.dat";
+    std::string filepathSolutionData = filepathToMathematicaOutput + "/" + cellLine + "/Solution/Activity_" + std::to_string(activitySample) + "kBq/NumberDecays.dat";
 
     // Importing data for decays occuring in solution
     std::vector<double> decayDataSolution = ImportDataStringDouble(filepathSolutionData);
-    numberDecays212PbInSolutionFirstHour = decayDataSolution[0];
+    numberDecays212PbInSolution1hTo2h = decayDataSolution[0];
 
 
     // If there are no radionuclides internalized there is no output file for "Cells"
     // So only read "Cells" files if there is uptake
-    if(U0InternalizedPerCell>0.0)
+    if(U0PerCell>0.0)
     {
         // Importing data for decays occuring in cells
-        std::string filepathCellData = filepathToMathematicaOutput + "/" + cellLine + "/Cells/Activity_" + std::to_string(activitySample) + "kBq/Decays.dat";
+        std::string filepathCellData = filepathToMathematicaOutput + "/" + cellLine + "/Cells/Activity_" + std::to_string(activitySample) + "kBq/NumberDecays.dat";
         std::vector<double> decayDataCells = ImportDataStringDouble(filepathCellData);
 
-        numberDecays212PbInMembraneTotalTime = decayDataCells[7];
-        numberDecays212PbInCytoplasmTotalTime = decayDataCells[14];
+        numberDecays212PbInMembrane1h2To26h = decayDataCells[7];
+        numberDecays212PbInCytoplasm1hTo26h = decayDataCells[14];
     }
     else
     {
-        numberDecays212PbInMembraneTotalTime = 0.0;
-        numberDecays212PbInCytoplasmTotalTime = 0.0;
+        numberDecays212PbInMembrane1h2To26h = 0.0;
+        numberDecays212PbInCytoplasm1hTo26h = 0.0;
     }
 }
 
@@ -344,9 +344,9 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 {
     //------------------–----------
     // Loading decay dynamics
-    double numberDecays212PbInSolutionFirstHour = decayDynamicsInstance.GetNumberDecaysInSolutionFirstHour()*volumeRatio;
-    double numberDecays212PbInMembrane25Hours = decayDynamicsInstance.GetNumberDecaysInMembraneTotalTime()*volumeRatio;
-    double numberDecays212PbInCytoplasm25Hours = decayDynamicsInstance.GetNumberDecaysInCytoplasmTotalTime()*volumeRatio;
+    double numberDecays212PbInSolution1hTo2h = decayDynamicsInstance.GetNumberDecaysInSolutionFirstHour()*volumeRatio;
+    double numberDecays212PbInMembrane1hTo26h = decayDynamicsInstance.GetNumberDecaysInMembraneTotalTime()*volumeRatio;
+    double numberDecays212PbInCytoplasm1hTo26h = decayDynamicsInstance.GetNumberDecaysInCytoplasmTotalTime()*volumeRatio;
 
 
     //------------------–----------
@@ -363,8 +363,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
     //------------------–----------
     //  Function for filling histograms
-    // auto FillHistograms = [&](std::string filepathSolutionSim_i, std::string filepathMembraneSim_i, std::string filepathCytoplasmSim_i)
-    auto FillHistograms = [&](TChain* chainSolutionSim, TChain* chainMembraneSim, TChain* chainCytoplasmSim)
+    auto FillHistograms = [&](std::string filepathSolutionSim_i, std::string filepathMembraneSim_i, std::string filepathCytoplasmSim_i)
+    // auto FillHistograms = [&](TChain* chainSolutionSim, TChain* chainMembraneSim, TChain* chainCytoplasmSim)
     {
 
 
@@ -372,20 +372,27 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // Opening TTree files and creating TTreeReaders
 
         // Reader for solution simulation
-        // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(filepathSolutionSim_i.c_str(), "READ"));
-        // std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(chainSolutionSim, "READ"));
-        // auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
-        TTreeReader myReaderSolutionSim(chainSolutionSim);
+        std::shared_ptr<TFile> myFileSolutionSim(TFile::Open(filepathSolutionSim_i.c_str(), "READ"));
+        auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
+        TTreeReader myReaderSolutionSim(treeSolutionSim);
 
         // Reader for membrane simulation
-        // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
-        // auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
-        TTreeReader myReaderMembraneSim(chainMembraneSim);
+        std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
+        auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
+        TTreeReader myReaderMembraneSim(treeMembraneSim);
 
-        // Reader for cytoplasm simulation
-        // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
-        // auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
-        TTreeReader myReaderCytoplasmSim(chainCytoplasmSim);
+
+        //Reader for cytoplasm simulation
+        std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
+        auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
+        TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
+
+
+        // //---------------------------
+        // // Using chains
+        // TTreeReader myReaderSolutionSim(chainSolutionSim);
+        // TTreeReader myReaderMembraneSim(chainMembraneSim);
+        // TTreeReader myReaderCytoplasmSim(chainCytoplasmSim);
 
 
         //------------------–----------
@@ -429,35 +436,35 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         std::vector<CellHit> storedCellHits;
 
         //------------------–----------
-        //Looping through data for decays occurring in solution in first hour
+        //Looping through data for decays occurring in solution from hour 1 to hour 2
 
         // Counter variable
-        int numberDecays212PbInSolutionFirstHour_counter = 0;
+        int numberDecays212PbInSolution1hTo2h_counter = 0;
         bool whileLoopSolutionSimWasBroken = false;
 
         while(myReaderSolutionSim.Next())
         {
 
-            // bool for if the decay occurred in solution in first hour
-            bool firstInteractionInSolutionInFirstHour = false;
+            // bool for if the decay occurred in solution from hour 1 to hour 2
+            bool firstInteractionInSolution1hTo2h = false;
 
             // Checking when and where first interaction occured
             if(firstInteractionVolumeSolutionSim[0]==0)
             {
 
-                if(firstInteractionTimeSolutionSim[0]/3600. < 1.0)
+                if(firstInteractionTimeSolutionSim[0]/3600. >= 1. && firstInteractionTimeSolutionSim[0]/3600. <= 2.)
                 {
 
                     // Sett bool true
-                    firstInteractionInSolutionInFirstHour = true;
+                    firstInteractionInSolution1hTo2h = true;
 
                     // Update counter
-                    numberDecays212PbInSolutionFirstHour_counter ++;
+                    numberDecays212PbInSolution1hTo2h_counter ++;
                 }
             }
 
             // Sorting through interactions
-            if(firstInteractionInSolutionInFirstHour)
+            if(firstInteractionInSolution1hTo2h)
             {
                 // looping over all steps for one event/decay
                 for(int i=0; i<energyDepsSolutionSim.GetSize(); i++)
@@ -467,8 +474,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                     if(energyDepsSolutionSim[i]>0.)
                     {
 
-                        // Only add if interaction happened within first hour
-                        if(interactionTimeSolutionSim[i]/3600.0 < 1.0)
+                        // Only add if interaction happened between hour 1 and hour 2
+                        if(interactionTimeSolutionSim[i]/3600.0 >= 1. && interactionTimeSolutionSim[i]/3600.0 <= 2.)
                         {
 
                             // boolean: true if cell has not already been hit before in this event
@@ -504,9 +511,9 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
             //------------------–----------
             // Break loop if number of decays have been reached
-            if(numberDecays212PbInSolutionFirstHour_counter >= numberDecays212PbInSolutionFirstHour)
+            if(numberDecays212PbInSolution1hTo2h_counter >= numberDecays212PbInSolution1hTo2h)
             {
-                std::cout << "Needed : " << numberDecays212PbInSolutionFirstHour << " Counted : " << numberDecays212PbInSolutionFirstHour_counter << " At entry : " << myReaderSolutionSim.GetCurrentEntry() << std::endl;
+                std::cout << "Needed : " << numberDecays212PbInSolution1hTo2h << " Counted : " << numberDecays212PbInSolution1hTo2h_counter << " At entry : " << myReaderSolutionSim.GetCurrentEntry() << std::endl;
                 whileLoopSolutionSimWasBroken = true;
                 break;
             }
@@ -515,28 +522,28 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // Check if enough decays were processed
         if(!whileLoopSolutionSimWasBroken)
         {
-            std::cout << "Not enough events in solution simulation file! Need " << numberDecays212PbInSolutionFirstHour << " number of decays. Only reached " << numberDecays212PbInSolutionFirstHour_counter << " number of decays at entry number " << myReaderSolutionSim.GetCurrentEntry() << std::endl;
+            std::cout << "Not enough events in solution simulation file! Need " << numberDecays212PbInSolution1hTo2h << " number of decays. Only reached " << numberDecays212PbInSolution1hTo2h_counter << " number of decays at entry number " << myReaderSolutionSim.GetCurrentEntry() << std::endl;
         }
 
 
         //------------------–----------
-        // Looping through data for decays occuring in Membrane in 25 hours
+        // Looping through data for decays occuring in Membrane from hour 1 to hour 26
 
         // Counter variable
-        int numberDecays212PbInMembrane25Hours_counter = 0;
+        int numberDecays212PbInMembrane1hTo26h_counter = 0;
         bool whileLoopMembraneSimWasBroken = false;
 
         while(myReaderMembraneSim.Next())
         {
-            bool firstInteractionInMembraneFirst25h = false;
+            bool firstInteractionInMembrane1hTo26h = false;
 
-            if(firstInteractionTimeMembraneSim[0]/3600. < 25.)
+            if(firstInteractionTimeMembraneSim[0]/3600. >= 1. && firstInteractionTimeMembraneSim[0]/3600. <= 26.)
             {
-                firstInteractionInMembraneFirst25h = true;
-                numberDecays212PbInMembrane25Hours_counter ++;
+                firstInteractionInMembrane1hTo26h = true;
+                numberDecays212PbInMembrane1hTo26h_counter ++;
             }
 
-            if(firstInteractionInMembraneFirst25h)
+            if(firstInteractionInMembrane1hTo26h)
             {
                 // looping over all steps for one event/decay
                 for(int i=0; i<energyDepsMembraneSim.GetSize(); i++)
@@ -546,8 +553,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                     if(energyDepsMembraneSim[i]>0.)
                     {
 
-                        // Only add if interaction happened within first 25 hours
-                        if(interactionTimeMembraneSim[i]/3600.0 < 25.0)
+                        // Only add if interaction happened between hour 1 and hour 26
+                        if(interactionTimeMembraneSim[i]/3600.0 >= 1. && interactionTimeMembraneSim[i]/3600.0 <= 26.)
                         {
 
                             // boolean: true if cell has not already been hit before in this event
@@ -581,7 +588,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             }
 
             // Break loop if number of decays have been reached
-            if(numberDecays212PbInMembrane25Hours_counter >= numberDecays212PbInMembrane25Hours)
+            if(numberDecays212PbInMembrane1hTo26h_counter >= numberDecays212PbInMembrane1hTo26h)
             {
                 whileLoopMembraneSimWasBroken = true;
                 break;
@@ -591,32 +598,32 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // Checking if enough decays were processed
         if(!whileLoopMembraneSimWasBroken)
         {
-            std::cout << "Not enough events in membrane simulation file! Need " << numberDecays212PbInMembrane25Hours << " number of decays. Only reached " << numberDecays212PbInMembrane25Hours_counter << " number of decays at entry number " << myReaderMembraneSim.GetCurrentEntry() << std::endl;
+            std::cout << "Not enough events in membrane simulation file! Need " << numberDecays212PbInMembrane1hTo26h << " number of decays. Only reached " << numberDecays212PbInMembrane1hTo26h_counter << " number of decays at entry number " << myReaderMembraneSim.GetCurrentEntry() << std::endl;
         }
 
 
         // ------------------–----------
-        // Looping through data for decays occuring in Cytoplasm in 25 hours
+        // Looping through data for decays occuring in Cytoplasm between hour 1 and hour 26
 
         // Counter variable
-        int numberDecays212PbInCytoplasm25Hours_counter = 0;
+        int numberDecays212PbInCytoplasm1hTo26h_counter = 0;
         bool whileLoopCytoplasmSimWasBroken = false;
 
         while(myReaderCytoplasmSim.Next())
         {
 
-            bool firstInteractionInCytoplasmFirst25h = false;
+            bool firstInteractionInCytoplasm1hTo26h = false;
 
             if(firstInteractionVolumeCytoplasmSim[0] == 2)
             {
-                if(firstInteractionTimeCytoplasmSim[0]/3600. < 25.)
+                if(firstInteractionTimeCytoplasmSim[0]/3600. >= 1. && firstInteractionTimeCytoplasmSim[0]/3600. <= 26.)
                 {
-                    firstInteractionInCytoplasmFirst25h = true;
-                    numberDecays212PbInCytoplasm25Hours_counter ++;
+                    firstInteractionInCytoplasm1hTo26h = true;
+                    numberDecays212PbInCytoplasm1hTo26h_counter ++;
                 }
             }
 
-            if(firstInteractionInCytoplasmFirst25h)
+            if(firstInteractionInCytoplasm1hTo26h)
             {
                 // looping over all steps for one event/decay
                 for(int i=0; i<energyDepsCytoplasmSim.GetSize(); i++)
@@ -626,8 +633,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                     if(energyDepsCytoplasmSim[i]>0.)
                     {
 
-                        // Only add if interaction happened within first 24 hours
-                        if(interactionTimeCytoplasmSim[i]/3600.0 < 25.0)
+                        // Only add if interaction happened within between hour 1 and hour 26
+                        if(interactionTimeCytoplasmSim[i]/3600.0 >= 1. && interactionTimeCytoplasmSim[i]/3600.0 <= 26.)
                         {
 
                             // boolean: true if cell has not already been hit before in this event
@@ -662,7 +669,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             }
 
             // Break loop if number of decays have been reached
-            if(numberDecays212PbInCytoplasm25Hours_counter >= numberDecays212PbInCytoplasm25Hours)
+            if(numberDecays212PbInCytoplasm1hTo26h_counter >= numberDecays212PbInCytoplasm1hTo26h)
             {
                 whileLoopCytoplasmSimWasBroken = true;
                 break;
@@ -672,7 +679,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         // Checking if enough decays where processed
         if(!whileLoopCytoplasmSimWasBroken)
         {
-            std::cout << "Not enough events in cytoplasm simulation file! Need " << numberDecays212PbInCytoplasm25Hours << " number of decays. Only reached " << numberDecays212PbInCytoplasm25Hours_counter << " number of decays at entry number " << myReaderCytoplasmSim.GetCurrentEntry() << std::endl;
+            std::cout << "Not enough events in cytoplasm simulation file! Need " << numberDecays212PbInCytoplasm1hTo26h << " number of decays. Only reached " << numberDecays212PbInCytoplasm1hTo26h_counter << " number of decays at entry number " << myReaderCytoplasmSim.GetCurrentEntry() << std::endl;
         }
 
 
@@ -686,40 +693,49 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         }
     };
 
-    TChain* chSolution = new TChain("B4");
-    TChain* chMembrane = new TChain("B4");
-    TChain* chCytoplasm = new TChain("B4");
 
-    std::string fileSolution;
-    std::string fileMembrane;
-    std::string fileCytoplasm;
+    // //----------------------------
+    // // Making chain from files
+    // TChain* chSolution = new TChain("B4");
+    // TChain* chMembrane = new TChain("B4");
+    // TChain* chCytoplasm = new TChain("B4");
 
-    for(int i=0; i<10; i++)
-    {
-        fileSolution = "/Volumes/SamsungT7/Output_Solution_Thread_" + std::to_string(i) + ".root";
-        fileMembrane = "/Volumes/SamsungT7/Output_Membrane_Thread_" + std::to_string(i) + ".root";
-        fileCytoplasm = "/Volumes/SamsungT7/Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
+    // std::string fileSolution;
+    // std::string fileMembrane;
+    // std::string fileCytoplasm;
 
-        chSolution->Add(fileSolution.c_str());
-        chMembrane->Add(fileMembrane.c_str());
-        chCytoplasm->Add(fileCytoplasm.c_str());
-    }
+    // for(int i=0; i<10; i++)
+    // {
+    //     fileSolution = "/Volumes/SamsungT7/Output_Solution_Thread_" + std::to_string(i) + ".root";
+    //     fileMembrane = "/Volumes/SamsungT7/Output_Membrane_Thread_" + std::to_string(i) + ".root";
+    //     fileCytoplasm = "/Volumes/SamsungT7/Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
 
-    // std::string filepathSimulationOutput = "../../GEANT4Simulations/OutputFromSaga/";
+    //     chSolution->Add(fileSolution.c_str());
+    //     chMembrane->Add(fileMembrane.c_str());
+    //     chCytoplasm->Add(fileCytoplasm.c_str());
+    // }
 
-    // std::string filepathSolutionIteration_i;
-    // std::string filepathMembraneIteration_i;
-    // std::string filepathCytoplasmIteration_i;
+
+    std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation-build/";
+
+    std::string filepathSolutionIteration_i;
+    std::string filepathMembraneIteration_i;
+    std::string filepathCytoplasmIteration_i;
 
     //------------------–----------
     // Filling histgrams
     for(int i=0; i<numberIterations; i++)
     {
-        // filepathSolutionIteration_i = filepathSimulationOutput + "Output_Solution_Thread_" + std::to_string(i) + ".root";
-        // filepathMembraneIteration_i = filepathSimulationOutput + "Output_Membrane_Thread_" + std::to_string(i) + ".root";
-        // filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Cytoplasm_Thread_" + std::to_string(i) + ".root";
-        FillHistograms(chSolution, chMembrane, chCytoplasm);
-        std::cout << " Activity " << decayDynamicsInstance.GetActivity() <<", finished iteration number: " << i+1 << std::endl;
+        filepathSolutionIteration_i = filepathSimulationOutput + "Output_Pb212_" + decayDynamicsInstance.GetCellLine() + "_Activity" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_Solution_Thread_" + std::to_string(i) + ".root";
+        filepathMembraneIteration_i = filepathSimulationOutput + "Output_Pb212_" + decayDynamicsInstance.GetCellLine() + "_Activity" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_Membrane_Thread_" + std::to_string(i) + ".root";
+        filepathCytoplasmIteration_i = filepathSimulationOutput + "Output_Pb212_" + decayDynamicsInstance.GetCellLine() + "_Activity" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_Cytoplasm_Thread_" + std::to_string(i) + ".root";
+
+
+        FillHistograms(filepathSolutionIteration_i, filepathMembraneIteration_i, filepathCytoplasmIteration_i);
+        // // -----------------------------
+        // // Filling using chains
+        // FillHistograms(chSolution, chMembrane, chCytoplasm);
+        // std::cout << " Activity " << decayDynamicsInstance.GetActivity() <<", finished iteration number: " << i+1 << std::endl;
     }
 
 
@@ -780,11 +796,11 @@ void mainAnalysisCode()
     DecayDynamics decays_A75kBq_PC3_Flu = DecayDynamics(75, 0., 0., "PC3_Flu");
     DecayDynamics decays_A100kBq_PC3_Flu = DecayDynamics(100, 0., 0., "PC3_Flu");
     DecayDynamics decays_A150kBq_PC3_Flu = DecayDynamics(150, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A1000kBq_PC3_Flu = DecayDynamics(1000,0.,0., "PC3_Flu");
-    DecayDynamics decays_A300kBq_PC3_Flu = DecayDynamics(300,0.,0., "PC3_Flu");
-    DecayDynamics decays_A500kBq_PC3_Flu = DecayDynamics(500,0.,0., "PC3_Flu");
-    DecayDynamics decays_A200kBq_PC3_Flu = DecayDynamics(200,0.,0., "PC3_Flu");
-    DecayDynamics decays_A250kBq_PC3_Flu = DecayDynamics(250,0.,0., "PC3_Flu");
+    // DecayDynamics decays_A1000kBq_PC3_Flu = DecayDynamics(1000,0.,0., "PC3_Flu");
+    // DecayDynamics decays_A300kBq_PC3_Flu = DecayDynamics(300,0.,0., "PC3_Flu");
+    // DecayDynamics decays_A500kBq_PC3_Flu = DecayDynamics(500,0.,0., "PC3_Flu");
+    // DecayDynamics decays_A200kBq_PC3_Flu = DecayDynamics(200,0.,0., "PC3_Flu");
+    // DecayDynamics decays_A250kBq_PC3_Flu = DecayDynamics(250,0.,0., "PC3_Flu");
 
 
 
@@ -815,43 +831,20 @@ void mainAnalysisCode()
     decays_A75kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
     decays_A100kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
     decays_A150kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-    decays_A1000kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-    decays_A300kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-    decays_A500kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-    decays_A200kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-    decays_A250kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-
-    // std::cout << "50 : " << decays_A50kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
-    // std::cout << "100 : " << decays_A100kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()*volumeRatio << std::endl;
+    // decays_A1000kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    // decays_A300kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    // decays_A500kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    // decays_A200kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+    // decays_A250kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
 
 
-    // EnergyDepositionHistograms Hist_A50kBq_PC3_PIP = MakeHistograms(decays_A50kBq_PC3_PIP, numberIterations, volumeRatio, numberCells);
-    // auto output = new TFile("../OutputAnalysisCode/Output_PC3_PIP_50kBq.root", "RECREATE");
-    // Hist_A50kBq_PC3_PIP.WriteHistogramsToFile();
-    // output->Write();
-    // output->Close();
 
-    /*
-    Needed : 128 268 Counted : 128 269 At entry : 2 068 965
-    Activity 50, finished iteration number: 1
+    //-------------------------------------
+    // Creating energy deposition histograms
 
-
-    Needed : 192 403 Counted : 192 403 At entry : 3 102 831
-    Activity 75, finished iteration number: 1
-
-
-    Needed : 256 537 Counted : 256 537 At entry : 4 136 555
-    Activity 100, finished iteration number: 1
-
-    Needed : 384805 Counted : 384806 At entry : 6206037
-    Activity 150, finished iteration number: 1
-
-    */
-
-
-    EnergyDepositionHistograms Hist_A100kBq_PC3_Flu = MakeHistograms(decays_A100kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
-    auto output = new TFile("../OutputAnalysisCode/Output_PC3_Flu_100kBq.root", "RECREATE");
-    Hist_A100kBq_PC3_Flu.WriteHistogramsToFile();
+    EnergyDepositionHistograms Hist_A10kBq_C4_2 = MakeHistograms(decays_A10kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    auto output = new TFile("../OutputAnalysisCode/Output_C4_2_10kBq.root", "RECREATE");
+    Hist_A10kBq_C4_2.WriteHistogramsToFile();
     output->Write();
     output->Close();
 }
