@@ -1,0 +1,20 @@
+TotalDecays212Pb212Bi$1h$26h	923707.8917367813
+TotalDecays212Bi208Tl$1h$26h	323354.2054571911
+TotalDecays212Bi212Po$1h$26h	576351.4301999386
+TotalDecays212Po208Pb$1h$26h	576351.4128086239
+TotalDecays208Tl208Pb$1h$26h	322916.772759387
+ToyalAlphaDecays$1h$26h	899705.618265815
+
+TotalDecays212Pb212Bi$1h$26h(cellMembrane)	467852.04906148673
+TotalDecays212Bi208Tl$1h$26h(cellMembrane)	163776.80536143447
+TotalDecays212Bi212Po$1h$26h(cellMembrane)	291918.25685451436
+TotalDecays212Po208Pb$1h$26h(cellMembrane)	291918.2480459264
+TotalDecays208Tl208Pb$1h$26h(cellMembrane)	163555.24854046875
+TotalAlphaDecays$1h$26h(cellMembrane)	455695.05340736086
+
+TotalDecays212Pb212Bi$1h$26h(cellCytoplasm)	455855.8426752946
+TotalDecays212Bi208Tl$1h$26h(cellCytoplasm)	159577.40009575663
+TotalDecays212Bi212Po$1h$26h(cellCytoplasm)	284433.17334542423
+TotalDecays212Po208Pb$1h$26h(cellCytoplasm)	284433.1647626975
+TotalDecays208Tl208Pb$1h$26h(cellCytoplasm)	159361.52421891823
+TotalAlphaDecays$1h$26h(cellCytoplasm)	444010.5648584541
