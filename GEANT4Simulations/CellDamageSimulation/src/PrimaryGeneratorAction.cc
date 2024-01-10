@@ -92,6 +92,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* detConstruc
 fDetConstruction(detConstruction),
 initialRadionuclide_excitationEnergy(0)
 {
+    TF1::DefaultAddToGlobalList(false);
     //-------------------------------
     G4int n_particle = 1;
     fParticleGun  = new G4ParticleGun(n_particle);
@@ -126,7 +127,7 @@ initialRadionuclide_excitationEnergy(0)
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
     // gROOT->GetListOfFunctions()->Remove(fDecayCurve.get());
-    gROOT->GetListOfFunctions()->Remove(fDecayCurve);
+    // gROOT->GetListOfFunctions()->Remove(fDecayCurve);
 
     delete fParticleGun;
 }
