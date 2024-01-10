@@ -102,6 +102,8 @@ set(EXAMPLEB4A_SCRIPTS
     Run_PC3_Flu_5.mac
     vis.mac
     jobScript_C4_2.sh
+    jobScript_PC3_PIP.sh
+    jobScript_PC3_Flu.sh
   )
 
 foreach(_script ${EXAMPLEB4A_SCRIPTS})

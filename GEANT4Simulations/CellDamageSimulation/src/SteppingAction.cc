@@ -166,6 +166,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         if(interactionTime/3600. >= 1.0 && interactionTime/3600. <= 2.0)
         {
             FillVectors();
+            // G4cout << "Energydeps: " << step->GetTotalEnergyDeposit()/MeV << G4endl;
         }
     }
     // If initial position in membrane or cytoplasm, only store interactions taking place

@@ -313,7 +313,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     if(initialRadionuclide_location==0)
     {
         //------------------------
-        // Generating decay time
+        //Generating decay time
 
         while(!foundDecayTime)
         {

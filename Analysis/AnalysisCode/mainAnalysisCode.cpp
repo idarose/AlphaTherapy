@@ -376,16 +376,16 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
         TTreeReader myReaderSolutionSim(treeSolutionSim);
 
-        // Reader for membrane simulation
-        std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
-        auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
-        TTreeReader myReaderMembraneSim(treeMembraneSim);
+        // // Reader for membrane simulation
+        // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
+        // auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
+        // TTreeReader myReaderMembraneSim(treeMembraneSim);
 
 
-        //Reader for cytoplasm simulation
-        std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
-        auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
-        TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
+        // //Reader for cytoplasm simulation
+        // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
+        // auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
+        // TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
 
 
         // //---------------------------
@@ -842,9 +842,9 @@ void mainAnalysisCode()
     //-------------------------------------
     // Creating energy deposition histograms
 
-    EnergyDepositionHistograms Hist_A10kBq_C4_2 = MakeHistograms(decays_A10kBq_C4_2, numberIterations, volumeRatio, numberCells);
-    auto output = new TFile("../OutputAnalysisCode/Output_C4_2_10kBq.root", "RECREATE");
-    Hist_A10kBq_C4_2.WriteHistogramsToFile();
+    EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = MakeHistograms(decays_A150kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
+    auto output = new TFile("OutputAnalysisCode/Output_PC3_Flu_150kBq.root", "RECREATE");
+    Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
     output->Write();
     output->Close();
 }
