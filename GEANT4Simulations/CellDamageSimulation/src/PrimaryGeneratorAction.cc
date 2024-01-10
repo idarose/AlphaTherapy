@@ -22,6 +22,15 @@
 #include  <TFile.h>
 #include  <TROOT.h>
 
+#include <TMath.h>
+#include <Math/Interpolator.h>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <iostream>
+#include <ctime>
+#include <tuple>
+
 
 // Methods to extract random element from a vector
 template<typename Iter, typename RandomGenerator>
@@ -39,52 +48,198 @@ Iter select_randomly(Iter start, Iter end) {
 }
 
 
+
+//------------------–----------
+std::tuple<std::vector<double>,std::vector<double>> ImportData(std::string filename)
+{
+    //----------------------
+    //  Imports data from file where both columns contains data
+    //  of type in double. Returns a tuple with two vectors corresponding
+    //  to the two columns
+
+    std::vector<double> CDF;
+    std::vector<double> time;
+
+    std::tuple<std::vector<double>,std::vector<double>> data;
+
+    std::fstream myfile(filename, std::ios_base::in);
+
+
+    if (myfile.is_open())
+    {
+        std::string line;
+        double x;
+        double y;
+
+        while(std::getline(myfile,line))
+        {
+            std::stringstream mystream(line);
+            mystream >> x >> y;
+            time.push_back(x);
+            CDF.push_back(y);
+        }
+    }
+    else
+    {
+        std::cout << "Unable to open file " << filename << std::endl;
+    }
+    myfile.close();
+
+    data = std::make_tuple(time,CDF);
+
+    return data;
+
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::LoadDecayCurveRadionuclide(G4int initialRadionuclide_location, G4int sampleActivity, std::string cellLineName)
 {
-    // Method to load file containing number of decays in solution and inside cells
-    // as a function of time. This curve is used to draw random decay times in
-    // GeneratingPrimaries().
-
     std::string filePath;
-    // TF1* fDecayCurveRadionuclide = nullptr;
+    std::tuple<std::vector<double>,std::vector<double>> fileData;
+    double tMin;
+    double tMax;
+
 
     if(initialRadionuclide_location == 0)
     {
-        filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_" + cellLineName + "_Solution_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+        filePath = "../../Mathematica/Output/" + cellLineName + "/Solution/Activity_" + std::to_string(sampleActivity) + "kBq/Decays212Pb212Bi.dat";
+        fileData = ImportData(filePath.c_str());
 
-        TFile* inputFile = new TFile(filePath.c_str(), "READ");
-        inputFile->GetObject("fDecaysSolution", fDecayCurve);
-        inputFile->Close();
+        // G4cout << "JOHO: " << filePath << G4endl;
+
+
+        decayCurveDataX = std::get<0>(fileData);
+        decayCurveDataY = std::get<1>(fileData);
 
         minTime = 1.;
         maxTime = 2.;
     }
     if(initialRadionuclide_location == 1 || initialRadionuclide_location == 2)
     {
-        filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_"  + cellLineName + "_Cells_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+        filePath = "../../Mathematica/Output/" + cellLineName + "/Cells/Activity_" + std::to_string(sampleActivity) + "kBq/Decays212Pb212Bi.dat";
 
-        TFile* inputFile = new TFile(filePath.c_str(), "READ");
-        inputFile->GetObject("fDecaysCells", fDecayCurve);
-        inputFile->Close();
+        fileData = ImportData(filePath.c_str());
+
+        // G4cout << "JOHOFile: " << filePath << G4endl;
+
+        decayCurveDataX = std::get<0>(fileData);
+        decayCurveDataY = std::get<1>(fileData);
 
         minTime = 1.;
         maxTime = 26.;
     }
-
-    if(fDecayCurve)
-    {
-        G4cout << " DecayCurvePointer was initialized!" << G4endl;
-        // fDecayCurve = std::shared_ptr<TF1>(fDecayCurveRadionuclide);
-        maxValueDecayCurve = 1.01*fDecayCurve->GetMaximum();
-    }
-    else
-    {
-        G4cout << " DecayCurvePointer was NOT initialized!" << G4endl;
-    }
-
+    // G4cout << "JOHOFile: " << decayCurveDataX.size() << G4endl;
 }
+
+double PrimaryGeneratorAction::EvaluateDecayCurve(double x)
+{
+    int i = 0;
+
+    while (i < decayCurveDataX.size() && decayCurveDataX[i] < x) {
+        i++;
+        // G4cout << i << ", " << x << ", " << decayCurveDataX[i] << G4endl;
+    }
+
+    if (i == 0) {
+        return decayCurveDataY[0];
+    }
+
+    else if (i == decayCurveDataX.size()) {
+        return decayCurveDataY.back();
+    }
+
+    else {
+        double x_diff = decayCurveDataX[i] - decayCurveDataX[i - 1];
+        double y_diff = decayCurveDataY[i] - decayCurveDataY[i - 1];
+        double x_ratio = (x - decayCurveDataX[i - 1]) / x_diff;
+        double y_val = decayCurveDataY[i - 1] + x_ratio * y_diff;
+        return y_val;
+    }
+}
+
+// void PrimaryGeneratorAction::LoadDecayCurveRadionuclide(G4int initialRadionuclide_location, G4int sampleActivity, std::string cellLineName)
+// {
+//     // Method to load file containing number of decays in solution and inside cells
+//     // as a function of time. This curve is used to draw random decay times in
+//     // GeneratingPrimaries().
+
+//     std::string filePath;
+//     std::tuple<std::vector<double>,std::vector<double>> fileData;
+//     double tMin;
+//     double tMax;
+
+
+//     if(initialRadionuclide_location == 0)
+//     {
+//         filePath = "../../Mathematica/Output/" + cellLineName + "/Solution/Activity_" + std::to_string(sampleActivity) + "kBq/Decays212Pb212Bi.dat";
+//         fileData = ImportData(filePath.c_str());
+
+//         tMin = *std::min_element(std::get<0>(fileData).begin(), std::get<0>(fileData).end());
+//         tMax = *std::max_element(std::get<0>(fileData).begin(), std::get<0>(fileData).end());
+
+//         // --------------------------------
+//         // Interpolating data
+//         ROOT::Math::Interpolator *interpolatedData = new ROOT::Math::Interpolator(std::get<0>(fileData),std::get<1>(fileData));
+//         decayCurve = interpolatedData;
+//     }
+//     if(initialRadionuclide_location == 1 || initialRadionuclide_location == 2)
+//     {
+//         filePath = "../../Mathematica/Output/" + cellLineName + "CCells/Actrivity_" + std::to_string(sampleActivity) + "kBq/Decays212Pb212Bi.dat";
+
+//         fileData = ImportData(filePath.c_str());
+
+//         tMin = *std::min_element(std::get<0>(fileData).begin(), std::get<0>(fileData).end());
+//         tMax = *std::max_element(std::get<0>(fileData).begin(), std::get<0>(fileData).end());
+
+//         // --------------------------------
+//         // Interpolating data
+//         ROOT::Math::Interpolator *interpolatedData = new ROOT::Math::Interpolator(std::get<0>(fileData),std::get<1>(fileData));
+//         decayCurve = interpolatedData;
+//     }
+
+
+
+//     // std::string filePath;
+//     // // TF1* fDecayCurveRadionuclide = nullptr;
+
+//     // if(initialRadionuclide_location == 0)
+//     // {
+//     //     filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_" + cellLineName + "_Solution_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+
+//     //     TFile* inputFile = new TFile(filePath.c_str(), "READ");
+//     //     inputFile->GetObject("fDecaysSolution", &fDecayCurve);
+//     //     inputFile->Close();
+
+//     //     minTime = 1.;
+//     //     maxTime = 2.;
+//     // }
+//     // if(initialRadionuclide_location == 1 || initialRadionuclide_location == 2)
+//     // {
+//     //     filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_"  + cellLineName + "_Cells_Activity_" + std::to_string(sampleActivity) + "kBq.root";
+
+//     //     TFile* inputFile = new TFile(filePath.c_str(), "READ");
+//     //     inputFile->GetObject("fDecaysCells", &fDecayCurve);
+//     //     inputFile->Close();
+
+//     //     minTime = 1.;
+//     //     maxTime = 26.;
+//     // }
+
+//     // if(fDecayCurve)
+//     // {
+//     //     G4cout << " DecayCurvePointer was initialized!" << G4endl;
+//     //     // fDecayCurve = std::shared_ptr<TF1>(fDecayCurveRadionuclide);
+//     //     maxValueDecayCurve = 1.01*fDecayCurve.GetMaximum();
+//     // }
+//     // else
+//     // {
+//     //     G4cout << " DecayCurvePointer was NOT initialized!" << G4endl;
+//     // }
+
+
+
+// }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -144,7 +299,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     {
         double r = G4UniformRand()*maxValueDecayCurve;
         double x = minTime + (maxTime - minTime)*G4UniformRand();
-        double y = fDecayCurve->Eval(x);
+        double y = EvaluateDecayCurve(x);
         if(r<=y)
         {
             fParticleGun->SetParticleTime(x*3600.*s);

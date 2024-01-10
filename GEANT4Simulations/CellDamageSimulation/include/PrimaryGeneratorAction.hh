@@ -38,7 +38,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         void SetCellLineName(std::string value);
         void SetDecayCurveRadionuclide();
         void LoadDecayCurveRadionuclide(G4int initialRadionuclide_location, G4int sampleActivity, std::string cellLineName);
-
+        double EvaluateDecayCurve(double time);
         int GetInitialRadionuclide_location(){return initialRadionuclide_location;};
 
 
@@ -48,11 +48,14 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4int       initialRadionuclide_location;
         G4int       sampleActivity;
         std::string cellLineName;
-        TF1*        fDecayCurve;
-        // std::shared_ptr<TF1> fDecayCurve;
         G4double    maxValueDecayCurve;
         G4double    minTime;
         G4double    maxTime;
+
+        std::vector<double> decayCurveDataX;
+        std::vector<double> decayCurveDataY;
+
+        // ROOT::Math::Interpolator* decayCurve;
 
     private:
         G4ParticleGun* fParticleGun = nullptr; // G4 particle gun
