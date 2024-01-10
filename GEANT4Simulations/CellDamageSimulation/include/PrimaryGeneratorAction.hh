@@ -48,7 +48,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4int       initialRadionuclide_location;
         G4int       sampleActivity;
         std::string cellLineName;
-        TF1*        fDecayCurve;
+        // TF1*        fDecayCurve;
+        std::shared_ptr<TF1> fDecayCurve;
         G4double    maxValueDecayCurve;
         G4double    minTime;
         G4double    maxTime;
