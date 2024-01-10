@@ -47,14 +47,14 @@ void PrimaryGeneratorAction::LoadDecayCurveRadionuclide(G4int initialRadionuclid
     // GeneratingPrimaries().
 
     std::string filePath;
-    TF1* fDecayCurveRadionuclide = nullptr;
+    // TF1* fDecayCurveRadionuclide = nullptr;
 
     if(initialRadionuclide_location == 0)
     {
         filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_" + cellLineName + "_Solution_Activity_" + std::to_string(sampleActivity) + "kBq.root";
 
         TFile* inputFile = new TFile(filePath.c_str(), "READ");
-        inputFile->GetObject("fDecaysSolution", fDecayCurveRadionuclide);
+        inputFile->GetObject("fDecaysSolution", fDecayCurve);
         inputFile->Close();
 
         minTime = 1.;
@@ -65,17 +65,17 @@ void PrimaryGeneratorAction::LoadDecayCurveRadionuclide(G4int initialRadionuclid
         filePath = "../DecaysPb212Bi212/Decays212Pb212Bi_"  + cellLineName + "_Cells_Activity_" + std::to_string(sampleActivity) + "kBq.root";
 
         TFile* inputFile = new TFile(filePath.c_str(), "READ");
-        inputFile->GetObject("fDecaysCells", fDecayCurveRadionuclide);
+        inputFile->GetObject("fDecaysCells", fDecayCurve);
         inputFile->Close();
 
         minTime = 1.;
         maxTime = 26.;
     }
 
-    if(fDecayCurveRadionuclide)
+    if(fDecayCurve)
     {
         G4cout << " DecayCurvePointer was initialized!" << G4endl;
-        fDecayCurve = fDecayCurveRadionuclide;
+        // fDecayCurve = fDecayCurveRadionuclide;
         maxValueDecayCurve = 1.01*fDecayCurve->GetMaximum();
     }
     else
