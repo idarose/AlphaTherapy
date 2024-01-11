@@ -376,24 +376,17 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         auto treeSolutionSim = myFileSolutionSim->Get<TTree>("B4");
         TTreeReader myReaderSolutionSim(treeSolutionSim);
 
-        // // Reader for membrane simulation
-        // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
-        // auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
-        // TTreeReader myReaderMembraneSim(treeMembraneSim);
+
+        // Reader for membrane simulation
+        std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
+        auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
+        TTreeReader myReaderMembraneSim(treeMembraneSim);
 
 
-        // //Reader for cytoplasm simulation
-        // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
-        // auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
-        // TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
-
-
-        // //---------------------------
-        // // Using chains
-        // TTreeReader myReaderSolutionSim(chainSolutionSim);
-        // TTreeReader myReaderMembraneSim(chainMembraneSim);
-        // TTreeReader myReaderCytoplasmSim(chainCytoplasmSim);
-
+        //Reader for cytoplasm simulation
+        std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
+        auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
+        TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
 
         //------------------–----------
         // Accessing brances of tree
@@ -428,6 +421,73 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
         TTreeReaderArray<double> interactionTimeCytoplasmSim(myReaderCytoplasmSim, "InteractionTime");
         TTreeReaderArray<double> firstInteractionTimeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionTime");
         TTreeReaderArray<int> firstInteractionVolumeCytoplasmSim(myReaderCytoplasmSim, "FirstInteractionVolume");
+
+        // // Membrane
+        // TTreeReaderArray<double> energyDepsMembraneSim;
+        // TTreeReaderArray<int> volumeTypesMembraneSim;
+        // TTreeReaderArray<int> cellIDsMembraneSim;
+        // TTreeReaderArray<double> kineticEnergyMembraneSim;
+        // TTreeReaderArray<int> particleTypeMembraneSim;
+        // TTreeReaderArray<double> interactionTimeMembraneSim;
+        // TTreeReaderArray<double> firstInteractionTimeMembraneSim;
+        // TTreeReaderArray<int> firstInteractionVolumeMembraneSim;
+
+
+        // // Cytoplasm
+        // TTreeReaderArray<double> energyDepsCytoplasmSim;
+        // TTreeReaderArray<int> volumeTypesCytoplasmSim;
+        // TTreeReaderArray<int> cellIDsCytoplasmSim;
+        // TTreeReaderArray<double> kineticEnergyCytoplasmSim;
+        // TTreeReaderArray<int> particleTypeCytoplasmSim;
+        // TTreeReaderArray<double> interactionTimeCytoplasmSim;
+        // TTreeReaderArray<double> firstInteractionTimeCytoplasmSim;
+        // TTreeReaderArray<int> firstInteractionVolumeCytoplasmSim;
+
+        // if(decayDynamicsInstance.GetCellLine() == "PC3_PIP" || decayDynamicsInstance.GetCellLine() == "C4_2")
+        // {
+        //     //------------------–----------
+        //     // Opening TTree files and creating TTreeReaders
+
+            // // Reader for membrane simulation
+            // std::shared_ptr<TFile> myFileMembraneSim(TFile::Open(filepathMembraneSim_i.c_str(), "READ"));
+            // auto treeMembraneSim = myFileMembraneSim->Get<TTree>("B4");
+            // TTreeReader myReaderMembraneSim(treeMembraneSim);
+
+
+            // //Reader for cytoplasm simulation
+            // std::shared_ptr<TFile> myFileCytoplasmSim(TFile::Open(filepathCytoplasmSim_i.c_str(), "READ"));
+            // auto treeCytoplasmSim = myFileCytoplasmSim->Get<TTree>("B4");
+            // TTreeReader myReaderCytoplasmSim(treeCytoplasmSim);
+
+        //     //------------------–----------
+        //     // Accessing brances of tree
+
+        //     // Membrane
+        //     energyDepsMembraneSim = TTreeReaderArray(myReaderMembraneSim, "EnergyDeps");
+        //     volumeTypesMembraneSim = TTreeReaderArray(myReaderMembraneSim, "VolumeTypes");
+        //     cellIDsMembraneSim = TTreeReaderArray(myReaderMembraneSim, "CellIDs");
+        //     kineticEnergyMembraneSim = TTreeReaderArray(myReaderMembraneSim, "KineticEnergy");
+        //     particleTypeMembraneSim = TTreeReaderArray(myReaderMembraneSim, "ParticleType");
+        //     interactionTimeMembraneSim = TTreeReaderArray(myReaderMembraneSim, "InteractionTime");
+        //     firstInteractionTimeMembraneSim = TTreeReaderArray(myReaderMembraneSim, "FirstInteractionTime");
+        //     firstInteractionVolumeMembraneSim = TTreeReaderArray(myReaderMembraneSim, "FirstInteractionVolume");
+
+        //     // Cytoplasm
+        //     energyDepsCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "EnergyDeps");
+        //     volumeTypesCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "VolumeTypes");
+        //     cellIDsCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "CellIDs");
+        //     kineticEnergyCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "KineticEnergy");
+        //     particleTypeCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "ParticleType");
+        //     interactionTimeCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "InteractionTime");
+        //     firstInteractionTimeCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "FirstInteractionTime");
+        //     firstInteractionVolumeCytoplasmSim = TTreeReaderArray(myReaderCytoplasmSim, "FirstInteractionVolume");
+        // }
+
+        // //---------------------------
+        // // Using chains
+        // TTreeReader myReaderSolutionSim(chainSolutionSim);
+        // TTreeReader myReaderMembraneSim(chainMembraneSim);
+        // TTreeReader myReaderCytoplasmSim(chainCytoplasmSim);
 
 
 
@@ -842,9 +902,9 @@ void mainAnalysisCode()
     //-------------------------------------
     // Creating energy deposition histograms
 
-    EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = MakeHistograms(decays_A150kBq_PC3_Flu, numberIterations, volumeRatio, numberCells);
-    auto output = new TFile("OutputAnalysisCode/Output_PC3_Flu_150kBq.root", "RECREATE");
-    Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
+    EnergyDepositionHistograms Hist_A50kBq_C4_2 = MakeHistograms(decays_A50kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    auto output = new TFile("Output_C4_2_50kBq.root", "RECREATE");
+    Hist_A50kBq_C4_2.WriteHistogramsToFile();
     output->Write();
     output->Close();
 }

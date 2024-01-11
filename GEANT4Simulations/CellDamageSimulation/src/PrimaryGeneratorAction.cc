@@ -315,10 +315,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         //------------------------
         //Generating decay time
 
-        while(!foundDecayTime)
-        {
-            GenerateDecayTime();
-        }
+        // while(!foundDecayTime)
+        // {
+        //     GenerateDecayTime();
+        // }
 
 
         //------------------------
@@ -345,10 +345,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         //------------------------
         // Generating decay time
 
-        while(!foundDecayTime)
-        {
-            GenerateDecayTime();
-        }
+        // while(!foundDecayTime)
+        // {
+        //     GenerateDecayTime();
+        // }
 
         //-----------------------
         //Generating random radius
@@ -386,10 +386,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         //------------------------
         // Generating decay time
 
-        while(!foundDecayTime)
-        {
-            GenerateDecayTime();
-        }
+        // while(!foundDecayTime)
+        // {
+        //     GenerateDecayTime();
+        // }
 
         //-----------------------
         //Generating random radius
