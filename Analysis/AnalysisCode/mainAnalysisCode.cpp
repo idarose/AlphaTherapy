@@ -342,6 +342,7 @@ void EnergyDepositionHistograms::WriteHistogramsToFile()
 //------------------–----------
 EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, int numberIterations, double volumeRatio, int numberCells)
 {
+    std::cout << "Starting iteration : " << numberIterations << std::endl;
     //------------------–----------
     // Loading decay dynamics
     double numberDecays212PbInSolution1hTo2h = decayDynamicsInstance.GetNumberDecaysInSolutionFirstHour()*volumeRatio;
@@ -573,7 +574,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             // Break loop if number of decays have been reached
             if(numberDecays212PbInSolution1hTo2h_counter >= numberDecays212PbInSolution1hTo2h)
             {
-                std::cout << "Needed : " << numberDecays212PbInSolution1hTo2h << " Counted : " << numberDecays212PbInSolution1hTo2h_counter << " At entry : " << myReaderSolutionSim.GetCurrentEntry() << std::endl;
+                // std::cout << "Needed : " << numberDecays212PbInSolution1hTo2h << " Counted : " << numberDecays212PbInSolution1hTo2h_counter << " At entry : " << myReaderSolutionSim.GetCurrentEntry() << std::endl;
+                std::cout << "Solution finished" << std::endl;
                 whileLoopSolutionSimWasBroken = true;
                 break;
             }
@@ -651,6 +653,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             if(numberDecays212PbInMembrane1hTo26h_counter >= numberDecays212PbInMembrane1hTo26h)
             {
                 whileLoopMembraneSimWasBroken = true;
+                std::cout << "Membrane finished" << std::endl;
                 break;
             }
         }
@@ -731,6 +734,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             // Break loop if number of decays have been reached
             if(numberDecays212PbInCytoplasm1hTo26h_counter >= numberDecays212PbInCytoplasm1hTo26h)
             {
+                std::cout << "Cytoplasm finished" << std::endl;
                 whileLoopCytoplasmSimWasBroken = true;
                 break;
             }
@@ -776,7 +780,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
     // }
 
 
-    std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation-build/";
+    std::string filepathSimulationOutput = "../../GEANT4Simulations/OutputFromSaga/";
 
     std::string filepathSolutionIteration_i;
     std::string filepathMembraneIteration_i;
@@ -902,9 +906,9 @@ void mainAnalysisCode()
     //-------------------------------------
     // Creating energy deposition histograms
 
-    EnergyDepositionHistograms Hist_A50kBq_C4_2 = MakeHistograms(decays_A50kBq_C4_2, numberIterations, volumeRatio, numberCells);
-    auto output = new TFile("Output_C4_2_50kBq.root", "RECREATE");
-    Hist_A50kBq_C4_2.WriteHistogramsToFile();
+    EnergyDepositionHistograms Hist_A10kBq_C4_2 = MakeHistograms(decays_A10kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    auto output = new TFile("Output_C4_2_10kBq.root", "RECREATE");
+    Hist_A10kBq_C4_2.WriteHistogramsToFile();
     output->Write();
     output->Close();
 }
