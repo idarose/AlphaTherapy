@@ -114,6 +114,8 @@ void PrimaryGeneratorAction::LoadDecayCurveRadionuclide(G4int initialRadionuclid
 
         minTime = 1.;
         maxTime = 2.;
+
+        maxValueDecayCurve = 1.1*(*max_element(decayCurveDataY.begin(), decayCurveDataY.end()));
     }
     if(initialRadionuclide_location == 1 || initialRadionuclide_location == 2)
     {
@@ -128,6 +130,8 @@ void PrimaryGeneratorAction::LoadDecayCurveRadionuclide(G4int initialRadionuclid
 
         minTime = 1.;
         maxTime = 26.;
+
+        maxValueDecayCurve = 1.1*(*max_element(decayCurveDataY.begin(), decayCurveDataY.end()));
     }
     // G4cout << "JOHOFile: " << decayCurveDataX.size() << G4endl;
 }
@@ -297,10 +301,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     auto GenerateDecayTime = [&]()
     {
-        G4cout << "Generate decay time was called " << G4endl;
+        // G4cout << "Generate decay time was called, r = " << << G4endl;
         double r = G4UniformRand()*maxValueDecayCurve;
         double x = minTime + (maxTime - minTime)*G4UniformRand();
         double y = EvaluateDecayCurve(x);
+        G4cout << "Generate decay time was called, r = " << r  << " y = " << y << G4endl;
         if(r<=y)
         {
             fParticleGun->SetParticleTime(x*3600.*s);
@@ -321,7 +326,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         {
             GenerateDecayTime();
         }
-
 
         //------------------------
         //Generating random postion for particle inside cell Tube
