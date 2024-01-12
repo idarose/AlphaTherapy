@@ -105,6 +105,7 @@ set(EXAMPLEB4A_SCRIPTS
     jobScript_C4_2.sh
     jobScript_PC3_PIP.sh
     jobScript_PC3_Flu.sh
+    jobScript0.sh
   )
 
 foreach(_script ${EXAMPLEB4A_SCRIPTS})
