@@ -297,12 +297,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     auto GenerateDecayTime = [&]()
     {
+        G4cout << "Generate decay time was called " << G4endl;
         double r = G4UniformRand()*maxValueDecayCurve;
         double x = minTime + (maxTime - minTime)*G4UniformRand();
         double y = EvaluateDecayCurve(x);
         if(r<=y)
         {
             fParticleGun->SetParticleTime(x*3600.*s);
+            G4cout << "Decay time generated : " << x << G4endl;
             foundDecayTime = true;
         }
     };
@@ -312,13 +314,13 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     // Distributing radionuclides randomly within the cell tube (aka. solution)
     if(initialRadionuclide_location==0)
     {
-        //------------------------
-        //Generating decay time
+        // ------------------------
+        // Generating decay time
 
-        // while(!foundDecayTime)
-        // {
-        //     GenerateDecayTime();
-        // }
+        while(!foundDecayTime)
+        {
+            GenerateDecayTime();
+        }
 
 
         //------------------------
@@ -345,10 +347,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         //------------------------
         // Generating decay time
 
-        // while(!foundDecayTime)
-        // {
-        //     GenerateDecayTime();
-        // }
+        while(!foundDecayTime)
+        {
+            GenerateDecayTime();
+        }
 
         //-----------------------
         //Generating random radius
@@ -386,10 +388,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         //------------------------
         // Generating decay time
 
-        // while(!foundDecayTime)
-        // {
-        //     GenerateDecayTime();
-        // }
+        while(!foundDecayTime)
+        {
+            GenerateDecayTime();
+        }
 
         //-----------------------
         //Generating random radius
