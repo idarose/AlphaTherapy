@@ -305,11 +305,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         double r = G4UniformRand()*maxValueDecayCurve;
         double x = minTime + (maxTime - minTime)*G4UniformRand();
         double y = EvaluateDecayCurve(x);
-        G4cout << "Generate decay time was called, r = " << r  << " y = " << y << G4endl;
+        // G4cout << "Generate decay time was called, r = " << r  << " y = " << y << G4endl;
         if(r<=y)
         {
             fParticleGun->SetParticleTime(x*3600.*s);
-            G4cout << "Decay time generated : " << x << G4endl;
+            // G4cout << "Decay time generated : " << x << G4endl;
             foundDecayTime = true;
         }
     };
