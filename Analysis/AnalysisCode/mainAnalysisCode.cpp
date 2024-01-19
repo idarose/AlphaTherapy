@@ -290,7 +290,7 @@ void CellHit::FinalizeCellHit()
         }
         if(interactionVolume==2)
         {
-            std::cout << "In cytoplasm : " << energyDepInteraction << std::endl;
+            // std::cout << "In cytoplasm : " << energyDepInteraction << std::endl;
             energyDepCytoplasm += energyDepInteraction;
             if(originVolume == 0){energyDepCytoplasm_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepCytoplasm_FromMembrane += energyDepInteraction;}
@@ -298,7 +298,7 @@ void CellHit::FinalizeCellHit()
         }
         if(interactionVolume==3)
         {
-            std::cout << "In nucleus : " << energyDepInteraction << std::endl;
+            // std::cout << "In nucleus : " << energyDepInteraction << std::endl;
             energyDepNucleus += energyDepInteraction;
             if(originVolume == 0){energyDepNucleus_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepNucleus_FromMembrane += energyDepInteraction;}
@@ -620,12 +620,12 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
     std::cout << "Making Histogram: " << decayDynamicsInstance.GetCellLine() << ", Activity: " << decayDynamicsInstance.GetActivity() << std::endl;
     //------------------–----------
     // Loading decay dynamics
-    // double numberDecays212PbInSolution1hTo2h = decayDynamicsInstance.GetNumberDecaysInSolutionFirstHour()*volumeRatio;
-    // double numberDecays212PbInMembrane1hTo26h = decayDynamicsInstance.GetNumberDecaysInMembraneTotalTime()*volumeRatio;
-    // double numberDecays212PbInCytoplasm1hTo26h = decayDynamicsInstance.GetNumberDecaysInCytoplasmTotalTime()*volumeRatio;
-    double numberDecays212PbInSolution1hTo2h = 10.;
-    double numberDecays212PbInMembrane1hTo26h = 0.;
-    double numberDecays212PbInCytoplasm1hTo26h = 10.;
+    double numberDecays212PbInSolution1hTo2h = decayDynamicsInstance.GetNumberDecaysInSolutionFirstHour()*volumeRatio;
+    double numberDecays212PbInMembrane1hTo26h = decayDynamicsInstance.GetNumberDecaysInMembraneTotalTime()*volumeRatio;
+    double numberDecays212PbInCytoplasm1hTo26h = decayDynamicsInstance.GetNumberDecaysInCytoplasmTotalTime()*volumeRatio;
+    // double numberDecays212PbInSolution1hTo2h = 10.;
+    // double numberDecays212PbInMembrane1hTo26h = 0.;
+    // double numberDecays212PbInCytoplasm1hTo26h = 10.;
     double numberCells_Sim = numberCells*volumeRatio;
 
     // std::cout << "Num: " << numberDecays212PbInSolution1hTo2h << std::endl;
@@ -1210,8 +1210,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
 
     // std::string filepathSimulationOutput = "../../GEANT4Simulations/OutputFromSaga/";
-    // std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation-build/";
-    std::string filepathSimulationOutput = "/Volumes/SamsungT7/";
+    std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation-build/";
+    // std::string filepathSimulationOutput = "/Volumes/SamsungT7/";
 
     std::string filepathSolutionIteration_i;
     std::string filepathMembraneIteration_i;

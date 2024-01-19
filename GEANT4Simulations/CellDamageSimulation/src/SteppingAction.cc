@@ -143,7 +143,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             G4int parentID = step->GetTrack()->GetParentID();
 
             // Storing information
-            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime, trackID, parentID);
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeCytoplasm, kineticEnergy, particleType, interactionTime, trackID, parentID);
         }
 
         //----------------------------------
@@ -170,7 +170,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             G4int parentID = step->GetTrack()->GetParentID();
 
             // Storing information
-            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime, trackID, parentID);
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeNucleus, kineticEnergy, particleType, interactionTime, trackID, parentID);
         }
     };
 
