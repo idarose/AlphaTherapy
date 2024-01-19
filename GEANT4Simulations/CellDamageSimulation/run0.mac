@@ -10,4 +10,4 @@
 /Sim/SetSampleActivity 10
 /Sim/SetCellLineName C4_2
 /Sim/SetDecayCurveRadionuclide
-/run/beamOn 14
+/run/beamOn 100

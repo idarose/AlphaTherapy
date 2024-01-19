@@ -33,6 +33,8 @@ fSeedN(1)
     analysisManager->CreateNtupleDColumn(0, "InteractionTime", fEventAction->GetInteractionTime());
     analysisManager->CreateNtupleDColumn(0, "FirstInteractionTime", fEventAction->GetFirstInteractionTime());
     analysisManager->CreateNtupleIColumn(0, "FirstInteractionVolume", fEventAction->GetFirstInteractionVolume());
+    analysisManager->CreateNtupleIColumn(0, "TrackID", fEventAction->GetTrackID());
+    analysisManager->CreateNtupleIColumn(0, "ParentID", fEventAction->GetParentID());
     analysisManager->FinishNtuple();
 
     fRunMessenger = new RunMessenger(this);

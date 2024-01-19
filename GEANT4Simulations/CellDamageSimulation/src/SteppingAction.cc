@@ -85,6 +85,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     */
 
 
+    /*
+    alpha = 1000020040
+    electron = 11
+    */
 
     //----------------------------------
     // Lambda function for filling vectors in EventAction with interaction information
@@ -106,8 +110,14 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             // Calculating cell ID number
             G4int cellID = volumeCopyNumber;
 
+            // Getting track ID
+            G4int trackID = step->GetTrack()->GetTrackID();
+
+            // Getting parent ID
+            G4int parentID = step->GetTrack()->GetParentID();
+
             // Storing information
-            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime);
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime, trackID, parentID);
         }
 
         //----------------------------------
@@ -126,8 +136,14 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             // Calculating cell ID number
             G4int cellID = volumeCopyNumber - numberCells;
 
+            // Getting track ID
+            G4int trackID = step->GetTrack()->GetTrackID();
+
+            // Getting parent ID
+            G4int parentID = step->GetTrack()->GetParentID();
+
             // Storing information
-            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeCytoplasm, kineticEnergy, particleType, interactionTime);
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime, trackID, parentID);
         }
 
         //----------------------------------
@@ -143,14 +159,18 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             //Getting the kinetic energy of the particle for the interaction, in MeV
             G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
 
-            // //Getting the interaction time
-            // G4double interactionTime = step->GetPreStepPoint()->GetGlobalTime()/s;
 
             // Calculating cell ID number
             G4int cellID = volumeCopyNumber - 2*numberCells;
 
+            // Getting track ID
+            G4int trackID = step->GetTrack()->GetTrackID();
+
+            // Getting parent ID
+            G4int parentID = step->GetTrack()->GetParentID();
+
             // Storing information
-            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeNucleus, kineticEnergy, particleType, interactionTime);
+            fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime, trackID, parentID);
         }
     };
 
@@ -166,7 +186,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         if(interactionTime/3600. >= 1.0 && interactionTime/3600. <= 2.0)
         {
             FillVectors();
-            // G4cout << "Energydeps: " << step->GetTotalEnergyDeposit()/MeV << G4endl;
         }
     }
     // If initial position in membrane or cytoplasm, only store interactions taking place

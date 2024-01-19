@@ -20,7 +20,7 @@ class EventAction : public G4UserEventAction
     void AddAbs(G4double de, G4double dl);
     void AddGap(G4double de, G4double dl);
 
-    void StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime);
+    void StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime, G4int trackID, G4int parentID);
     void SetFirstInteractionInfo(G4double firstInteractionTime, G4int firstInteractionVolume);
 
 
@@ -33,6 +33,8 @@ class EventAction : public G4UserEventAction
     std::vector<G4double>& GetInteractionTime() {return interactionTimeVec;};
     std::vector<G4double>& GetFirstInteractionTime() {return firstInteractionTimeVec;};
     std::vector<G4int>& GetFirstInteractionVolume() {return firstInteractionVolumeVec;};
+    std::vector<G4int>& GetTrackID() {return trackIDVec;};
+    std::vector<G4int>& GetParentID(){return parentIDVec;};
 
 
 
@@ -51,6 +53,9 @@ class EventAction : public G4UserEventAction
 
     std::vector<G4double> firstInteractionTimeVec;
     std::vector<G4int> firstInteractionVolumeVec;
+
+    std::vector<G4int> trackIDVec;
+    std::vector<G4int> parentIDVec;
 
 
 

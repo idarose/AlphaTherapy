@@ -370,11 +370,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         G4double y_particle = radius*std::sin(theta)*sin(phi);
         G4double z_particle = radius*std::cos(theta);
 
-        // Selecting radom cell
+        // Selecting random cell
         G4ThreeVector centerOfCell = *select_randomly(cellPositions.begin(), cellPositions.end());
 
 
-        // Generating position inside memebrane of this cell
+        // Generating position inside membrane of this cell
         G4ThreeVector particlePosRelativeToCenterCell = G4ThreeVector(x_particle,y_particle,z_particle);
 
         // Finding position relative to world volume
@@ -408,11 +408,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         G4double z_particle = radius*std::cos(theta);
 
 
-        // Selecting radom cell
+        // Selecting random cell
         G4ThreeVector centerOfCell = *select_randomly(cellPositions.begin(), cellPositions.end());
 
 
-        // Generating position inside membrane of this cell
+        // Generating position inside cytoplasm of this cell
         G4ThreeVector particlePosRelativeToCenterCell = G4ThreeVector(x_particle,y_particle,z_particle);
 
         // Finding the absolute position

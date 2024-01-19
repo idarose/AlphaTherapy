@@ -32,6 +32,8 @@ void EventAction::BeginOfEventAction(const G4Event* /*event*/)
     interactionTimeVec.clear();
     firstInteractionTimeVec.clear();
     firstInteractionVolumeVec.clear();
+    trackIDVec.clear();
+    parentIDVec.clear();
 
     // Resetting step number
     ResetStepNumber();
@@ -59,7 +61,7 @@ void EventAction::SetFirstInteractionInfo(G4double firstInteractionTime, G4int f
 }
 
 
-void EventAction::StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime)
+void EventAction::StoreInteractionInformation(G4double energyDep, G4int cellID, G4int volumeType, G4double kineticEnergy, G4int particleType, G4double interactionTime, G4int trackID, G4int parentID)
 {
     //Adding values to vectors
     energyDepVec.push_back(energyDep);
@@ -68,5 +70,7 @@ void EventAction::StoreInteractionInformation(G4double energyDep, G4int cellID, 
     kineticEnergyVec.push_back(kineticEnergy);
     particleTypeVec.push_back(particleType);
     interactionTimeVec.push_back(interactionTime);
+    trackIDVec.push_back(trackID);
+    parentIDVec.push_back(parentID);
 }
 
