@@ -165,19 +165,26 @@ class CellHit
         double GetEnergyDepositionTotalCell_FromMembrane(){return energyDepTotalCell_FromMembrane;};
         double GetEnergyDepositionTotalCell_FromCytoplasm(){return energyDepTotalCell_FromCytoplasm;};
 
-        int GetNumberHitsAlpha(){return numberHitsAlphas;};
+        int GetNumberHitsAlphas_TotalCell(){return numberHitsAlphas_TotalCell;};
+        int GetNumberHitsAlphas_Nucleus(){return nummberHitsAlphas_Nucleus;};
+        int GetNumberHitsAlphas_Membrane(){return numberHitsAlphas_Membrane;};
+        int GetNumberHitsAlphas_Cytoplasm(){return numberHitsAlphas_Cytoplasm;};
         int GetNumberHitsBeta(){return numberHitsBetas;};
 
         void AddEnergyDeposition(double energyDep_in, int volumeTypeInteraction_in, int volumeTypeOriginDecay_in);
         // void AddParticleHitsInfo(int trackID_in, int parentID_in, int pdgEncoding_in);
         void FinalizeCellHit();
 
-        void HitByAlphaParticle();
+        void HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha);
         void HitByBetaParticle();
 
 
     private:
         int cellID;
+        int numberHitsAlphas_TotalCell;
+        int nummberHitsAlphas_Nucleus;
+        int numberHitsAlphas_Membrane;
+        int numberHitsAlphas_Cytoplasm;
         int numberHitsAlphas;
         int numberHitsBetas;
 
@@ -213,7 +220,10 @@ class CellHit
 CellHit::CellHit(int cellID_in)
 {
     cellID = cellID_in;
-    numberHitsAlphas = 0;
+    nummberHitsAlphas_Nucleus = 0;
+    numberHitsAlphas_Membrane = 0;
+    numberHitsAlphas_Cytoplasm = 0;
+    numberHitsAlphas_TotalCell = 0;
 
     energyDepMembrane = 0.0;
     energyDepCytoplasm = 0.0;
@@ -250,9 +260,13 @@ void CellHit::AddEnergyDeposition(double energyDep_in, int volumeTypeInteraction
 
 
 //------------------–----------
-void CellHit::HitByAlphaParticle()
+void CellHit::HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha)
 {
-    numberHitsAlphas ++;
+    if(volumeTypeHit==1){numberHitsAlphas_Membrane++;}
+    if(volumeTypeHit==2){numberHitsAlphas_Cytoplasm++;}
+    if(volumeTypeHit==3){nummberHitsAlphas_Nucleus++;}
+
+    if(firstTimeCountingAlpha){numberHitsAlphas_TotalCell++;}
 }
 
 //----------------------------
@@ -320,51 +334,58 @@ void CellHit::FinalizeCellHit()
 class EnergyDepositionHistograms
 {
     public:
-        EnergyDepositionHistograms(int NBins_in, double EMin_in, double EMax_in);
+        EnergyDepositionHistograms(double EMax_in);
 
         void GenerateEmptyHistograms(DecayDynamics decayDynamicsInstance);
         void AddCellHitsToHistograms(CellHit cellHit);
         void ScaleHistograms(double factor);
         void WriteHistogramsToFile();
 
-        TH1D* GetEnergyDepNucleusHist(){return hEnergyDepsNucleus;};
-        TH1D* GetEnergyDepMembraneHist(){return hEnergyDepsMembrane;};
-        TH1D* GetEnergyDepCytoplasmHist(){return hEnergyDepsCytoplasm;};
-        TH1D* GetEnergyDepTotalCellHist(){return hEnergyDepsTotalCell;};
+        // TH1D* GetEnergyDepNucleusHist(){return hEnergyDepsNucleus;};
+        // TH1D* GetEnergyDepMembraneHist(){return hEnergyDepsMembrane;};
+        // TH1D* GetEnergyDepCytoplasmHist(){return hEnergyDepsCytoplasm;};
+        // TH1D* GetEnergyDepTotalCellHist(){return hEnergyDepsTotalCell;};
 
     private:
-        int NBins;
-        double EMin;
         double EMax;
 
-
         // Histogram for total energy deposited in one nuclei per number of cells
-        TH1D *hEnergyDepsNucleus;
+        TH1D *hEnergyDepsNucleus_eVBinning;
+        TH1D *hEnergyDepsNucleus_keVBinning;
         TH1D *hEnergyDepsNucleus_FromSolution;
         TH1D *hEnergyDepsNucleus_FromMembrane;
         TH1D *hEnergyDepsNucleus_FromCytoplasm;
 
         // Histogram for total energy deposited in one membrane per number of cells
-        TH1D *hEnergyDepsMembrane;
+        TH1D *hEnergyDepsMembrane_eVBinning;
+        TH1D *hEnergyDepsMembrane_keVBinning;
         TH1D *hEnergyDepsMembrane_FromSolution;
         TH1D *hEnergyDepsMembrane_FromMembrane;
         TH1D *hEnergyDepsMembrane_FromCytoplasm;
 
 
         // Histogram for total energy deposited in one cytoplasm per number of cells
-        TH1D *hEnergyDepsCytoplasm;
+        TH1D *hEnergyDepsCytoplasm_eVBinning;
+        TH1D *hEnergyDepsCytoplasm_keVBinning;
         TH1D *hEnergyDepsCytoplasm_FromSolution;
         TH1D *hEnergyDepsCytoplasm_FromMembrane;
         TH1D *hEnergyDepsCytoplasm_FromCytoplasm;
 
         // Histogram for total energy deposited in one cell per number of cells
-        TH1D *hEnergyDepsTotalCell;
+        TH1D *hEnergyDepsTotalCell_eVBinning;
+        TH1D *hEnergyDepsTotalCell_keVBinning;
         TH1D *hEnergyDepsTotalCell_FromSolution;
         TH1D *hEnergyDepsTotalCell_FromMembrane;
         TH1D *hEnergyDepsTotalCell_FromCytoplasm;
 
-        TH2D* hEnergyDepNucleus_HitsAlpha;
+        // Histograms for number of hits by alpha particles
+        TH2D* hEnergyDepsTotalCell_HitsAlpha;
+        TH2D* hEnergyDepsNucleus_HitsAlpha;
+        TH2D* hEnergyDepsMembrane_HitsAlpha;
+        TH2D* hEnergyDepsCytoplasm_HitsAlpha;
 
+        // General hit histogram
+        TH1D* hFractionHitsAlpha;
 
         // // Histogram for total energy deposited in both membrane and cytoplasm of one cell, per number of cells
         // TH1D *hEnergyDepsMembraneAndCytoplasm;
@@ -379,10 +400,8 @@ class EnergyDepositionHistograms
 
 
 //------------------–----------
-EnergyDepositionHistograms::EnergyDepositionHistograms(int NBins_in, double EMin_in, double EMax_in)
+EnergyDepositionHistograms::EnergyDepositionHistograms(double EMax_in)
 {
-    NBins = NBins_in;
-    EMin = EMin_in;
     EMax = EMax_in;
 }
 
@@ -390,12 +409,79 @@ EnergyDepositionHistograms::EnergyDepositionHistograms(int NBins_in, double EMin
 //------------------–----------
 void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDynamicsInstance)
 {
+    // //-----------------------------
+    // // Making logarithmic bins for energy
+    // int NumberLogBins = 500000;
+    // double LogBinEdges[NumberLogBins+1];
+    // for(int i = 0; i <= NumberLogBins; i++)
+    // {
+    //     LogBinEdges[i] = std::pow(10.0,std::log10(EMin+0.01)+(std::log10(EMax) - std::log10(EMin+0.01))/double(NumberLogBins)*double(i));
+    // }
+
+    // std::cout << "Made hists" << std::endl;
+
+    // // //-----------------------------
+    // // // Making standard bins for number of hits
+    // int NumberHitBins = 50;
+    // double HitMin = 0.;
+    // double HitMax = 50.;
+    // double HitBinsEdges[NumberHitBins+1];
+    // for(int i=0; i<51; i++)
+    // {
+    //     HitBinsEdges[i] = i;
+    // }
+
+    // int nBinsFirstPart = 1000000;
+    // int nBinsSecondsPart = 99*1000;
+    // int nBinsTotal = nBinsFirstPart + nBinsSecondsPart;
+
+    // double binWidthsFirstPart = 1.;
+    // double binWidthsSecondsPart = 1000.;
+
+    // double eMinFirst = 0.;
+    // double eMaxFirst = 1.;
+
+    // double eMinSeconds = 1.;
+    // double eMaxSeconds = 100.;
+
+    // double BinEdges[nBinsTotal+1];
+    // for(int i=0; i<(nBinsFirstPart+1); i++)
+    // {
+
+    //     BinEdges[i] = i*binWidthsFirstPart;
+    // }
+
+    // for(int i=(nBinsFirstPart+1); i<(nBinsTotal+1); i++)
+    // {
+    //     BinEdges[i] = BinEdges[i] + i*binWidthsSecondsPart;
+    // }
+
+    int NBins_eVBinning = std::pow(10.,6.);
+    double EMin_eVBinning = 0.;
+    double EMax_eVBinning = 1.;
+
+    int NBins_keVBinning = std::pow(10.,5.);
+    double EMin_keVBinning = 0.;
+    double EMax_keVBinning = 100.;
+
+    int NBins_Hits = 100;
+    double MaxHits = 100.;
+    double MinHits = 0.;
+
+
+    //-----------------------------
+    // Making names for histograms
     std::string generalHistogramName = "hEnergyDeps_212Pb_" + decayDynamicsInstance.GetCellLine() + "_" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_";
 
-    std::string histogramNameNucleus = generalHistogramName + "Nucleus";
-    std::string histogramNameMembrane = generalHistogramName + "Membrane";
-    std::string histogramNameCytoplasm = generalHistogramName + "Cytoplasm";
-    std::string histogramNameTotalCell = generalHistogramName + "TotalCell";
+    std::string histogramNameNucleus_eVBinning = generalHistogramName + "Nucleus_eVBinning";
+    std::string histogramNameMembrane_eVBinning = generalHistogramName + "Membrane_eVBinning";
+    std::string histogramNameCytoplasm_eVBinning = generalHistogramName + "Cytoplasm_eVBinning";
+    std::string histogramNameTotalCell_eVBinning = generalHistogramName + "TotalCell_eVBinning";
+
+    std::string histogramNameNucleus_keVBinning = generalHistogramName + "Nucleus_keVBinning";
+    std::string histogramNameMembrane_keVBinning = generalHistogramName + "Membrane_keVBinning";
+    std::string histogramNameCytoplasm_keVBinning = generalHistogramName + "Cytoplasm_keVBinning";
+    std::string histogramNameTotalCell_keVBinning = generalHistogramName + "TotalCell_keVBinning";
 
     std::string histogramNameNucleus_FromSolution = generalHistogramName + "Nucleus_FromSolution";
     std::string histogramNameNucleus_FromMembrane = generalHistogramName + "Nucleus_FromMembrane";
@@ -413,71 +499,75 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
     std::string histogramNameTotalCell_FromMembrane = generalHistogramName + "TotalCell_FromMembrane";
     std::string histogramNameTotalCell_FromCytoplasm = generalHistogramName + "TotalCell_FromCytoplasm";
 
+    std::string histogramNameTotalCell_HitsAlpha =  generalHistogramName + "TotalCell_HitsAlpha";
+    std::string histogramNameNucleus_HitsAlpha = generalHistogramName + "Nucleus_HitsAlpha";
+    std::string histogramNameMembrane_HitsAlpha =  generalHistogramName + "Membrane_HitsAlpha";
+    std::string histogramNameCytoplasm_HitsAlpha =  generalHistogramName + "Cytoplasm_HitsAlpha";
 
-    // Double_t xEdges[XBINS + 1] = {0.0, 0.2, 0.3, 0.6, 0.8, 1.0};
-    // TH1* h = new TH1D(
-    //   /* name */ "h1",
-    //   /* title */ "Hist with variable bin width",
-    //   /* number of bins */ NBINS,
-    //   /* edge array */ edges
-    // )
-
-    int LogBins = 40000;
-    double LogWidth[LogBins+1];
-
-    //calculate bins
-    for(int i = 0; i <= LogBins; i++)
-    {
-        LogWidth[i] = std::pow(10.0,std::log10(EMin+0.01)+(std::log10(EMax) - std::log10(EMin+0.01))/double(LogBins)*double(i));
-    }
-
-    int hitBins = 50;
-    double hitMin = 0.;
-    double hitMax = 50.;
-    double HitWidth[hitBins+1];
-
-    for(int i=0; i<51; i++)
-    {
-        HitWidth[i] = i;
-    }
-
-    std::string histogramNameNucleus_HitsAlpha =  generalHistogramName + "Nucleus_HitsAlpha";
-
-    hEnergyDepNucleus_HitsAlpha = new TH2D(histogramNameNucleus_HitsAlpha.c_str(), "Energy deposition in nucleus and number of hits by alphas", LogBins, LogWidth, hitBins, HitWidth);
+    std::string histogramNameFractionHitsAlpha = "hFractionHitsAlpha_212Pb_" + decayDynamicsInstance.GetCellLine() + "_" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq";
 
 
-    hEnergyDepsNucleus = new TH1D(histogramNameNucleus.c_str(), "Energy Deposition in Cell Nucleus / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsMembrane = new TH1D(histogramNameMembrane.c_str(), "Energy Depsition in Cell Membrane / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsCytoplasm = new TH1D(histogramNameCytoplasm.c_str(), "Energy Depsition in Cell Cytoplasm / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsTotalCell = new TH1D(histogramNameTotalCell.c_str(), "Energy Depsition in Cell / Number of Cells", NBins, EMin, EMax);
+    //-------------------------------
+    // Making empty histograms
+    hEnergyDepsNucleus_eVBinning = new TH1D(histogramNameNucleus_eVBinning.c_str(), "Energy Deposition in Cell Nucleus (eV) / Number of Cells", NBins_eVBinning, EMin_eVBinning, EMax_eVBinning);
+    hEnergyDepsMembrane_eVBinning = new TH1D(histogramNameMembrane_eVBinning.c_str(), "Energy Depsition in Cell Membrane (eV) / Number of Cells", NBins_eVBinning, EMin_eVBinning, EMax_eVBinning);
+    hEnergyDepsCytoplasm_eVBinning = new TH1D(histogramNameCytoplasm_eVBinning.c_str(), "Energy Depsition in Cell Cytoplasm (eV) / Number of Cells", NBins_eVBinning, EMin_eVBinning, EMax_eVBinning);
+    hEnergyDepsTotalCell_eVBinning = new TH1D(histogramNameTotalCell_eVBinning.c_str(), "Energy Depsition in Cell (eV) / Number of Cells", NBins_eVBinning, EMin_eVBinning, EMax_eVBinning);
 
-    hEnergyDepsNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Solution) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Membrane) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Cytoplasm) / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsNucleus_keVBinning = new TH1D(histogramNameNucleus_keVBinning.c_str(), "Energy Deposition in Cell Nucleus (keV) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsMembrane_keVBinning = new TH1D(histogramNameMembrane_keVBinning.c_str(), "Energy Depsition in Cell Membrane (keV) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsCytoplasm_keVBinning = new TH1D(histogramNameCytoplasm_keVBinning.c_str(), "Energy Depsition in Cell Cytoplasm (keV) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsTotalCell_keVBinning = new TH1D(histogramNameTotalCell_keVBinning.c_str(), "Energy Depsition in Cell (keV) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
-     hEnergyDepsMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Solution) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Membrane) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Cytoplasm) / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Solution) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Membrane) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Cytoplasm) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
-     hEnergyDepsCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Solution) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Membrane) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Cytoplasm) / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Solution) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Membrane) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Cytoplasm) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
-     hEnergyDepsTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Energy Deposition in Cell (Decay originated in Solution) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Energy Deposition in Cell (Decay originated in Membrane) / Number of Cells", NBins, EMin, EMax);
-    hEnergyDepsTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Energy Deposition in Cell (Decay originated in Cytoplasm) / Number of Cells", NBins, EMin, EMax);
+    hEnergyDepsCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Solution) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Membrane) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Cytoplasm) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+
+    hEnergyDepsTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Energy Deposition in Cell (Decay originated in Solution) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Energy Deposition in Cell (Decay originated in Membrane) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Energy Deposition in Cell (Decay originated in Cytoplasm) / Number of Cells", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+
+    hEnergyDepsTotalCell_HitsAlpha = new TH2D(histogramNameTotalCell_HitsAlpha.c_str(), "Energy Depsition in Cell / Number of Cells, Number of hits by alphas", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning, NBins_Hits, MinHits, MaxHits);
+    hEnergyDepsNucleus_HitsAlpha = new TH2D(histogramNameNucleus_HitsAlpha.c_str(), "Energy Depsition in Cell Nucleus / Number of Cells, Number of hits by alphas", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning, NBins_Hits, MinHits, MaxHits);
+    hEnergyDepsMembrane_HitsAlpha = new TH2D(histogramNameMembrane_HitsAlpha.c_str(), "Energy Depsition in Cell Membrane / Number of Cells, Number of hits by alphas", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning, NBins_Hits, MinHits, MaxHits);
+    hEnergyDepsCytoplasm_HitsAlpha = new TH2D(histogramNameCytoplasm_HitsAlpha.c_str(), "Energy Depsition in Cell Cytoplasm / Number of Cells, Number of hits by alphas", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning, NBins_Hits, MinHits, MaxHits);
+
+    hFractionHitsAlpha = new TH1D(histogramNameFractionHitsAlpha.c_str(), "Fraction of Cells Hit a Number of Times by an Alpha Particle", NBins_Hits, MinHits, MaxHits);
 }
 
 //------------------–----------
 void EnergyDepositionHistograms::AddCellHitsToHistograms(CellHit cellHit)
 {
-    // cellHit.FinalizeCellHit();
-    // std::cout << cellHit.GetEnergyDepositionCytoplasm() << std::endl;
-
-    if(cellHit.GetEnergyDepositionMembrane()>0.0){hEnergyDepsMembrane->Fill(cellHit.GetEnergyDepositionMembrane());}
-    if(cellHit.GetEnergyDepositionCytoplasm()>0.0){hEnergyDepsCytoplasm->Fill(cellHit.GetEnergyDepositionCytoplasm());}
-    if(cellHit.GetEnergyDepositionNucleus()>0.0){hEnergyDepsNucleus->Fill(cellHit.GetEnergyDepositionNucleus());}
-    if(cellHit.GetEnergyDepositionTotalCell()>0.0){hEnergyDepsTotalCell->Fill(cellHit.GetEnergyDepositionTotalCell());}
+    //----------------------------
+    // Fill histograms
+    if(cellHit.GetEnergyDepositionMembrane()>0.0)
+    {
+        hEnergyDepsMembrane_eVBinning->Fill(cellHit.GetEnergyDepositionMembrane());
+        hEnergyDepsMembrane_keVBinning->Fill(cellHit.GetEnergyDepositionMembrane());
+    }
+    if(cellHit.GetEnergyDepositionCytoplasm()>0.0)
+    {
+        hEnergyDepsCytoplasm_eVBinning->Fill(cellHit.GetEnergyDepositionCytoplasm());
+        hEnergyDepsCytoplasm_keVBinning->Fill(cellHit.GetEnergyDepositionCytoplasm());
+    }
+    if(cellHit.GetEnergyDepositionNucleus()>0.0)
+    {
+        hEnergyDepsNucleus_eVBinning->Fill(cellHit.GetEnergyDepositionNucleus());
+        hEnergyDepsNucleus_keVBinning->Fill(cellHit.GetEnergyDepositionNucleus());
+    }
+    if(cellHit.GetEnergyDepositionTotalCell()>0.0)
+    {
+        hEnergyDepsTotalCell_eVBinning->Fill(cellHit.GetEnergyDepositionTotalCell());
+        hEnergyDepsTotalCell_keVBinning->Fill(cellHit.GetEnergyDepositionTotalCell());
+    }
 
     if(cellHit.GetEnergyDepositionNucleus_FromSolution()>0.0){hEnergyDepsNucleus_FromSolution->Fill(cellHit.GetEnergyDepositionNucleus_FromSolution());}
     if(cellHit.GetEnergyDepositionNucleus_FromMembrane()>0.0){hEnergyDepsNucleus_FromMembrane->Fill(cellHit.GetEnergyDepositionNucleus_FromMembrane());}
@@ -495,19 +585,29 @@ void EnergyDepositionHistograms::AddCellHitsToHistograms(CellHit cellHit)
     if(cellHit.GetEnergyDepositionTotalCell_FromMembrane()>0.0){hEnergyDepsTotalCell_FromMembrane->Fill(cellHit.GetEnergyDepositionTotalCell_FromMembrane());}
     if(cellHit.GetEnergyDepositionTotalCell_FromCytoplasm()>0.0){hEnergyDepsTotalCell_FromCytoplasm->Fill(cellHit.GetEnergyDepositionTotalCell_FromCytoplasm());}
 
-    // if(cellHit.GetEnergyDepositionNucleus()>0.0){std::cout << cellHit.GetNumberHitsAlpha() << std::endl;}
-    // std::cout << cellHit.GetNumberHitsAlpha() << ", " << cellHit.GetEnergyDepositionTotalCell() << std::endl;
-    if(cellHit.GetEnergyDepositionTotalCell()>0.0){hEnergyDepNucleus_HitsAlpha->Fill(cellHit.GetEnergyDepositionTotalCell(), cellHit.GetNumberHitsAlpha());}
+    if(cellHit.GetEnergyDepositionTotalCell()>0.0){hEnergyDepsTotalCell_HitsAlpha->Fill(cellHit.GetEnergyDepositionTotalCell(), cellHit.GetNumberHitsAlphas_TotalCell());}
+    if(cellHit.GetEnergyDepositionNucleus()>0.0){hEnergyDepsNucleus_HitsAlpha->Fill(cellHit.GetEnergyDepositionNucleus(), cellHit.GetNumberHitsAlphas_Nucleus());}
+    if(cellHit.GetEnergyDepositionMembrane()>0.0){hEnergyDepsMembrane_HitsAlpha->Fill(cellHit.GetEnergyDepositionMembrane(), cellHit.GetNumberHitsAlphas_Membrane());}
+    if(cellHit.GetEnergyDepositionCytoplasm()>0.0){hEnergyDepsCytoplasm_HitsAlpha->Fill(cellHit.GetEnergyDepositionCytoplasm(), cellHit.GetNumberHitsAlphas_Cytoplasm());}
+
+    if(cellHit.GetEnergyDepositionTotalCell()>0.0){hFractionHitsAlpha->Fill(cellHit.GetNumberHitsAlphas_TotalCell());}
 
 }
 
 //------------------–----------
 void EnergyDepositionHistograms::ScaleHistograms(double factor)
 {
-    hEnergyDepsMembrane->Scale(factor);
-    hEnergyDepsCytoplasm->Scale(factor);
-    hEnergyDepsNucleus->Scale(factor);
-    hEnergyDepsTotalCell->Scale(factor);
+    //---------------------------
+    // Scaling histograms
+    hEnergyDepsMembrane_eVBinning->Scale(factor);
+    hEnergyDepsCytoplasm_eVBinning->Scale(factor);
+    hEnergyDepsNucleus_eVBinning->Scale(factor);
+    hEnergyDepsTotalCell_eVBinning->Scale(factor);
+
+    hEnergyDepsMembrane_keVBinning->Scale(factor);
+    hEnergyDepsCytoplasm_keVBinning->Scale(factor);
+    hEnergyDepsNucleus_keVBinning->Scale(factor);
+    hEnergyDepsTotalCell_keVBinning->Scale(factor);
 
     hEnergyDepsNucleus_FromSolution->Scale(factor);
     hEnergyDepsNucleus_FromMembrane->Scale(factor);
@@ -525,18 +625,28 @@ void EnergyDepositionHistograms::ScaleHistograms(double factor)
     hEnergyDepsTotalCell_FromMembrane->Scale(factor);
     hEnergyDepsTotalCell_FromCytoplasm->Scale(factor);
 
+    hEnergyDepsTotalCell_HitsAlpha->Scale(factor);
+    hEnergyDepsNucleus_HitsAlpha->Scale(factor);
+    hEnergyDepsMembrane_HitsAlpha->Scale(factor);
+    hEnergyDepsCytoplasm_HitsAlpha->Scale(factor);
 
-    hEnergyDepNucleus_HitsAlpha->Scale(factor);
+    hFractionHitsAlpha->Scale(factor);
 }
 
 //------------------–----------
 void EnergyDepositionHistograms::WriteHistogramsToFile()
 {
     //------------------–----------
-    hEnergyDepsMembrane->Write();
-    hEnergyDepsCytoplasm->Write();
-    hEnergyDepsNucleus->Write();
-    hEnergyDepsTotalCell->Write();
+    // Writing histograms to file
+    hEnergyDepsMembrane_eVBinning->Write();
+    hEnergyDepsCytoplasm_eVBinning->Write();
+    hEnergyDepsNucleus_eVBinning->Write();
+    hEnergyDepsTotalCell_eVBinning->Write();
+
+    hEnergyDepsMembrane_keVBinning->Write();
+    hEnergyDepsCytoplasm_keVBinning->Write();
+    hEnergyDepsNucleus_keVBinning->Write();
+    hEnergyDepsTotalCell_keVBinning->Write();
 
     hEnergyDepsNucleus_FromSolution->Write();
     hEnergyDepsNucleus_FromMembrane->Write();
@@ -554,22 +664,38 @@ void EnergyDepositionHistograms::WriteHistogramsToFile()
     hEnergyDepsTotalCell_FromMembrane->Write();
     hEnergyDepsTotalCell_FromCytoplasm->Write();
 
-    hEnergyDepNucleus_HitsAlpha->Write();
+    hEnergyDepsTotalCell_HitsAlpha->Write();
+    hEnergyDepsNucleus_HitsAlpha->Write();
+    hEnergyDepsMembrane_HitsAlpha->Write();
+    hEnergyDepsCytoplasm_HitsAlpha->Write();
 
+    hFractionHitsAlpha->Write();
 
     //------------------–----------
-    hEnergyDepsMembrane->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembrane->GetYaxis()->SetTitle("Fraction of Cells hit");
+    // Setting axis legends
+    hEnergyDepsMembrane_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsMembrane_eVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
 
-    hEnergyDepsCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCytoplasm->GetYaxis()->SetTitle("Fraction of Cells hit");
+    hEnergyDepsCytoplasm_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsCytoplasm_eVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
 
-    hEnergyDepsNucleus->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleus->GetYaxis()->SetTitle("Fraction of Cells hit");
+    hEnergyDepsNucleus_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsNucleus_eVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
 
-    hEnergyDepsTotalCell->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsTotalCell->GetYaxis()->SetTitle("Fraction of Cells hit");
+    hEnergyDepsTotalCell_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsTotalCell_eVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
 
+    hEnergyDepsMembrane_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsMembrane_keVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
+
+    hEnergyDepsCytoplasm_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsCytoplasm_eVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
+
+    hEnergyDepsNucleus_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsNucleus_eVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
+
+    hEnergyDepsTotalCell_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsTotalCell_keVBinning->GetYaxis()->SetTitle("Fraction of Cells hit");
 
     hEnergyDepsNucleus_FromSolution->GetXaxis()->SetTitle("Energy Deposition [MeV]");
     hEnergyDepsNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Cells hit");
@@ -610,6 +736,21 @@ void EnergyDepositionHistograms::WriteHistogramsToFile()
     hEnergyDepsTotalCell_FromCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
     hEnergyDepsTotalCell_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells hit");
 
+    hEnergyDepsTotalCell_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsTotalCell_HitsAlpha->GetYaxis()->SetTitle("Number of Hits by Alpha Particle");
+
+    hEnergyDepsNucleus_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsNucleus_HitsAlpha->GetYaxis()->SetTitle("Number of Hits by Alpha Particle");
+
+    hEnergyDepsMembrane_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsMembrane_HitsAlpha->GetYaxis()->SetTitle("Number of Hits by Alpha Particle");
+
+    hEnergyDepsCytoplasm_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsCytoplasm_HitsAlpha->GetYaxis()->SetTitle("Number of Hits by Alpha Particle");
+
+    hFractionHitsAlpha->GetXaxis()->SetTitle("Number of hits by Alpha Particle");
+    hFractionHitsAlpha->GetYaxis()->SetTitle("Fraction of cells hit");
+
 }
 
 
@@ -623,32 +764,27 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
     double numberDecays212PbInSolution1hTo2h = decayDynamicsInstance.GetNumberDecaysInSolutionFirstHour()*volumeRatio;
     double numberDecays212PbInMembrane1hTo26h = decayDynamicsInstance.GetNumberDecaysInMembraneTotalTime()*volumeRatio;
     double numberDecays212PbInCytoplasm1hTo26h = decayDynamicsInstance.GetNumberDecaysInCytoplasmTotalTime()*volumeRatio;
-    // double numberDecays212PbInSolution1hTo2h = 10.;
+    // double numberDecays212PbInSolution1hTo2h = 1000.;
     // double numberDecays212PbInMembrane1hTo26h = 0.;
-    // double numberDecays212PbInCytoplasm1hTo26h = 10.;
+    // double numberDecays212PbInCytoplasm1hTo26h = 0.;
     double numberCells_Sim = numberCells*volumeRatio;
 
-    // std::cout << "Num: " << numberDecays212PbInSolution1hTo2h << std::endl;
-    //------------------–----------
-    int NBins = 4000000;
-    double EMin = 0.0;
-    double EMax = 40.0;
+    double MaxEnergyCytoplasm = 100.;
 
     //------------------–----------
     // Generating empty histograms
-    EnergyDepositionHistograms energyDepHistograms = EnergyDepositionHistograms(NBins, EMin, EMax);
+    EnergyDepositionHistograms energyDepHistograms = EnergyDepositionHistograms(MaxEnergyCytoplasm);
     energyDepHistograms.GenerateEmptyHistograms(decayDynamicsInstance);
 
 
 
-    std::vector<double> energyDepCytoplasmVec;
 
     //------------------–----------
     //  Function for filling histograms
     auto FillHistograms = [&](std::string filepathSolutionSim_i, std::string filepathMembraneSim_i, std::string filepathCytoplasmSim_i)
     // auto FillHistograms = [&](TChain* chainSolutionSim, TChain* chainMembraneSim, TChain* chainCytoplasmSim)
     {
-
+        std::vector<double> energyDepCytoplasmVec;
 
         //------------------–----------
         // Opening TTree files and creating TTreeReaders
@@ -790,8 +926,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             }
 
             //--------------------------------------
-            // Vector to store <cellID, trackID> for particle hits to a cell for one event
-            std::vector<std::tuple<int,int>> particleHitsInfoForEventVec;
+            // Vector to store <cellID, trackID, volume hit> for particle hits to a cell for one event
+            std::vector<std::tuple<int,int,int>> particleHitsInfoForEventVec;
 
             // Sorting through interactions
             if(firstInteractionInSolution1hTo2h)
@@ -832,8 +968,11 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
 
                                     //---------------------------------------------
-                                    // boolean: true if the particle track has already been stored for a specific cell ID
-                                    bool trackAlreadyRegistered = false;
+                                    // boolean: true if the particle track has already been stored for a specific cell ID in this specific component of the cell
+                                    bool trackAlreadyRegisteredInThisCellComponent = false;
+
+                                    // boolean: true if it is the first time the track has been counted in a cell
+                                    bool firstTimeCountingTrackInCell = true;
 
                                     // Looping over all previously stored track IDs and corresponding cell IDs for this event
                                     for(int iii=0; iii<particleHitsInfoForEventVec.size(); iii++)
@@ -844,22 +983,29 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                                         {
                                             if(trackIDSolutionSim[i]==std::get<1>(particleHitsInfoForEventVec[iii]))
                                             {
-                                                trackAlreadyRegistered = true;
+                                                // Track has been counted before in this cell, just in a different component of the cell
+                                                firstTimeCountingTrackInCell = false;
+
+                                                if(volumeTypesSolutionSim[i]==get<2>(particleHitsInfoForEventVec[iii]))
+                                                {
+                                                    // Track already counted in this cell and cell component
+                                                    trackAlreadyRegisteredInThisCellComponent = true;
+                                                }
                                             }
                                         }
                                     }
                                     // If track ID has not already been registered or not been registered for this cell ID
-                                    if(!trackAlreadyRegistered)
+                                    if(!trackAlreadyRegisteredInThisCellComponent)
                                     {
 
                                         // If alpha particle type
                                         if(particleTypeSolutionSim[i]==1000020040)
                                         {
-                                            storedCellHits[ii].HitByAlphaParticle();
+                                            storedCellHits[ii].HitByAlphaParticle(volumeTypesSolutionSim[i],firstTimeCountingTrackInCell);
                                         }
 
                                         // Save the hit and cellID
-                                        std::tuple<int,int> particleHit = std::make_tuple(cellIDsSolutionSim[i],trackIDSolutionSim[i]);
+                                        std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsSolutionSim[i],trackIDSolutionSim[i],volumeTypesSolutionSim[i]);
                                         particleHitsInfoForEventVec.push_back(particleHit);
 
                                     }
@@ -879,10 +1025,10 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                                 // If alpha particle
                                 if(particleTypeSolutionSim[i]==1000020040)
                                 {
-                                    aNewCellHit.HitByAlphaParticle();
+                                    aNewCellHit.HitByAlphaParticle(volumeTypesSolutionSim[i],true);
                                 }
 
-                                std::tuple<int,int> particleHit = std::make_tuple(cellIDsSolutionSim[i],trackIDSolutionSim[i]);
+                                std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsSolutionSim[i],trackIDSolutionSim[i],volumeTypesSolutionSim[i]);
                                 particleHitsInfoForEventVec.push_back(particleHit);
 
                             }
@@ -932,7 +1078,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
                 //--------------------------------------
                 // Vector to store <cellID, trackID> for particle hits to a cell for one event
-                std::vector<std::tuple<int,int>> particleHitsInfoForEventVec;
+                std::vector<std::tuple<int,int,int>> particleHitsInfoForEventVec;
 
                 if(firstInteractionInMembrane1hTo26h)
                 {
@@ -969,7 +1115,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
                                         //--------------------------------------
                                         // boolean: true if the particle track has already been stored for a specific cell ID
-                                        bool trackAlreadyRegistered = false;
+                                        bool trackAlreadyRegisteredInThisCellComponent = false;
+                                        bool firstTimeCountingTrackInCell = true;
 
                                         // Looping over all previously stored track IDs and corresponding cell IDs for this event
                                         for(int iii=0; iii<particleHitsInfoForEventVec.size(); iii++)
@@ -980,22 +1127,26 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                                             {
                                                 if(trackIDMembraneSim[i]==std::get<1>(particleHitsInfoForEventVec[iii]))
                                                 {
-                                                    trackAlreadyRegistered = true;
+                                                    firstTimeCountingTrackInCell = false;
+                                                    if(volumeTypesMembraneSim[i]==std::get<2>(particleHitsInfoForEventVec[iii]))
+                                                    {
+                                                        trackAlreadyRegisteredInThisCellComponent = true;
+                                                    }
                                                 }
                                             }
                                         }
                                         // If track ID has not already been registered or not been registered for this cell ID
-                                        if(!trackAlreadyRegistered)
+                                        if(!trackAlreadyRegisteredInThisCellComponent)
                                         {
 
                                             // If alpha particle type
                                             if(particleTypeMembraneSim[i]==1000020040)
                                             {
-                                                storedCellHits[ii].HitByAlphaParticle();
+                                                storedCellHits[ii].HitByAlphaParticle(volumeTypesMembraneSim[i],firstTimeCountingTrackInCell);
                                             }
 
                                             // Save the hit and cellID
-                                            std::tuple<int,int> particleHit = std::make_tuple(cellIDsMembraneSim[i],trackIDMembraneSim[i]);
+                                            std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsMembraneSim[i],trackIDMembraneSim[i],volumeTypesMembraneSim[i]);
                                             particleHitsInfoForEventVec.push_back(particleHit);
 
                                         }
@@ -1014,10 +1165,10 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                                     // If alpha particle
                                     if(particleTypeMembraneSim[i]==1000020040)
                                     {
-                                        aNewCellHit.HitByAlphaParticle();
+                                        aNewCellHit.HitByAlphaParticle(volumeTypesMembraneSim[i],true);
                                     }
 
-                                    std::tuple<int,int> particleHit = std::make_tuple(cellIDsMembraneSim[i],trackIDMembraneSim[i]);
+                                    std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsMembraneSim[i],trackIDMembraneSim[i],volumeTypesMembraneSim[i]);
                                     particleHitsInfoForEventVec.push_back(particleHit);
                                 }
                             }
@@ -1072,7 +1223,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
 
                 //--------------------------------------
                 // Vector to store <cellID, trackID> for particle hits to a cell for one event
-                std::vector<std::tuple<int,int>> particleHitsInfoForEventVec;
+                std::vector<std::tuple<int,int,int>> particleHitsInfoForEventVec;
 
                 if(firstInteractionInCytoplasm1hTo26h)
                 {
@@ -1107,7 +1258,8 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                                         cellAlreadyHit = true;
 
                                         // boolean: true if the particle track has already been stored for a specific cell ID
-                                        bool trackAlreadyRegistered = false;
+                                        bool trackAlreadyRegisteredInThisCellComponent = false;
+                                        bool firstTimeCountingTrackInCell = true;
 
                                         // Looping over all previously stored track IDs and corresponding cell IDs for this event
                                         for(int iii=0; iii<particleHitsInfoForEventVec.size(); iii++)
@@ -1118,23 +1270,27 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                                             {
                                                 if(trackIDCytoplasmSim[i]==std::get<1>(particleHitsInfoForEventVec[iii]))
                                                 {
-                                                    trackAlreadyRegistered = true;
+                                                    firstTimeCountingTrackInCell = false;
+                                                    if(volumeTypesCytoplasmSim[i]==std::get<2>(particleHitsInfoForEventVec[iii]))
+                                                    {
+                                                        trackAlreadyRegisteredInThisCellComponent = true;
+                                                    }
                                                 }
                                             }
                                         }
                                         // If track ID has not already been registered or not been registered for this cell ID
-                                        if(!trackAlreadyRegistered)
+                                        if(!trackAlreadyRegisteredInThisCellComponent)
                                         {
 
                                             // If alapha particle type
                                             if(particleTypeCytoplasmSim[i]==1000020040)
                                             {
-                                                storedCellHits[ii].HitByAlphaParticle();
+                                                storedCellHits[ii].HitByAlphaParticle(volumeTypesCytoplasmSim[i],firstTimeCountingTrackInCell);
                                                 // std::cout << "New track : "<< cellIDsCytoplasmSim[i] << " , " << trackIDCytoplasmSim[i] << " , " << particleTypeCytoplasmSim[i] << std::endl;
                                             }
 
                                             // Save the hit and cellID
-                                            std::tuple<int,int> particleHit = std::make_tuple(cellIDsCytoplasmSim[i],trackIDCytoplasmSim[i]);
+                                            std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsCytoplasmSim[i],trackIDCytoplasmSim[i],volumeTypesCytoplasmSim[i]);
                                             particleHitsInfoForEventVec.push_back(particleHit);
 
                                         }
@@ -1152,10 +1308,10 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
                                     // If alpha particle
                                     if(particleTypeCytoplasmSim[i]==1000020040)
                                     {
-                                        aNewCellHit.HitByAlphaParticle();
+                                        aNewCellHit.HitByAlphaParticle(volumeTypesCytoplasmSim[i],true);
                                     }
 
-                                    std::tuple<int,int> particleHit = std::make_tuple(cellIDsCytoplasmSim[i],trackIDCytoplasmSim[i]);
+                                    std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsCytoplasmSim[i],trackIDCytoplasmSim[i],volumeTypesCytoplasmSim[i]);
                                     particleHitsInfoForEventVec.push_back(particleHit);
                                 }
                             }
@@ -1173,6 +1329,7 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             }
         }
 
+
         //------------------–----------
         // Looping over all stored cell energy depositions
         for(int i=0; i<storedCellHits.size(); i++)
@@ -1181,12 +1338,24 @@ EnergyDepositionHistograms MakeHistograms(DecayDynamics decayDynamicsInstance, i
             storedCellHits[i].FinalizeCellHit();
             energyDepCytoplasmVec.push_back(storedCellHits[i].GetEnergyDepositionCytoplasm());
             energyDepHistograms.AddCellHitsToHistograms(storedCellHits[i]);
+
+
         }
+        double maxE = 0.;
+        for(int i=0; i<energyDepCytoplasmVec.size(); i++)
+        {
+            if(energyDepCytoplasmVec[i]>maxE)
+            {
+                maxE = energyDepCytoplasmVec[i];
+                // std::cout << energyDepCytoplasmVec[i] << std::endl;
+            }
+        }
+        std::cout << "Max energy cytoplasm " <<  maxE << std::endl;
     };
 
 
-    double maxE = *std::max_element(energyDepCytoplasmVec.begin(), energyDepCytoplasmVec.end());
-    std::cout << "Max energy cytoplasm " << std::endl;
+    // double maxE = *std::max_element(energyDepCytoplasmVec.begin(), energyDepCytoplasmVec.end());
+    // std::cout << "Max energy cytoplasm " <<  maxE << std::endl;
     // //----------------------------
     // // Making chain from files
     // TChain* chSolution = new TChain("B4");
@@ -1344,15 +1513,15 @@ void mainAnalysisCode()
     // output->Write();
     // output->Close();
 
-    // EnergyDepositionHistograms Hist_A100kBq_PC3_PIP = MakeHistograms(decays_A100kBq_PC3_PIP, numberIterations, volumeRatio, numberCells);
-    // auto output = new TFile("Output_PC3_PIP_100kBq.root", "RECREATE");
-    // Hist_A100kBq_PC3_PIP.WriteHistogramsToFile();
+    // EnergyDepositionHistograms Hist_A150kBq_PC3_PIP = MakeHistograms(decays_A150kBq_PC3_PIP, numberIterations, volumeRatio, numberCells);
+    // auto output = new TFile("Output_PC3_PIP_150kBq.root", "RECREATE");
+    // Hist_A150kBq_PC3_PIP.WriteHistogramsToFile();
     // output->Write();
     // output->Close();
 
-    EnergyDepositionHistograms Hist_A5kBq_C4_2 = MakeHistograms(decays_A5kBq_C4_2, numberIterations, volumeRatio, numberCells);
-    auto output = new TFile("Output_C4_2_5kBq.root", "RECREATE");
-    Hist_A5kBq_C4_2.WriteHistogramsToFile();
+    EnergyDepositionHistograms Hist_A150kBq_C4_2 = MakeHistograms(decays_A150kBq_C4_2, numberIterations, volumeRatio, numberCells);
+    auto output = new TFile("Output_C4_2_150kBq.root", "RECREATE");
+    Hist_A150kBq_C4_2.WriteHistogramsToFile();
     output->Write();
     output->Close();
 }
