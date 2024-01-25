@@ -55,7 +55,6 @@ set(EXAMPLEB4A_SCRIPTS
     init_vis.mac
     plotHisto.C
     plotNtuple.C
-    run0.mac
     Run_C4_2_Solution_Case_0.mac
     Run_C4_2_Solution_Case_1.mac
     Run_C4_2_Solution_Case_2.mac
