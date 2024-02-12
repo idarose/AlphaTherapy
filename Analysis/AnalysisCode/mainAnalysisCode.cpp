@@ -772,21 +772,21 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
     hDoseCytoplasm_mGyBinning = new TH1D(histogramNameCytoplasm_mGyBinning.c_str(), "Dose Delivered in Cell Cytoplasm", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
     hDoseTotalCell_mGyBinning = new TH1D(histogramNameTotalCell_mGyBinning.c_str(), "Dose Delivered in Cell", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
+    hDoseNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
+    hDoseMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
+    hDoseCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Dose Delivered in Cell (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Dose Delivered in Cell (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
-    hDoseTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Dose Delivered in Cell (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning);
+    hDoseTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Dose Delivered in Cell (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Dose Delivered in Cell (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Dose Delivered in Cell (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
     // Naming axis
     hDoseMembrane_uGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
@@ -862,10 +862,10 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
 
 
     // making empty histograms
-    hDoseTotalCell_HitsAlpha = new TH2D(histogramNameTotalCell_HitsAlpha.c_str(), "Dose Delivered in Cell per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning, NBins_Hits, MinHits, MaxHits);
-    hDoseNucleus_HitsAlpha = new TH2D(histogramNameNucleus_HitsAlpha.c_str(), "Dose Delivered in Cell Nucleus per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning, NBins_Hits, MinHits, MaxHits);
-    hDoseMembrane_HitsAlpha = new TH2D(histogramNameMembrane_HitsAlpha.c_str(), "Dose Delivered in Cell Membrane per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning, NBins_Hits, MinHits, MaxHits);
-    hDoseCytoplasm_HitsAlpha = new TH2D(histogramNameCytoplasm_HitsAlpha.c_str(), "Dose Delivered in Cell Cytoplasm per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_uGyBinning, NBins_Hits, MinHits, MaxHits);
+    hDoseTotalCell_HitsAlpha = new TH2D(histogramNameTotalCell_HitsAlpha.c_str(), "Dose Delivered in Cell per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning, NBins_Hits, MinHits, MaxHits);
+    hDoseNucleus_HitsAlpha = new TH2D(histogramNameNucleus_HitsAlpha.c_str(), "Dose Delivered in Cell Nucleus per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning, NBins_Hits, MinHits, MaxHits);
+    hDoseMembrane_HitsAlpha = new TH2D(histogramNameMembrane_HitsAlpha.c_str(), "Dose Delivered in Cell Membrane per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning, NBins_Hits, MinHits, MaxHits);
+    hDoseCytoplasm_HitsAlpha = new TH2D(histogramNameCytoplasm_HitsAlpha.c_str(), "Dose Delivered in Cell Cytoplasm per N Number of hits by alphas", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning, NBins_Hits, MinHits, MaxHits);
 
 
     // Naming axis
@@ -1390,7 +1390,7 @@ void AddEnergyDepositionHistograms::AddHistograms(EnergyDepositionHistograms& h1
 //------------------–----------
 EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDynamicsInstance, int numberIterations)
 {
-    std::cout << "-----------------------" << std::endl;
+    std::cout << "---------------------------------" << std::endl;
     std::cout << "Analyzing Histograms for : " << decayDynamicsInstance.GetCellLine() << ", Activity: " << decayDynamicsInstance.GetActivity() << std::endl;
     //------------------–----------
     // Loading decay dynamics
@@ -2015,7 +2015,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
 void mainAnalysisCode()
 {
 
-    int numberIterations = 3;
+    int numberIterations = 1;
 
 
 
@@ -2100,11 +2100,11 @@ void mainAnalysisCode()
     //-------------------------------------
     // Creating energy deposition histograms
 
-    // EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_Flu, numberIterations);
-    // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_Flu_150kBq.root", "RECREATE");
-    // Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
-    // output->Write();
-    // output->Close();
+    EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_Flu, numberIterations);
+    auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_Flu_150kBq.root", "RECREATE");
+    Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
+    output->Write();
+    output->Close();
 
     // EnergyDepositionHistograms Hist_A150kBq_PC3_PIP = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_PIP, numberIterations);
     // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_PIP_150kBq.root", "RECREATE");
@@ -2112,11 +2112,11 @@ void mainAnalysisCode()
     // output->Write();
     // output->Close();
 
-    EnergyDepositionHistograms Hist_A150kBq_C4_2 = AnalyzeHistogramsFromSimulation(decays_A150kBq_C4_2, numberIterations);
-    auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_C4_2_150kBq.root", "RECREATE");
-    Hist_A150kBq_C4_2.WriteHistogramsToFile();
-    output->Write();
-    output->Close();
+    // EnergyDepositionHistograms Hist_A150kBq_C4_2 = AnalyzeHistogramsFromSimulation(decays_A150kBq_C4_2, numberIterations);
+    // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_C4_2_150kBq.root", "RECREATE");
+    // Hist_A150kBq_C4_2.WriteHistogramsToFile();
+    // output->Write();
+    // output->Close();
 }
 
 
