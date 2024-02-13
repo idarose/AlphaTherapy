@@ -309,7 +309,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
     //Cell Nucleus parameters
     G4double cellNucleusRMin = 0.*um; //Inner radius
-    G4double cellNucleusRMax = 2.5*um; //Outer radius
+    G4double cellNucleusRMax = 6.*um; //Outer radius
     G4double cellNucleusSPhi = 0.*deg; //Phi Start
     G4double cellNucleusEPhi = 360.*deg; //Phi end
     G4double cellNucleusSTheta = 0.*deg; //Start Theta

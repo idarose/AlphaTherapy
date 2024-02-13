@@ -16,41 +16,8 @@
 #include <future>
 #include <thread>
 
-//------------------–----------
-std::vector<double> ImportDataStringDouble(std::string filename)
-{
-    //----------------------
-    //  Imports data from file where the first column contains data in string form
-    //  and second column contains data in double form. Returns the columns of double
-    //  values in the form of a vector
+// g++ -o output_file mainAnalysisCode.cpp $(root-config --cflags --libs)
 
-    std::vector<double> input_data;
-
-    std::fstream myfile(filename, ios_base::in);
-
-
-    if (myfile.is_open())
-    {
-        std::string line;
-        std::string x;
-        double y;
-
-        while(std::getline(myfile,line))
-        {
-            std::stringstream mystream(line);
-            mystream >> x >> y;
-            input_data.push_back(y);
-        }
-    }
-    else
-    {
-        std::cout << "Unable to open file " << filename << std::endl;
-    }
-    myfile.close();
-
-    return input_data;
-
-}
 
 //------------------–----------
 class DecayDynamics
@@ -62,6 +29,7 @@ class DecayDynamics
     public:
         DecayDynamics(int activitySample_in, double U0PerCell_in, double U0InternalizedPerCell_in, std::string cellLine_in);
 
+        std::vector<double> ReadFileFromMathematica(std::string filename);
         void LoadDataFromMathematicaCalculations(std::string filepathToMathematicaOutput);
 
         double GetNumberDecaysInSolutionFirstHour(){return numberDecays212PbInSolution1hTo2h;};
@@ -95,7 +63,7 @@ class DecayDynamics
 
 };
 
-
+//------------------–----------
 DecayDynamics::DecayDynamics(int activitySample_in, double U0PerCell_in, double U0InternalizedPerCell_in, std::string cellLine_in)
 {
     activitySample = activitySample_in;
@@ -111,7 +79,44 @@ DecayDynamics::DecayDynamics(int activitySample_in, double U0PerCell_in, double 
 }
 
 
+//------------------–----------
+std::vector<double> DecayDynamics::ReadFileFromMathematica(std::string filename)
+{
+    //----------------------
+    //  Imports data from file where the first column contains data in string form
+    //  and second column contains data in double form. Returns the columns of double
+    //  values in the form of a vector
 
+    std::vector<double> input_data;
+
+    std::fstream myfile(filename, std::ios_base::in);
+
+
+    if (myfile.is_open())
+    {
+        std::string line;
+        std::string x;
+        double y;
+
+        while(std::getline(myfile,line))
+        {
+            std::stringstream mystream(line);
+            mystream >> x >> y;
+            input_data.push_back(y);
+        }
+    }
+    else
+    {
+        std::cout << "Unable to open file " << filename << std::endl;
+    }
+    myfile.close();
+
+    return input_data;
+
+}
+
+
+//------------------–----------
 void DecayDynamics::LoadDataFromMathematicaCalculations(std::string filepathToMathematicaOutput)
 {
 
@@ -121,7 +126,7 @@ void DecayDynamics::LoadDataFromMathematicaCalculations(std::string filepathToMa
     std::string filepathSolutionData = filepathToMathematicaOutput + "/" + cellLine + "/Solution/Activity_" + std::to_string(activitySample) + "kBq/NumberDecays.dat";
 
     // Importing data for decays occuring in solution
-    std::vector<double> decayDataSolution = ImportDataStringDouble(filepathSolutionData);
+    std::vector<double> decayDataSolution = ReadFileFromMathematica(filepathSolutionData);
     numberDecays212PbInSolution1hTo2h = decayDataSolution[0];
 
 
@@ -131,7 +136,7 @@ void DecayDynamics::LoadDataFromMathematicaCalculations(std::string filepathToMa
     {
         // Importing data for decays occuring in cells
         std::string filepathCellData = filepathToMathematicaOutput + "/" + cellLine + "/Cells/Activity_" + std::to_string(activitySample) + "kBq/NumberDecays.dat";
-        std::vector<double> decayDataCells = ImportDataStringDouble(filepathCellData);
+        std::vector<double> decayDataCells = ReadFileFromMathematica(filepathCellData);
 
         numberDecays212PbInMembrane1h2To26h = decayDataCells[7];
         numberDecays212PbInCytoplasm1hTo26h = decayDataCells[14];
@@ -2012,10 +2017,9 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
 
 }
 
-void mainAnalysisCode()
+int main()
 {
-
-    int numberIterations = 1;
+     int numberIterations = 1;
 
 
 
@@ -2118,5 +2122,111 @@ void mainAnalysisCode()
     // output->Write();
     // output->Close();
 }
+// void mainAnalysisCode()
+// {
+
+//     int numberIterations = 1;
+
+
+
+//     // std::cout << volumeRatio << std::endl;
+
+
+//     //------------------–----------
+//     // Defining decay dynamics
+
+
+//     // C4-2 Cells
+
+//     DecayDynamics decays_A5kBq_C4_2 = DecayDynamics(5,1.14,1.16,"C4_2");
+//     DecayDynamics decays_A10kBq_C4_2 = DecayDynamics(10,1.97,1.98,"C4_2");
+//     DecayDynamics decays_A25kBq_C4_2 = DecayDynamics(25,4.78,5.91,"C4_2");
+//     DecayDynamics decays_A50kBq_C4_2 = DecayDynamics(50,8.94,11.07,"C4_2");
+//     DecayDynamics decays_A75kBq_C4_2 = DecayDynamics(75,10.79,13.12,"C4_2");
+//     DecayDynamics decays_A100kBq_C4_2 = DecayDynamics(100,13.16,22.72,"C4_2");
+//     DecayDynamics decays_A150kBq_C4_2 = DecayDynamics(150,16.40,23.56,"C4_2");
+
+
+//     // PC3 PIP Cells
+
+//     DecayDynamics decays_A10kBq_PC3_PIP = DecayDynamics(10, 47., 2., "PC3_PIP");
+//     DecayDynamics decays_A25kBq_PC3_PIP = DecayDynamics(25, 119., 229., "PC3_PIP");
+//     DecayDynamics decays_A50kBq_PC3_PIP = DecayDynamics(50, 229., 11., "PC3_PIP");
+//     DecayDynamics decays_A75kBq_PC3_PIP = DecayDynamics(75, 335., 17., "PC3_PIP");
+//     DecayDynamics decays_A100kBq_PC3_PIP = DecayDynamics(100, 448., 22., "PC3_PIP");
+//     DecayDynamics decays_A150kBq_PC3_PIP = DecayDynamics(150, 565., 28., "PC3_PIP");
+
+
+//     // PC3 Flu Cells
+//     DecayDynamics decays_A10kBq_PC3_Flu = DecayDynamics(10, 0., 0., "PC3_Flu");
+//     DecayDynamics decays_A25kBq_PC3_Flu = DecayDynamics(25, 0., 0., "PC3_Flu");
+//     DecayDynamics decays_A50kBq_PC3_Flu = DecayDynamics(50, 0., 0., "PC3_Flu");
+//     DecayDynamics decays_A75kBq_PC3_Flu = DecayDynamics(75, 0., 0., "PC3_Flu");
+//     DecayDynamics decays_A100kBq_PC3_Flu = DecayDynamics(100, 0., 0., "PC3_Flu");
+//     DecayDynamics decays_A150kBq_PC3_Flu = DecayDynamics(150, 0., 0., "PC3_Flu");
+//     // DecayDynamics decays_A1000kBq_PC3_Flu = DecayDynamics(1000,0.,0., "PC3_Flu");
+//     // DecayDynamics decays_A300kBq_PC3_Flu = DecayDynamics(300,0.,0., "PC3_Flu");
+//     // DecayDynamics decays_A500kBq_PC3_Flu = DecayDynamics(500,0.,0., "PC3_Flu");
+//     // DecayDynamics decays_A200kBq_PC3_Flu = DecayDynamics(200,0.,0., "PC3_Flu");
+//     // DecayDynamics decays_A210kBq_PC3_Flu = DecayDynamics(250,0.,0., "PC3_Flu");
+
+
+
+
+//     //------------------–----------
+//     // Loading decay dynamics calculations
+
+//     std::string mathematicaOutput = "../../Mathematica/Output";
+
+//     decays_A5kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A10kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A25kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A50kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A75kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A100kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A150kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+
+//     decays_A10kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A25kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A50kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A75kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A100kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A150kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+
+//     decays_A10kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A25kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A50kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A75kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A100kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     decays_A150kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     // decays_A1000kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     // decays_A300kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     // decays_A500kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     // decays_A200kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+//     // decays_A210kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
+
+
+
+//     //-------------------------------------
+//     // Creating energy deposition histograms
+
+//     EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_Flu, numberIterations);
+//     auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_Flu_150kBq.root", "RECREATE");
+//     Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
+//     output->Write();
+//     output->Close();
+
+//     // EnergyDepositionHistograms Hist_A150kBq_PC3_PIP = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_PIP, numberIterations);
+//     // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_PIP_150kBq.root", "RECREATE");
+//     // Hist_A150kBq_PC3_PIP.WriteHistogramsToFile();
+//     // output->Write();
+//     // output->Close();
+
+//     // EnergyDepositionHistograms Hist_A150kBq_C4_2 = AnalyzeHistogramsFromSimulation(decays_A150kBq_C4_2, numberIterations);
+//     // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_C4_2_150kBq.root", "RECREATE");
+//     // Hist_A150kBq_C4_2.WriteHistogramsToFile();
+//     // output->Write();
+//     // output->Close();
+// }
 
 
