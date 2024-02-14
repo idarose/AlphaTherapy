@@ -152,7 +152,7 @@ void numberEventsNeeded()
     std::cout << "Volume ratio of simulation : " << volumeRatio << std::endl;
 
     double ratioInSolution = 0.98;
-    double ratioInCytoplasm = 0.97;
+    double ratioInCytoplasm = 0.68;
     double ratioInMembrane = 0.99;
 
     //------------------–----------

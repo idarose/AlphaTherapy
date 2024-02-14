@@ -241,6 +241,15 @@ void EnergyDepositionHistograms::LoadHistogramsFromAnalysis(CellSurvival cellSur
 
 void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, int region)
 {
+    //-----------------------
+    // Calculate scaling factor for histogram
+    double VolumeSample = 0.2*1000; // mm^3
+    double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
+    double volumeRatio = volumeCellTube/VolumeSample;
+    double numberCells = 500000.*volumeRatio;
+    int numberIterations = 1;
+    double scalingFactorHistogram = numberCells*((double) numberIterations);
+
     //------------------------
     // Defininng volume used for fit
     std::string regionName;
@@ -305,16 +314,6 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
 
     std::vector<std::tuple<double, TH2D*>> dose_hits_histograms_vec = energyDepHistograms.Get_dose_hits_histograms_vec();
 
-    //------------------------------
-    // Defining decay dynamics to calculate scaling factor for dose histograms
-    double VolumeSample = 0.2*1000; // mm^3
-    double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
-    double volumeRatio = volumeCellTube/VolumeSample;
-
-    double numberIterations =1.;
-    double numberCells = 500000.*volumeRatio;
-    double scalingFactor = numberIterations*numberCells;
-
 
     //------------------------------
     auto CalculateCellSurvivalFraction = [&](TH1D *h_energyDeposition_eV, TH1D *h_energyDeposition_keV, double *par)
@@ -333,31 +332,16 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         //      The fraction of missed cells obviously all survive so that is immediately added.
         double fractionOfTotalCellsHitSurviving = fractionOfComponentsMissed;
 
-        // Uncertainty in cell survival
-        std::vector<double> deltaFractionOfTotalCellsSurviving_Vec;
-
-        double deltaAlpha = 0.05*alpha;
-
-
         // Looping over uGy binned histogram
         for(int i=0; i<h_energyDeposition_eV->GetNbinsX();i++)
         {
             double energyDeposition = h_energyDeposition_eV->GetBinCenter(i+1);
             double fractionOfTotalCellsHit = h_energyDeposition_eV->GetBinContent(i+1);
 
-            // Uncertainty in fraction of cells hit at this dose
-            double deltaFractionOfTotalCellsHit = (1./scalingFactor)*std::sqrt(scalingFactor*fractionOfTotalCellsHit);
-
             //----------------------------
             double cellSurvivalfraction = TMath::Exp(-(alpha*energyDeposition + beta*TMath::Power(energyDeposition, 2.0)));
-
             double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
 
-            // Uncertainty in surviving fraction of fraction of cells hit
-            double deltaFractionOfTotalCellsHit_survivingFraction = fractionOfTotalCellsHit_survivingFraction*std::sqrt( std::pow(energyDeposition*deltaAlpha,2.) + std::pow((1./fractionOfTotalCellsHit)*deltaFractionOfTotalCellsHit,2.));
-
-            // Adding uncertainty to storage vector
-            deltaFractionOfTotalCellsSurviving_Vec.push_back(deltaFractionOfTotalCellsHit_survivingFraction);
 
             fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
         }
@@ -368,33 +352,15 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
             double energyDeposition = h_energyDeposition_keV->GetBinCenter(i+1);
             double fractionOfTotalCellsHit = h_energyDeposition_keV->GetBinContent(i+1);
 
-            // Uncertainty in fraction of cells hit at this dose
-            double deltaFractionOfTotalCellsHit = (1./scalingFactor)*std::sqrt(scalingFactor*fractionOfTotalCellsHit);
-
             //----------------------------
             double cellSurvivalfraction = TMath::Exp(-(alpha*energyDeposition + beta*TMath::Power(energyDeposition, 2.0)));
-
             double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
-
-            // Uncertainty in surviving fraction of fraction of cells hit
-            double deltaFractionOfTotalCellsHit_survivingFraction = fractionOfTotalCellsHit_survivingFraction*std::sqrt( std::pow(energyDeposition*deltaAlpha,2.) + std::pow((1./fractionOfTotalCellsHit)*deltaFractionOfTotalCellsHit,2.));
-
-            // Adding uncertainty to storage vector
-            deltaFractionOfTotalCellsSurviving_Vec.push_back(deltaFractionOfTotalCellsHit_survivingFraction);
 
             fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
         }
 
-        double varianceFractionOfTotalCellsSurviving = 0.;
-        for(int i=0; i<deltaFractionOfTotalCellsSurviving_Vec.size(); i++)
-        {
-            varianceFractionOfTotalCellsSurviving += std::pow(deltaFractionOfTotalCellsSurviving_Vec[i],2.);
-        }
-
-        double deltaFractionOfTotalCellsSurviving = std::sqrt(varianceFractionOfTotalCellsSurviving);
-        std::tuple<double,double> fractionSurvived_deltaFractionSurived = std::make_tuple(fractionOfTotalCellsHitSurviving, deltaFractionOfTotalCellsSurviving);
         //------------------------------------------------
-        return fractionSurvived_deltaFractionSurived;
+        return fractionOfTotalCellsHitSurviving;
     };
 
     //------------------------------------------------------------------------------------------------
@@ -412,11 +378,9 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
             auto hist_eV = std::get<1>(entry);
             auto hist_keV = std::get<2>(entry);
 
-            double cellSurvival = std::get<0>(CalculateCellSurvivalFraction(hist_eV, hist_keV, par));
-            double deltaCellSurvival = std::get<1>(CalculateCellSurvivalFraction(hist_eV, hist_keV, par));
+            double cellSurvival = CalculateCellSurvivalFraction(hist_eV, hist_keV, par);
 
             gr.SetPoint(graphPointN, activity, cellSurvival);
-            gr.SetPointError(graphPointN, 0.0, deltaCellSurvival);
 
             graphPointN++;
         }
@@ -430,7 +394,7 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
     TGraphErrors gr_cellSurvivability_vs_activitykBqPerMl;
 
     //------------------------------------------------------------------------------------------------
-    auto f_cellSurvivalVsDose_C4_2 = new TF1("f_cellSurvivalVsDose_C4_2",
+    auto f_cellSurvivalVsDose = new TF1("f_cellSurvivalVsDose",
         [&](double*x, double *p)
         {
             double activity_Bq = x[0];
@@ -462,28 +426,28 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
 
         }, 0.0, 150.0, nParameters);
 
-    f_cellSurvivalVsDose_C4_2->SetParLimits(0, 0.0, 1.0e+05);
-    f_cellSurvivalVsDose_C4_2->SetParLimits(1, 0.0, 1.0e+05);
+    f_cellSurvivalVsDose->SetParLimits(0, 0.0, 1.0e+05);
+    f_cellSurvivalVsDose->SetParLimits(1, 0.0, 1.0e+05);
 
-    f_cellSurvivalVsDose_C4_2->SetNpx(10000);
-    f_cellSurvivalVsDose_C4_2->SetParameter(0, 1.0e+00);
-    // f_cellSurvivalVsDose_C4_2->SetParameter(1, 1.0e+00);
+    f_cellSurvivalVsDose->SetNpx(10000);
+    f_cellSurvivalVsDose->SetParameter(0, 1.0e+00);
+    // f_cellSurvivalVsDose->SetParameter(1, 1.0e+00);
 
     if(modelName=="LM")
     {
-        f_cellSurvivalVsDose_C4_2->FixParameter(1, 0.0e+00);
+        f_cellSurvivalVsDose->FixParameter(1, 0.0e+00);
     }
     if(modelName=="LQ")
     {
-        f_cellSurvivalVsDose_C4_2->SetParameter(1, 1.0e+00);
+        f_cellSurvivalVsDose->SetParameter(1, 1.0e+00);
     }
 
     std::cout << " Cell Line " + cellSurvivalInstance.GetCellLine() << " Model : " << modelName << " Region : " << regionName << std::endl;
-    gr_clonogenicSurvival->Fit(f_cellSurvivalVsDose_C4_2, "", "", 0.0, 150.0);
+    gr_clonogenicSurvival->Fit(f_cellSurvivalVsDose, "", "", 0.0, 150.0);
 
-    double chi_sq = f_cellSurvivalVsDose_C4_2->GetChisquare();
+    double chi_sq = f_cellSurvivalVsDose->GetChisquare();
 
-    int deg_freedom = f_cellSurvivalVsDose_C4_2->GetNDF();
+    int deg_freedom = f_cellSurvivalVsDose->GetNDF();
 
     std::cout << "Chi squared: " << chi_sq << std::endl;
     std::cout << "Deg Freedom: " << deg_freedom << std::endl;
@@ -500,13 +464,13 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
     gr_clonogenicSurvival->GetXaxis()->SetTitle("Activity [kBq/mL]");
     gr_clonogenicSurvival->GetYaxis()->SetTitle("Survival Fraction");
     gr_clonogenicSurvival->Write();
-    f_cellSurvivalVsDose_C4_2->Write();
+    f_cellSurvivalVsDose->Write();
     gr_cellSurvivability_vs_activitykBqPerMl.Write();
 
     auto legend = new TLegend(0.1,0.7,0.48,0.9);
     legend->SetHeader("The Legend Title","C"); // option "C" allows to center the header
     legend->AddEntry(gr_clonogenicSurvival,"Experimental Data","f");
-    legend->AddEntry(f_cellSurvivalVsDose_C4_2,"Simulated Data","f");
+    legend->AddEntry(f_cellSurvivalVsDose,"Simulated Data","f");
 
     legend->Write();
 
@@ -518,18 +482,16 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         hist->Write();
     }
 
-    double alpha = savedParameters[0];
+    //-----------------------
+    // Extracting alpha and uncertainty in alpha
+    double alpha = f_cellSurvivalVsDose->GetParameter(0);
+    double dAlpha = f_cellSurvivalVsDose->GetParError(1);
 
 
     //------------------------
     // Hit Analysis
 
-    std::vector<std::tuple<double,double>> percentKilledNumberHits[11];
-
-
-    // Tuple< nHits , Vector< activity, mean dose >>
-    // std::tuple<int,std::vector<std::tuple<double,double>>> meandDose_Activity_PerNHits;
-
+    std::vector<std::tuple<double,double>> percentDeathNumberHits[11];
     std::vector< std::tuple<double,double>> meanDose_PerHits[11];
 
     for(int i=0; i<dose_hits_histograms_vec.size(); i++)
@@ -559,33 +521,76 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
 
         //---------------------------
         // Vector to store fraction of cells survived at each number of hits
-        std::vector<std::tuple<int,double>> hits_SurvivalFraction_Vec;
+        // <nHits, survivalFractionNHits, uncertainty survivalFractionNHits>
+        std::vector<std::tuple<int,double,double>> hits_SurvivalFraction_Vec;
 
+
+        //---------------------------------
+        // Function to calculate the error in the survival fraction of one bin at a certain dose
+        auto CalculateUncertaintyFractionSurvivalDoseBin = [&](double doseInBin, double fractionHitDoseBin, double fractionSurvivedDoseBin)
+        {
+            double countsInBin = fractionHitDoseBin*scalingFactorHistogram;
+            // std::cout << countsInBin << std::endl;
+            double dFractionHitDoseBin = (1./scalingFactorHistogram)*std::sqrt(countsInBin);
+            double dFractionSurvivedDoseBin = fractionSurvivedDoseBin*std::sqrt(std::pow(doseInBin*dAlpha,2.) + std::pow((1./fractionHitDoseBin)*dFractionHitDoseBin,2.));
+
+            return dFractionSurvivedDoseBin;
+        };
+
+
+        //------------------------------
         // Loop over y axis (number hits)
         for(int i=0; i<dose_hits_histogram->GetNbinsY(); i++)
         {
             double survivalFractionThisHitNumber = 0.;
 
+            // Vector to store the uncertainty in the survival fraction at every bin
+            std::vector<double> dSurvivaFractionThisDose_Vec;
+
+            //--------------------------
             // Loop over x axis (dose deposited)
             for(int j=0; j<dose_hits_histogram->GetNbinsX(); j++)
             {
                 double doseDep = (dose_hits_histogram->GetXaxis())->GetBinCenter(j+1);
-                double survivalThisEnergy = dose_hits_histogram->GetBinContent(j+1,i+1)*TMath::Exp(-alpha*doseDep);
+                double fractionHitThisDose = dose_hits_histogram->GetBinContent(j+1,i+1);
 
-                survivalFractionThisHitNumber += survivalThisEnergy;
+                // Only calculate survival if some fraction has dose dep
+                if(fractionHitThisDose>0.)
+                {
+                    double survivaFractionThisDose = fractionHitThisDose*TMath::Exp(-alpha*doseDep);
+                    double dSurvivaFractionThisDose = CalculateUncertaintyFractionSurvivalDoseBin(doseDep, fractionHitThisDose, survivaFractionThisDose);
+                    dSurvivaFractionThisDose_Vec.push_back(dSurvivaFractionThisDose);
+
+                    // Adding survival fraction to total survival
+                    survivalFractionThisHitNumber += survivaFractionThisDose;
+                }
             }
 
+
+            //------------------------------
+            // Calculating uncertainty in survival fraction for hit number
+            double dSurvivalFractionThisHitNumber_squared = 0.;
+            for(auto& entry : dSurvivaFractionThisDose_Vec)
+            {
+                dSurvivalFractionThisHitNumber_squared += std::pow(entry,2.);
+            }
+            double dSurvivalFractionThisHitNumber = std::sqrt(dSurvivalFractionThisHitNumber_squared);
+            hits_SurvivalFraction_Vec.push_back(std::make_tuple(i,survivalFractionThisHitNumber, dSurvivalFractionThisHitNumber));
+
+
+            //-------------------------------------
+            // Calculating mean dose for each activity, separated by number of hits
             std::string nameProjectedHist = "doseDelivered_NHits_" + std::to_string(i) + "_" + std::to_string((int)activity) + "kBq";
             TH1D* projectedDose_ForNHits = dose_hits_histogram->ProjectionX(nameProjectedHist.c_str(), i,i+1);
             double meanDose = projectedDose_ForNHits->GetMean(1);
             projectedDose_ForNHits->SetDirectory(0);
 
+            // Only store up to 11 hits
             if(i<11)
             {
                 meanDose_PerHits[i].push_back(std::make_tuple(activity,meanDose));
             }
 
-            hits_SurvivalFraction_Vec.push_back(std::make_tuple(i,survivalFractionThisHitNumber));
         }
 
 
@@ -594,12 +599,14 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         for(int i=0; i<hits_SurvivalFraction_Vec.size(); i++)
         {
             int hits = std::get<0>(hits_SurvivalFraction_Vec[i]);
-            double fraction = std::get<1>(hits_SurvivalFraction_Vec[i]);
+            double fractionSurvived = std::get<1>(hits_SurvivalFraction_Vec[i]);
+            double dFractionSurvived = std::get<2>(hits_SurvivalFraction_Vec[i]);
 
 
-            if(fraction>=0.)
+            if(fractionSurvived>=0.)
             {
-                hitMultiplicity_Survival_Histogram->SetBinContent(hits+1, fraction);
+                hitMultiplicity_Survival_Histogram->SetBinContent(hits+1, fractionSurvived);
+                hitMultiplicity_Survival_Histogram->SetBinError(hits+1, dFractionSurvived);
             }
         }
 
@@ -611,29 +618,46 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         // Getting histogram with fraction of cells hit per cell hit
         auto hitMultiplicityHist  = std::get<1>(hitMultiplicity_histograms_vec[i]);
 
-        // Bool for finding 99% dead
-        // bool found90PercentPoint = false;
+        auto CalculateUncertaintyPercentageDeathPerHits = [&](double percentageDeath, double fractionHitNHits, double dFractionHitNHits, double fractionDeathNHits, double dFractionDeathNHits)
+        {
+            // double dFractionHitNHits = (1./scalingFactorHistogram)*std::sqrt(scalingFactorHistogram*fractionHitNHits);
+            double scale = std::sqrt(std::pow((1./fractionDeathNHits)*dFractionDeathNHits,2.) + std::pow((1./fractionHitNHits)*dFractionHitNHits,2.));
+            // std::cout << scale << std::endl;
+            double dPercentageDeath = percentageDeath*scale;
+            return dPercentageDeath;
+        };
 
+        //--------------------------
         // Looping over number of hits
         for(int i=0; i<hitMultiplicityHist->GetNbinsX(); i++)
         {
             // Fraction of cells hit a number of times
             double fractionHit = hitMultiplicityHist->GetBinContent(i+1);
+            double dFractionHit = (1./scalingFactorHistogram)*std::sqrt(scalingFactorHistogram*fractionHit);
 
             // Fraction of cells hit a number of times surviving
             double fractionSurvived = hitMultiplicity_Survival_Histogram->GetBinContent(i+1);
+            double dFractionSurvived = hitMultiplicity_Survival_Histogram->GetBinError(i+1);
 
             if(fractionHit>0.)
             {
-                double percentKilled = 100. - 100.*fractionSurvived/fractionHit;
+                std::cout << "Fraction surv : " <<  fractionSurvived << " e: " << dFractionSurvived << std::endl;
+                std::cout << "Fraction hit : " <<  fractionHit << " e: " << dFractionHit << std::endl;
+                double fractionDeath = fractionHit - fractionSurvived;
+                double dFractionDeath = std::sqrt( std::pow(dFractionSurvived,2.) + std::pow(dFractionHit, 2.));
+                std::cout << "Fraction death : " <<  fractionDeath << " e: " << dFractionDeath << std::endl;
+
+                double percentDeath = 100.*fractionDeath/fractionHit;
+                double dPercentDeath = CalculateUncertaintyPercentageDeathPerHits(percentDeath, fractionHit, dFractionHit, fractionDeath, dFractionDeath);
 
                 // Adding percent killed to histogram
-                hitMultiplicity_Survival_Percentage_Histogram->SetBinContent(i+1, percentKilled);
+                hitMultiplicity_Survival_Percentage_Histogram->SetBinContent(i+1, percentDeath);
+                hitMultiplicity_Survival_Percentage_Histogram->SetBinError(i+1,dPercentDeath);
 
                 // Storing percentage killed, separated by number of hits
                 if(i<11)
                 {
-                    percentKilledNumberHits[i].push_back(std::make_tuple(activity,percentKilled));
+                    percentDeathNumberHits[i].push_back(std::make_tuple(activity,percentDeath));
                 }
             }
         }
@@ -655,9 +679,9 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         for(auto & entry : dataPerNumberHits_vec)
         {
             double activity = std::get<0>(entry);
-            double percentKilled = std::get<1>(entry);
+            double percentDeath = std::get<1>(entry);
 
-            gr_DataPerNumberHits->SetPoint(graphPointN_data, activity, percentKilled);
+            gr_DataPerNumberHits->SetPoint(graphPointN_data, activity, percentDeath);
             graphPointN_data++;
         }
 
@@ -665,13 +689,13 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
 
     for(int i=0; i<11; i++)
     {
-        std::string graphName_percentKilled = "gr_percentKilled_" + std::to_string(i) + "_NumberHits";
-        TGraph * gr_percentKilled_i = new TGraph();
-        gr_percentKilled_i->SetName(graphName_percentKilled.c_str());
-        GraphDataPerNumberHits(gr_percentKilled_i, percentKilledNumberHits[i]);
-        gr_percentKilled_i->GetXaxis()->SetTitle("Activity [kBq/mL]");
-        gr_percentKilled_i->GetYaxis()->SetTitle("Percent of Cells Killed");
-        gr_percentKilled_i->Write();
+        std::string graphName_percentDeath = "gr_percentDeath_" + std::to_string(i) + "_NumberHits";
+        TGraph * gr_percentDeath_i = new TGraph();
+        gr_percentDeath_i->SetName(graphName_percentDeath.c_str());
+        GraphDataPerNumberHits(gr_percentDeath_i, percentDeathNumberHits[i]);
+        gr_percentDeath_i->GetXaxis()->SetTitle("Activity [kBq/mL]");
+        gr_percentDeath_i->GetYaxis()->SetTitle("Percent of Cells Killed");
+        gr_percentDeath_i->Write();
 
         std::string graphName_meanDose = "gr_meanDose_" + std::to_string(i) + "_NumberHits";
         TGraph* gr_meanDose_i = new TGraph();
@@ -752,7 +776,7 @@ void mainFittingCode()
     // // std::vector<double,double> C4_2_Parameters;
     // FitCellSurvival(cellSurvival_C4_2, "LM", 1);
     // FitCellSurvival(cellSurvival_C4_2, "LM", 2);
-    FitCellSurvival(cellSurvival_C4_2, "LM", 3);
+    // FitCellSurvival(cellSurvival_C4_2, "LM", 3);
     FitCellSurvival(cellSurvival_C4_2, "LM", 4);
 
 };

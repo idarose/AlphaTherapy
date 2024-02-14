@@ -1,6 +1,6 @@
 /run/initialize
 /run/printProgress 10000
-/Sim/setSeed 35625
+/Sim/setSeed 50814
 /Sim/setOutputFileName Output_Pb212_PC3_PIP_Activity100kBq_Cytoplasm_Thread_2.root
 /Sim/SetInitialRadionuclide_Z 82
 /Sim/SetInitialRadionuclide_A 212
@@ -10,4 +10,4 @@
 /Sim/SetSampleActivity 100
 /Sim/SetCellLineName PC3_PIP
 /Sim/SetDecayCurveRadionuclide
-/run/beamOn 35615
+/run/beamOn 50804
