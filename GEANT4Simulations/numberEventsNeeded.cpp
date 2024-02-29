@@ -66,7 +66,7 @@ class DecayDynamics
     //  Assumes the output file from Mathematica is structured in a specific way
 
     public:
-        DecayDynamics(int activitySample_in, double U0InternalizedPerCell_in, double U0SurfaceBoundPerCell_in, std::string cellLine_in);
+        DecayDynamics(int activitySample_in, double U0InternalizedTotalPerCell_in, double U0InternalizedCytoplasmPerCell_in, std::string cellLine_in);
 
         void LoadDataFromMathematicaCalculations(std::string filepathToMathematicaOutput, double ratio);
 
@@ -85,18 +85,18 @@ class DecayDynamics
         double numberDecays212PbInMembraneTotalTime;
         double numberDecays212PbInCytoplasmTotalTime;
 
-        double U0InternalizedPerCell;
-        double U0SurfaceBoundPerCell;
+        double U0InternalizedTotalPerCell;
+        double U0InternalizedCytoplasmPerCell;
         int activitySample;  // Given in kBq/1mL
         std::string cellLine;
 };
 
 
-DecayDynamics::DecayDynamics(int activitySample_in, double U0InternalizedPerCell_in, double U0SurfaceBoundPerCell_in, std::string cellLine_in)
+DecayDynamics::DecayDynamics(int activitySample_in, double U0InternalizedTotalPerCell_in, double U0InternalizedCytoplasmPerCell_in, std::string cellLine_in)
 {
     activitySample = activitySample_in;
-    U0InternalizedPerCell = U0InternalizedPerCell_in;
-    U0SurfaceBoundPerCell = U0SurfaceBoundPerCell_in;
+    U0InternalizedTotalPerCell = U0InternalizedTotalPerCell_in;
+    U0InternalizedCytoplasmPerCell = U0InternalizedCytoplasmPerCell_in;
     cellLine = cellLine_in;
 
 }
@@ -117,7 +117,7 @@ void DecayDynamics::LoadDataFromMathematicaCalculations(std::string filepathToMa
 
     // If there are no radionuclides internalized there is no output file for "Cells"
     // So only read "Cells" files if there is uptake
-    if(U0InternalizedPerCell>0.0)
+    if(U0InternalizedTotalPerCell>0.0)
     {
         // Importing data for decays occuring in cells
         std::string filepathCellData = filepathToMathematicaOutput + "/" + cellLine + "/Cells/Activity_" + std::to_string(activitySample) + "kBq/NumberDecays.dat";
@@ -161,19 +161,24 @@ void numberEventsNeeded()
 
     // C4-2 Cells
 
-    DecayDynamics decays_A5kBq_C4_2 = DecayDynamics(5,1.14,1.16,"C4_2");
-    DecayDynamics decays_A10kBq_C4_2 = DecayDynamics(10,1.97,1.98,"C4_2");
-    DecayDynamics decays_A25kBq_C4_2 = DecayDynamics(25,4.78,5.91,"C4_2");
-    DecayDynamics decays_A50kBq_C4_2 = DecayDynamics(50,8.94,11.07,"C4_2");
-    DecayDynamics decays_A75kBq_C4_2 = DecayDynamics(75,10.79,13.12,"C4_2");
-    DecayDynamics decays_A100kBq_C4_2 = DecayDynamics(100,13.16,22.72,"C4_2");
-    DecayDynamics decays_A150kBq_C4_2 = DecayDynamics(150,16.40,23.56,"C4_2");
+    DecayDynamics decays_A1kBq_C4_2 = DecayDynamics(1,0.462,0.228,"C4_2");
+    DecayDynamics decays_A3kBq_C4_2 = DecayDynamics(3,1.386,0.684,"C4_2");
+    DecayDynamics decays_A5kBq_C4_2 = DecayDynamics(5,2.31,1.14,"C4_2");
+    DecayDynamics decays_A10kBq_C4_2 = DecayDynamics(10,3.96,1.97,"C4_2");
+    DecayDynamics decays_A25kBq_C4_2 = DecayDynamics(25,10.69,4.78,"C4_2");
+    DecayDynamics decays_A50kBq_C4_2 = DecayDynamics(50,20.2,8.94,"C4_2");
+    DecayDynamics decays_A75kBq_C4_2 = DecayDynamics(75,23.91,10.79,"C4_2");
+    DecayDynamics decays_A100kBq_C4_2 = DecayDynamics(100,35.89,13.16,"C4_2");
+    DecayDynamics decays_A150kBq_C4_2 = DecayDynamics(150,39.96,16.40,"C4_2");
 
 
     // PC3 PIP Cells
 
+    DecayDynamics decays_A1kBq_PC3_PIP = DecayDynamics(1, 4.7, 0.2, "PC3_PIP");
+    DecayDynamics decays_A3kBq_PC3_PIP = DecayDynamics(3, 14.1, 0.6, "PC3_PIP");
+    DecayDynamics decays_A5kBq_PC3_PIP = DecayDynamics(5, 23.5, 1., "PC3_PIP");
     DecayDynamics decays_A10kBq_PC3_PIP = DecayDynamics(10, 47., 2., "PC3_PIP");
-    DecayDynamics decays_A25kBq_PC3_PIP = DecayDynamics(25, 119., 229., "PC3_PIP");
+    DecayDynamics decays_A25kBq_PC3_PIP = DecayDynamics(25, 119., 6., "PC3_PIP");
     DecayDynamics decays_A50kBq_PC3_PIP = DecayDynamics(50, 229., 11., "PC3_PIP");
     DecayDynamics decays_A75kBq_PC3_PIP = DecayDynamics(75, 335., 17., "PC3_PIP");
     DecayDynamics decays_A100kBq_PC3_PIP = DecayDynamics(100, 448., 22., "PC3_PIP");
@@ -181,6 +186,9 @@ void numberEventsNeeded()
 
 
     // PC3 Flu Cells
+    DecayDynamics decays_A1kBq_PC3_Flu = DecayDynamics(1, 0., 0., "PC3_Flu");
+    DecayDynamics decays_A3kBq_PC3_Flu = DecayDynamics(3, 0., 0., "PC3_Flu");
+    DecayDynamics decays_A5kBq_PC3_Flu = DecayDynamics(5, 0., 0., "PC3_Flu");
     DecayDynamics decays_A10kBq_PC3_Flu = DecayDynamics(10, 0., 0., "PC3_Flu");
     DecayDynamics decays_A25kBq_PC3_Flu = DecayDynamics(25, 0., 0., "PC3_Flu");
     DecayDynamics decays_A50kBq_PC3_Flu = DecayDynamics(50, 0., 0., "PC3_Flu");
@@ -199,6 +207,8 @@ void numberEventsNeeded()
 
     std::string mathematicaOutput = "../Mathematica/Output";
 
+    decays_A1kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
+    decays_A3kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A5kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A10kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A25kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
@@ -207,6 +217,9 @@ void numberEventsNeeded()
     decays_A100kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A150kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
 
+    decays_A1kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
+    decays_A3kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
+    decays_A5kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A10kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A25kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A50kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
@@ -214,6 +227,9 @@ void numberEventsNeeded()
     decays_A100kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A150kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
 
+    decays_A1kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
+    decays_A3kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
+    decays_A5kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A10kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A25kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
     decays_A50kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str(),volumeRatio);
@@ -246,7 +262,13 @@ void numberEventsNeeded()
         std::cerr << "Error: failed to create file " << filename_C4_2.str() << '\n';
     }
 
-    file_C4_2 << "5 " << decays_A5kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A5kBq_C4_2.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A5kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+    file_C4_2 <<
+
+    "1 " << decays_A1kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A1kBq_C4_2.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A1kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n3 " << decays_A3kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A3kBq_C4_2.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A3kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n5 " << decays_A5kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A5kBq_C4_2.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A5kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
 
     "\n10 " << decays_A10kBq_C4_2.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A10kBq_C4_2.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A10kBq_C4_2.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
 
@@ -277,7 +299,15 @@ void numberEventsNeeded()
 
 
 
-    file_PC3_PIP << "10 " << decays_A10kBq_PC3_PIP.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A10kBq_PC3_PIP.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A10kBq_PC3_PIP.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+    file_PC3_PIP <<
+
+    "1 " << decays_A1kBq_PC3_PIP.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A1kBq_PC3_PIP.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A1kBq_PC3_PIP.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n3 " << decays_A3kBq_PC3_PIP.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A3kBq_PC3_PIP.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A3kBq_PC3_PIP.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n5 " << decays_A5kBq_PC3_PIP.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A5kBq_PC3_PIP.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A5kBq_PC3_PIP.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n10 " << decays_A10kBq_PC3_PIP.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A10kBq_PC3_PIP.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A10kBq_PC3_PIP.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
 
     "\n25 " << decays_A25kBq_PC3_PIP.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A25kBq_PC3_PIP.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A25kBq_PC3_PIP.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
 
@@ -309,7 +339,15 @@ void numberEventsNeeded()
         std::cerr << "Error: failed to create file " << filename_PC3_Flu.str() << '\n';
     }
 
-    file_PC3_Flu << "10 " << decays_A10kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A10kBq_PC3_Flu.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A10kBq_PC3_Flu.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+    file_PC3_Flu <<
+
+    "1 " << decays_A1kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A1kBq_PC3_Flu.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A1kBq_PC3_Flu.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n3 " << decays_A3kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A3kBq_PC3_Flu.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A3kBq_PC3_Flu.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n5 " << decays_A5kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A5kBq_PC3_Flu.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A5kBq_PC3_Flu.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
+
+    "\n10 " << decays_A10kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A10kBq_PC3_Flu.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A10kBq_PC3_Flu.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
 
     "\n25 " << decays_A25kBq_PC3_Flu.GetNumberDecaysInSolutionFirstHour()/ratioInSolution << " " << decays_A25kBq_PC3_Flu.GetNumberDecaysInMembraneTotalTime()/ratioInMembrane << " " << decays_A25kBq_PC3_Flu.GetNumberDecaysInCytoplasmTotalTime()/ratioInCytoplasm <<
 

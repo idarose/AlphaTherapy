@@ -298,9 +298,9 @@ CellHit::CellHit(int cellID_in)
     numberHitsBetas = 0;
 
     double densityWater = 1000. ; // kg/m^3
-    double radiusCytoplasm = 9.0e-6; // m
-    double radiusNucleus = 2.5e-6; // m
-    double radiusCell = radiusCytoplasm + 4.e-9; // m
+    double radiusCell = 9.0e-6; // m
+    double radiusNucleus = 6.0e-6; // m
+    double radiusCytoplasm = radiusCell - 4.0e-9; // m
 
     massNucleus = (4./3.)*TMath::Pi()*std::pow(radiusNucleus,3.)*densityWater; // kg
     massCytoplasm = (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater - massNucleus; // kg
@@ -1041,10 +1041,15 @@ void EnergyDepositionHistograms::AddCellHitsToHistograms(CellHit cellHit)
 
     //-------------------------------
     // Filling hit multiplicity histograms
-    if(cellHit.GetEnergyDepositionTotalCell()>0.0){hFractionHitsAlpha_TotalCell->Fill(cellHit.GetNumberHitsAlphas_TotalCell());}
-    if(cellHit.GetEnergyDepositionNucleus()>0.0){hFractionHitsAlpha_Nucleus->Fill(cellHit.GetNumberHitsAlphas_Nucleus());}
-    if(cellHit.GetEnergyDepositionMembrane()>0.0){hFractionHitsAlpha_Membrane->Fill(cellHit.GetNumberHitsAlphas_Membrane());}
-    if(cellHit.GetEnergyDepositionCytoplasm()>0.0){hFractionHitsAlpha_Cytoplasm->Fill(cellHit.GetNumberHitsAlphas_Cytoplasm());}
+    hFractionHitsAlpha_TotalCell->Fill(cellHit.GetNumberHitsAlphas_TotalCell());
+    hFractionHitsAlpha_Nucleus->Fill(cellHit.GetNumberHitsAlphas_Nucleus());
+    hFractionHitsAlpha_Membrane->Fill(cellHit.GetNumberHitsAlphas_Membrane());
+    hFractionHitsAlpha_Cytoplasm->Fill(cellHit.GetNumberHitsAlphas_Cytoplasm());
+
+    // if(cellHit.GetEnergyDepositionTotalCell()>0.0){hFractionHitsAlpha_TotalCell->Fill(cellHit.GetNumberHitsAlphas_TotalCell());}
+    // if(cellHit.GetEnergyDepositionNucleus()>0.0){hFractionHitsAlpha_Nucleus->Fill(cellHit.GetNumberHitsAlphas_Nucleus());}
+    // if(cellHit.GetEnergyDepositionMembrane()>0.0){hFractionHitsAlpha_Membrane->Fill(cellHit.GetNumberHitsAlphas_Membrane());}
+    // if(cellHit.GetEnergyDepositionCytoplasm()>0.0){hFractionHitsAlpha_Cytoplasm->Fill(cellHit.GetNumberHitsAlphas_Cytoplasm());}
 
 }
 
@@ -2104,11 +2109,11 @@ void mainAnalysisCode()
     //-------------------------------------
     // Creating energy deposition histograms
 
-    // EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_Flu, numberIterations);
-    // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_Flu_150kBq.root", "RECREATE");
-    // Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
-    // output->Write();
-    // output->Close();
+    EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_Flu, numberIterations);
+    auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_Flu_150kBq.root", "RECREATE");
+    Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
+    output->Write();
+    output->Close();
 
     // EnergyDepositionHistograms Hist_A150kBq_PC3_PIP = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_PIP, numberIterations);
     // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_PIP_150kBq.root", "RECREATE");
@@ -2116,11 +2121,11 @@ void mainAnalysisCode()
     // output->Write();
     // output->Close();
 
-    EnergyDepositionHistograms Hist_A150kBq_C4_2 = AnalyzeHistogramsFromSimulation(decays_A150kBq_C4_2, numberIterations);
-    auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_C4_2_150kBq.root", "RECREATE");
-    Hist_A150kBq_C4_2.WriteHistogramsToFile();
-    output->Write();
-    output->Close();
+    // EnergyDepositionHistograms Hist_A150kBq_C4_2 = AnalyzeHistogramsFromSimulation(decays_A150kBq_C4_2, numberIterations);
+    // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_C4_2_150kBq.root", "RECREATE");
+    // Hist_A150kBq_C4_2.WriteHistogramsToFile();
+    // output->Write();
+    // output->Close();
 }
 
 

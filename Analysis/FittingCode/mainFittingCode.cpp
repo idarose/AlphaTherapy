@@ -67,17 +67,17 @@ class EnergyDepositionHistograms
     public:
         EnergyDepositionHistograms(double t);
         void LoadHistogramsFromAnalysis(CellSurvival cellSurvivalInstance, std::string regionName);
-        std::vector<std::tuple<double, TH1D*, TH1D*>> Get_activity_energyDeps_histograms_vec(){return activity_energyDeps_histograms_vec;};
-        std::vector<std::tuple<double, TH1D*>> Get_hitMultiplicity_histograms_vec(){return hitMultiplicity_histograms_vec;};
-        std::vector<std::tuple<double, TH2D*>> Get_dose_hits_histograms_vec(){return dose_hits_histograms_vec;};
+        std::vector<std::tuple<double, TH1D*, TH1D*>> Get_hDose_Activity_Vec(){return hDose_Activity_Vec;};
+        std::vector<std::tuple<double, TH1D*>> Get_hHitMultiplicity_vec(){return hHitMultiplicity_vec;};
+        std::vector<std::tuple<double, TH2D*>> Get_hDose_HitsCellComponent_Vec(){return hDose_HitsCellComponent_Vec;};
 
     private:
         double n;
-        std::vector<std::tuple<double, TH1D*, TH1D*>> activity_energyDeps_histograms_vec;
+        std::vector<std::tuple<double, TH1D*, TH1D*>> hDose_Activity_Vec;
 
-        std::vector<std::tuple<double, TH1D*>> hitMultiplicity_histograms_vec;
+        std::vector<std::tuple<double, TH1D*>> hHitMultiplicity_vec;
 
-        std::vector<std::tuple<double, TH2D*>> dose_hits_histograms_vec;
+        std::vector<std::tuple<double, TH2D*>> hDose_HitsCellComponent_Vec;
 };
 
 
@@ -97,158 +97,144 @@ void EnergyDepositionHistograms::LoadHistogramsFromAnalysis(CellSurvival cellSur
     // Specific filepath
     std::string filePath;
 
-    // Looping through all activities
+    // Make one for 0kBq activity here
+    // Also 1kBq and 5kBq for the ones that are missing uptake at 5kBq
+
+    //---------------------------
+    // Making zero activity case by cloning the first histogram and resetting it
+
+    // Making filename
+    double firstActivity = std::get<0>(cellSurvivalData[0]);
+    filePath = generalFilePath + std::to_string(((int)firstActivity)) + "kBq.root";
+
+    // Read file containing histogram
+    TFile* inputFile = new TFile(filePath.c_str(), "READ");
+
+    //-------------------------------------
+    // Extracting dose deposition histogram for cell component with mGY binning
+    TH1D* hDose_CellComponent_mGy = nullptr;
+    std::string histogramName_mGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)firstActivity)) +"kBq_" + regionName + "_mGyBinning";
+    std::string histogramNewName = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_" + regionName + "_mGyBinning";
+
+
+    inputFile->GetObject(histogramName_mGy.c_str(), hDose_CellComponent_mGy);
+    hDose_CellComponent_mGy->SetDirectory(0);
+    hDose_CellComponent_mGy->SetName(histogramNewName.c_str());
+    hDose_CellComponent_mGy->Reset();
+
+
+    //-------------------------------------
+    // Extracting dose deposition histogram for nucleus with uGyBinning
+    TH1D* hDose_CellComponent_uGy = nullptr;
+    std::string histogramName_uGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)firstActivity)) +"kBq_" + regionName + "_uGyBinning";
+    histogramNewName = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_" + regionName + "_uGyBinning";
+
+    inputFile->GetObject(histogramName_uGy.c_str(), hDose_CellComponent_uGy);
+    hDose_CellComponent_uGy->SetDirectory(0);
+    hDose_CellComponent_uGy->SetName(histogramNewName.c_str());
+    hDose_CellComponent_uGy->Reset();
+
+
+    //-------------------------------------
+    // Extracting 2D histogram for dose in cell component per number of alpha-particle hits
+    TH2D* hDose_hitsAlpha_CellComponent = nullptr;
+    std::string histogramName_Dose_HitsAlpha_CellComponent = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)firstActivity)) +"kBq_HitsAlpha_" + regionName;
+    histogramNewName = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_HitsAlpha_" + regionName;
+
+
+    inputFile->GetObject(histogramName_Dose_HitsAlpha_CellComponent.c_str(), hDose_hitsAlpha_CellComponent);
+    hDose_hitsAlpha_CellComponent->SetDirectory(0);
+    hDose_hitsAlpha_CellComponent->SetName(histogramNewName.c_str());
+    hDose_hitsAlpha_CellComponent->Reset();
+
+
+    //-------------------------------------
+    // Extracting hit multiplicity histogram for cell component
+    TH1D* hHitMultiplicity_CellComponent = nullptr;
+    std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)firstActivity)) +"kBq_" + regionName;
+
+    inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_CellComponent);
+    hHitMultiplicity_CellComponent->SetDirectory(0);
+    hHitMultiplicity_CellComponent->SetName(histogramNewName.c_str());
+    hHitMultiplicity_CellComponent->Reset();
+
+
+    //-------------------------------------
+    inputFile->Close();
+
+
+    hDose_Activity_Vec.push_back(std::make_tuple(0.,hDose_CellComponent_uGy,hDose_CellComponent_mGy));
+    hHitMultiplicity_vec.push_back(std::make_tuple(0,hHitMultiplicity_CellComponent));
+    hDose_HitsCellComponent_Vec.push_back(std::make_tuple(0.,hDose_hitsAlpha_CellComponent));
+
+    //--------------------------------
+    // Looping through all activities other activities
     for(int i=0; i<cellSurvivalData.size(); i++)
     {
-
         // Extracting activity
         double activity = std::get<0>(cellSurvivalData[i]);
 
-        if(activity<=0.)
-        {
-            // Extracting activity
-            double activity = std::get<0>(cellSurvivalData[i+1]);
+        // Making filename
+        filePath = generalFilePath + std::to_string(((int)activity)) + "kBq.root";
 
-            // Making filename
-            filePath = generalFilePath + std::to_string(((int)activity)) + "kBq.root";
-
-            // Read file containing histogram
-            TFile* inputFile = new TFile(filePath.c_str(), "READ");
-
-            //-------------------------------------
-            // Extracting energy deposition histogram for nucleus with mGY binning
-            TH1D* hEnergyDeps_Nucleus_keV = nullptr;
-            std::string histogramName_keV = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_mGyBinning";
-            std::string histogramNewName = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_" + regionName + "_mGyBinning";
+        // Read file containing histogram
+        TFile* inputFile = new TFile(filePath.c_str(), "READ");
 
 
-            inputFile->GetObject(histogramName_keV.c_str(), hEnergyDeps_Nucleus_keV);
-            hEnergyDeps_Nucleus_keV->SetDirectory(0);
-            hEnergyDeps_Nucleus_keV->SetName(histogramNewName.c_str());
-            hEnergyDeps_Nucleus_keV->Reset();
+        //-------------------------------------
+        // Extracting dose deposition histogram for nucleus with keV binning
+        TH1D* hDose_CellComponent_mGy = nullptr;
+        std::string histogramName_mGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_mGyBinning";
+
+        inputFile->GetObject(histogramName_mGy.c_str(), hDose_CellComponent_mGy);
+        hDose_CellComponent_mGy->SetDirectory(0);
 
 
-            //-------------------------------------
-            // Extracting energy deposition histogram for nucleus with uGyBinning
-            TH1D* hEnergyDeps_Nucleus_eV = nullptr;
-            std::string histogramName_eV = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_uGyBinning";
-            histogramNewName = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_" + regionName + "_uGyBinning";
+        //-------------------------------------
+        // Extracting dose deposition histogram for nucleus with eV binning
+        TH1D* hDose_CellComponent_uGy = nullptr;
+        std::string histogramName_uGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_uGyBinning";
 
-            inputFile->GetObject(histogramName_eV.c_str(), hEnergyDeps_Nucleus_eV);
-            hEnergyDeps_Nucleus_eV->SetDirectory(0);
-            hEnergyDeps_Nucleus_eV->SetName(histogramNewName.c_str());
-            hEnergyDeps_Nucleus_eV->Reset();
+        inputFile->GetObject(histogramName_uGy.c_str(), hDose_CellComponent_uGy);
+        hDose_CellComponent_uGy->SetDirectory(0);
 
+        //-------------------------------------
+        // Extracting 2D histogram for dose in cell component per number of alpha-particle hits
+        TH2D* hDose_hitsAlpha_CellComponent = nullptr;
+        std::string histogramName_Dose_HitsAlpha_CellComponent = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_HitsAlpha_" + regionName;
 
-            //-------------------------------------
-            // Extracting 2D energydeps vs number of hits histogram
-            TH2D* hEnergyDeps_hitsAlpha_Nucleus = nullptr;
-            std::string histogramName_energyDeps_hitsAlpha_Nucleus = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_HitsAlpha_" + regionName;
-            histogramNewName = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_HitsAlpha_" + regionName;
+        inputFile->GetObject(histogramName_Dose_HitsAlpha_CellComponent.c_str(), hDose_hitsAlpha_CellComponent);
+        hDose_hitsAlpha_CellComponent->SetDirectory(0);
 
-            // std::cout << histogramNewName << std::endl;
+        //-------------------------------------
+        // Extracting hit multiplicity histogram for cell component
+        TH1D* hHitMultiplicity_CellComponent = nullptr;
+        std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName;
 
-            inputFile->GetObject(histogramName_energyDeps_hitsAlpha_Nucleus.c_str(), hEnergyDeps_hitsAlpha_Nucleus);
-            hEnergyDeps_hitsAlpha_Nucleus->SetDirectory(0);
-            hEnergyDeps_hitsAlpha_Nucleus->SetName(histogramNewName.c_str());
-            hEnergyDeps_hitsAlpha_Nucleus->Reset();
-
-
-            //-------------------------------------
-            // Extracting hit multiplicity histogram for nucleus
-            TH1D* hHitMultiplicity_Nucleus = nullptr;
-            std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName;
-
-            inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_Nucleus);
-            hHitMultiplicity_Nucleus->SetDirectory(0);
-            hHitMultiplicity_Nucleus->SetName(histogramNewName.c_str());
-            hHitMultiplicity_Nucleus->Reset();
+        inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_CellComponent);
+        hHitMultiplicity_CellComponent->SetDirectory(0);
 
 
-            //-------------------------------------
-            inputFile->Close();
+        //-------------------------------------
+        inputFile->Close();
 
 
-            activity_energyDeps_histograms_vec.push_back(std::make_tuple(0.,hEnergyDeps_Nucleus_eV,hEnergyDeps_Nucleus_keV));
-            hitMultiplicity_histograms_vec.push_back(std::make_tuple(0,hHitMultiplicity_Nucleus));
-            dose_hits_histograms_vec.push_back(std::make_tuple(0.,hEnergyDeps_hitsAlpha_Nucleus));
-        }
-
-        else
-        {
-            // Making filename
-            filePath = generalFilePath + std::to_string(((int)activity)) + "kBq.root";
-
-            // Read file containing histogram
-            TFile* inputFile = new TFile(filePath.c_str(), "READ");
-
-
-            //-------------------------------------
-            // Extracting energy deposition histogram for nucleus with keV binning
-            TH1D* hEnergyDeps_Nucleus_keV = nullptr;
-            std::string histogramName_keV = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_mGyBinning";
-
-            inputFile->GetObject(histogramName_keV.c_str(), hEnergyDeps_Nucleus_keV);
-            hEnergyDeps_Nucleus_keV->SetDirectory(0);
-
-
-            //-------------------------------------
-            // Extracting energy deposition histogram for nucleus with eV binning
-            TH1D* hEnergyDeps_Nucleus_eV = nullptr;
-            std::string histogramName_eV = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_uGyBinning";
-
-            inputFile->GetObject(histogramName_eV.c_str(), hEnergyDeps_Nucleus_eV);
-            hEnergyDeps_Nucleus_eV->SetDirectory(0);
-
-            //-------------------------------------
-            // Extracting 2D energydeps vs number of hits histogram
-            TH2D* hEnergyDeps_hitsAlpha_Nucleus = nullptr;
-            std::string histogramName_energyDeps_hitsAlpha_Nucleus = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_HitsAlpha_" + regionName;
-
-            inputFile->GetObject(histogramName_energyDeps_hitsAlpha_Nucleus.c_str(), hEnergyDeps_hitsAlpha_Nucleus);
-            hEnergyDeps_hitsAlpha_Nucleus->SetDirectory(0);
-
-            //-------------------------------------
-            // Extracting hit multiplicity histogram for nucleus
-            TH1D* hHitMultiplicity_Nucleus = nullptr;
-            std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName;
-
-            inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_Nucleus);
-            hHitMultiplicity_Nucleus->SetDirectory(0);
-
-
-            //-------------------------------------
-            inputFile->Close();
-
-
-            activity_energyDeps_histograms_vec.push_back(std::make_tuple(activity,hEnergyDeps_Nucleus_eV,hEnergyDeps_Nucleus_keV));
-            hitMultiplicity_histograms_vec.push_back(std::make_tuple(activity,hHitMultiplicity_Nucleus));
-            dose_hits_histograms_vec.push_back(std::make_tuple(activity,hEnergyDeps_hitsAlpha_Nucleus));
-        }
+        hDose_Activity_Vec.push_back(std::make_tuple(activity,hDose_CellComponent_uGy,hDose_CellComponent_mGy));
+        hHitMultiplicity_vec.push_back(std::make_tuple(activity,hHitMultiplicity_CellComponent));
+        hDose_HitsCellComponent_Vec.push_back(std::make_tuple(activity,hDose_hitsAlpha_CellComponent));
     }
-
-    // for(auto & entry : activity_energyDeps_histograms_vec)
-    // {
-    //     double activity = std::get<0>(entry);
-    //     auto hist = std::get<2>(entry);
-
-    //     double integral = hist->Integral();
-
-    //     std::cout << "activity: " << activity << ",\t integral: " << integral << std::endl;
-    // }
 }
 
 
+//----------------------------------
 void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, int region)
 {
-    //-----------------------
-    // Calculate scaling factor for histogram
-    double VolumeSample = 0.2*1000; // mm^3
-    double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
-    double volumeRatio = volumeCellTube/VolumeSample;
-    double numberCells = 500000.*volumeRatio;
-    int numberIterations = 1;
-    double scalingFactorHistogram = numberCells*((double) numberIterations);
+    //--------------------------------
+    // Function fitting the cell survival data provided with a model, either:
+    // LM : Linear model, beta set to zero automatically
+    // LQ : Linear-quadratic model
+    // The region is
+    // Returns a vector of tuples containing the fit parameters and their uncertainties
 
     //------------------------
     // Defininng volume used for fit
@@ -308,24 +294,24 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
     energyDepHistograms.LoadHistogramsFromAnalysis(cellSurvivalInstance, regionName);
 
 
-    std::vector<std::tuple<double,TH1D*,TH1D*>> vec_activities_histograms = energyDepHistograms.Get_activity_energyDeps_histograms_vec();
+    std::vector<std::tuple<double,TH1D*,TH1D*>> vec_activities_histograms = energyDepHistograms.Get_hDose_Activity_Vec();
 
-    std::vector<std::tuple<double, TH1D*>> hitMultiplicity_histograms_vec = energyDepHistograms.Get_hitMultiplicity_histograms_vec();
+    // std::vector<std::tuple<double, TH1D*>> hHitMultiplicity_vec = energyDepHistograms.Get_hHitMultiplicity_vec();
 
-    std::vector<std::tuple<double, TH2D*>> dose_hits_histograms_vec = energyDepHistograms.Get_dose_hits_histograms_vec();
+    // std::vector<std::tuple<double, TH2D*>> hDose_HitsCellComponent_Vec = energyDepHistograms.Get_hDose_HitsCellComponent_Vec();
 
+    // Factor histograms have been scaled by
+    double scalingFactorHistogram = ((double)get<1>(vec_activities_histograms[1])->GetEntries())/((double) get<1>(vec_activities_histograms[1])->Integral());
 
     //------------------------------
-    auto CalculateCellSurvivalFraction = [&](TH1D *h_energyDeposition_eV, TH1D *h_energyDeposition_keV, double *par)
+    auto CalculateCellSurvivalFraction = [&](TH1D *hDose_uGy, TH1D *hDose_mGy, double *par)
     {
         double alpha = par[0];
         double beta = par[1];
 
-        // std::cout << "alpha: " << alpha << std::endl;
-        // std::cout << "beta: " << beta << std::endl;
 
         //------------------------------------------------
-        double fractionOfComponentsHit = h_energyDeposition_keV->Integral();
+        double fractionOfComponentsHit = hDose_mGy->Integral();
         double fractionOfComponentsMissed = (1.0 - fractionOfComponentsHit);
 
         //------------------------------------------------
@@ -333,13 +319,13 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         double fractionOfTotalCellsHitSurviving = fractionOfComponentsMissed;
 
         // Looping over uGy binned histogram
-        for(int i=0; i<h_energyDeposition_eV->GetNbinsX();i++)
+        for(int i=0; i<hDose_uGy->GetNbinsX();i++)
         {
-            double energyDeposition = h_energyDeposition_eV->GetBinCenter(i+1);
-            double fractionOfTotalCellsHit = h_energyDeposition_eV->GetBinContent(i+1);
+            double dose = hDose_uGy->GetBinCenter(i+1);
+            double fractionOfTotalCellsHit = hDose_uGy->GetBinContent(i+1);
 
             //----------------------------
-            double cellSurvivalfraction = TMath::Exp(-(alpha*energyDeposition + beta*TMath::Power(energyDeposition, 2.0)));
+            double cellSurvivalfraction = TMath::Exp(-(alpha*dose + beta*TMath::Power(dose, 2.0)));
             double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
 
 
@@ -347,13 +333,13 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         }
 
         // Looping over mGy binned histogram
-        for(int i=1000; i<h_energyDeposition_keV->GetNbinsX(); i++)
+        for(int i=1000; i<hDose_mGy->GetNbinsX(); i++)
         {
-            double energyDeposition = h_energyDeposition_keV->GetBinCenter(i+1);
-            double fractionOfTotalCellsHit = h_energyDeposition_keV->GetBinContent(i+1);
+            double dose = hDose_mGy->GetBinCenter(i+1);
+            double fractionOfTotalCellsHit = hDose_mGy->GetBinContent(i+1);
 
             //----------------------------
-            double cellSurvivalfraction = TMath::Exp(-(alpha*energyDeposition + beta*TMath::Power(energyDeposition, 2.0)));
+            double cellSurvivalfraction = TMath::Exp(-(alpha*dose + beta*TMath::Power(dose, 2.0)));
             double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
 
             fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
@@ -375,10 +361,10 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
         for(auto & entry : vec)
         {
             double activity = std::get<0>(entry);
-            auto hist_eV = std::get<1>(entry);
-            auto hist_keV = std::get<2>(entry);
+            auto histDose_uGy = std::get<1>(entry);
+            auto histDose_mGy = std::get<2>(entry);
 
-            double cellSurvival = CalculateCellSurvivalFraction(hist_eV, hist_keV, par);
+            double cellSurvival = CalculateCellSurvivalFraction(histDose_uGy, histDose_mGy, par);
 
             gr.SetPoint(graphPointN, activity, cellSurvival);
 
@@ -431,7 +417,6 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
 
     f_cellSurvivalVsDose->SetNpx(10000);
     f_cellSurvivalVsDose->SetParameter(0, 1.0e+00);
-    // f_cellSurvivalVsDose->SetParameter(1, 1.0e+00);
 
     if(modelName=="LM")
     {
@@ -483,89 +468,86 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
     }
 
     //-----------------------
-    // Extracting alpha and uncertainty in alpha
+    // Extracting fit parameters
+
+    std::vector<std::tuple<double,double>> parametersAndUncertainties_Vec;
+
     double alpha = f_cellSurvivalVsDose->GetParameter(0);
-    double dAlpha = f_cellSurvivalVsDose->GetParError(1);
+    double dAlpha = f_cellSurvivalVsDose->GetParError(0);
+
+    parametersAndUncertainties_Vec.push_back(std::make_tuple(alpha,dAlpha));
+
+    if(modelName=="LQ")
+    {
+        double beta = f_cellSurvivalVsDose->GetParameter(1);
+        double dBeta = f_cellSurvivalVsDose->GetParError(1);
+
+        parametersAndUncertainties_Vec.push_back(std::make_tuple(beta,dBeta));
+    }
+
 
 
     //------------------------
     // Hit Analysis
 
-    std::vector<std::tuple<double,double>> percentDeathNumberHits[11];
-    std::vector< std::tuple<double,double>> meanDose_PerHits[11];
 
-    for(int i=0; i<dose_hits_histograms_vec.size(); i++)
+
+    //--------------------------------------------
+    auto Fill_hHitMultiplicity_SurvivalFraction_OneActivity = [&](double activity, TH2D* hDose_hitsAlpha_CellComponent_OneActivity, TH1D* hHitMultiplicity_SurvivalFraction_OneActivity, TH1D* hDose_mGy)
     {
-        //------------------------
-        // Defining activity
-        double activity = std::get<0>(dose_hits_histograms_vec[i]);
 
-        // Extracting dose per hits histograms
-        TH2D* dose_hits_histogram = std::get<1>(dose_hits_histograms_vec[i]);
-
-        // Define number of bins and max number of hits
-        int nBins = dose_hits_histogram->GetNbinsY();
-        double hitsMax = 700.;
-
-
-        //-------------------------
-        // Making histogram for survical fraction for number of hits
-        std::string hitMultiplicity_Survival_Name = "hHitMultiplicity_" + regionName + "_Survival_" + std::to_string((int)activity) + "kBq";
-        TH1D* hitMultiplicity_Survival_Histogram = new TH1D(hitMultiplicity_Survival_Name.c_str(), "Cell Survival per N Number of Hits by Alpha Particle", nBins, 0,hitsMax);
-
-        //--------------------------
-        // Making histogram for percent of cells killed for number of hist
-        std::string hitMultiplicity_Survival_Percentage_Name = "hHitMultiplicity_" + regionName + "_Death_Percentage_" + std::to_string((int)activity) + "kBq";
-        TH1D* hitMultiplicity_Survival_Percentage_Histogram = new TH1D(hitMultiplicity_Survival_Percentage_Name.c_str(), "Cell Death per N Number of Hits by Alpha Particle", nBins, 0,hitsMax);
-
+        //---------------------------------
+        // Function to calculate the error in the survival fraction of one bin at a certain dose
+        auto CalculateUncertainty_HitMultiplicity_SurvivalFraction_OneBin = [&](double doseInBin, double fractionSurvivedDoseBin)
+        {
+            double dFractionSurvivedDoseBin = doseInBin*fractionSurvivedDoseBin*dAlpha;
+            return dFractionSurvivedDoseBin;
+        };
 
         //---------------------------
         // Vector to store fraction of cells survived at each number of hits
         // <nHits, survivalFractionNHits, uncertainty survivalFractionNHits>
-        std::vector<std::tuple<int,double,double>> hits_SurvivalFraction_Vec;
+        std::vector<std::tuple<int,double,double>> hitMultiplicity_SurvivalFraction_Vec;
 
+        double fractionCellsNotHit;
 
-        //---------------------------------
-        // Function to calculate the error in the survival fraction of one bin at a certain dose
-        auto CalculateUncertaintyFractionSurvivalDoseBin = [&](double doseInBin, double fractionHitDoseBin, double fractionSurvivedDoseBin)
+        if(activity<=0.)
         {
-            double countsInBin = fractionHitDoseBin*scalingFactorHistogram;
-            // std::cout << countsInBin << std::endl;
-            double dFractionHitDoseBin = (1./scalingFactorHistogram)*std::sqrt(countsInBin);
-            double dFractionSurvivedDoseBin = fractionSurvivedDoseBin*std::sqrt(std::pow(doseInBin*dAlpha,2.) + std::pow((1./fractionHitDoseBin)*dFractionHitDoseBin,2.));
-
-            return dFractionSurvivedDoseBin;
-        };
-
-
-        //------------------------------
-        // Loop over y axis (number hits)
-        for(int i=0; i<dose_hits_histogram->GetNbinsY(); i++)
+            fractionCellsNotHit = 1. - hDose_mGy->Integral();
+        }
+        else
         {
-            double survivalFractionThisHitNumber = 0.;
+            fractionCellsNotHit = 0.;
+        }
+
+        //----------------------------
+        // Loop over number of hits (y-axis)
+        for(int i=0; i<hDose_hitsAlpha_CellComponent_OneActivity->GetNbinsY(); i++)
+        {
+            // Those not hit always survive
+            double survivalFractionThisHitNumber = fractionCellsNotHit;
 
             // Vector to store the uncertainty in the survival fraction at every bin
             std::vector<double> dSurvivaFractionThisDose_Vec;
 
             //--------------------------
             // Loop over x axis (dose deposited)
-            for(int j=0; j<dose_hits_histogram->GetNbinsX(); j++)
+            for(int j=0; j<hDose_hitsAlpha_CellComponent_OneActivity->GetNbinsX(); j++)
             {
-                double doseDep = (dose_hits_histogram->GetXaxis())->GetBinCenter(j+1);
-                double fractionHitThisDose = dose_hits_histogram->GetBinContent(j+1,i+1);
+                double doseDep = (hDose_hitsAlpha_CellComponent_OneActivity->GetXaxis())->GetBinCenter(j+1);
+                double fractionHitThisDose = hDose_hitsAlpha_CellComponent_OneActivity->GetBinContent(j+1,i+1);
 
-                // Only calculate survival if some fraction has dose dep
+                // Only calculate survival if some fraction has dose deposited
                 if(fractionHitThisDose>0.)
                 {
                     double survivaFractionThisDose = fractionHitThisDose*TMath::Exp(-alpha*doseDep);
-                    double dSurvivaFractionThisDose = CalculateUncertaintyFractionSurvivalDoseBin(doseDep, fractionHitThisDose, survivaFractionThisDose);
+                    double dSurvivaFractionThisDose = CalculateUncertainty_HitMultiplicity_SurvivalFraction_OneBin(doseDep,survivaFractionThisDose);
                     dSurvivaFractionThisDose_Vec.push_back(dSurvivaFractionThisDose);
 
                     // Adding survival fraction to total survival
                     survivalFractionThisHitNumber += survivaFractionThisDose;
                 }
             }
-
 
             //------------------------------
             // Calculating uncertainty in survival fraction for hit number
@@ -575,148 +557,553 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
                 dSurvivalFractionThisHitNumber_squared += std::pow(entry,2.);
             }
             double dSurvivalFractionThisHitNumber = std::sqrt(dSurvivalFractionThisHitNumber_squared);
-            hits_SurvivalFraction_Vec.push_back(std::make_tuple(i,survivalFractionThisHitNumber, dSurvivalFractionThisHitNumber));
-
-
-            //-------------------------------------
-            // Calculating mean dose for each activity, separated by number of hits
-            std::string nameProjectedHist = "doseDelivered_NHits_" + std::to_string(i) + "_" + std::to_string((int)activity) + "kBq";
-            TH1D* projectedDose_ForNHits = dose_hits_histogram->ProjectionX(nameProjectedHist.c_str(), i,i+1);
-            double meanDose = projectedDose_ForNHits->GetMean(1);
-            projectedDose_ForNHits->SetDirectory(0);
-
-            // Only store up to 11 hits
-            if(i<11)
-            {
-                meanDose_PerHits[i].push_back(std::make_tuple(activity,meanDose));
-            }
-
+            hitMultiplicity_SurvivalFraction_Vec.push_back(std::make_tuple(i,survivalFractionThisHitNumber, dSurvivalFractionThisHitNumber));
         }
 
-
-        //---------------------------
-        // Add survival fraction per number of hits to histogram
-        for(int i=0; i<hits_SurvivalFraction_Vec.size(); i++)
+        //-------------------------
+        // Adding survival fraction to histogram
+        for(auto& entry : hitMultiplicity_SurvivalFraction_Vec)
         {
-            int hits = std::get<0>(hits_SurvivalFraction_Vec[i]);
-            double fractionSurvived = std::get<1>(hits_SurvivalFraction_Vec[i]);
-            double dFractionSurvived = std::get<2>(hits_SurvivalFraction_Vec[i]);
+            int nHits = get<0>(entry);
+            double survivalFraction = get<1>(entry);
+            double dSurvivalFraction = get<2>(entry);
 
-
-            if(fractionSurvived>=0.)
-            {
-                hitMultiplicity_Survival_Histogram->SetBinContent(hits+1, fractionSurvived);
-                hitMultiplicity_Survival_Histogram->SetBinError(hits+1, dFractionSurvived);
-            }
+            hHitMultiplicity_SurvivalFraction_OneActivity->SetBinContent(nHits+1,survivalFraction);
+            hHitMultiplicity_SurvivalFraction_OneActivity->SetBinError(nHits+1, dSurvivalFraction);
         }
 
-
-
-        //---------------------------
-        // Calculating percent of cells dead at each number of hits
-
-        // Getting histogram with fraction of cells hit per cell hit
-        auto hitMultiplicityHist  = std::get<1>(hitMultiplicity_histograms_vec[i]);
-
-        auto CalculateUncertaintyPercentageDeathPerHits = [&](double percentageDeath, double fractionHitNHits, double dFractionHitNHits, double fractionDeathNHits, double dFractionDeathNHits)
-        {
-            // double dFractionHitNHits = (1./scalingFactorHistogram)*std::sqrt(scalingFactorHistogram*fractionHitNHits);
-            double scale = std::sqrt(std::pow((1./fractionDeathNHits)*dFractionDeathNHits,2.) + std::pow((1./fractionHitNHits)*dFractionHitNHits,2.));
-            // std::cout << scale << std::endl;
-            double dPercentageDeath = percentageDeath*scale;
-            return dPercentageDeath;
-        };
-
-        //--------------------------
-        // Looping over number of hits
-        for(int i=0; i<hitMultiplicityHist->GetNbinsX(); i++)
-        {
-            // Fraction of cells hit a number of times
-            double fractionHit = hitMultiplicityHist->GetBinContent(i+1);
-            double dFractionHit = (1./scalingFactorHistogram)*std::sqrt(scalingFactorHistogram*fractionHit);
-
-            // Fraction of cells hit a number of times surviving
-            double fractionSurvived = hitMultiplicity_Survival_Histogram->GetBinContent(i+1);
-            double dFractionSurvived = hitMultiplicity_Survival_Histogram->GetBinError(i+1);
-
-            if(fractionHit>0.)
-            {
-                std::cout << "Fraction surv : " <<  fractionSurvived << " e: " << dFractionSurvived << std::endl;
-                std::cout << "Fraction hit : " <<  fractionHit << " e: " << dFractionHit << std::endl;
-                double fractionDeath = fractionHit - fractionSurvived;
-                double dFractionDeath = std::sqrt( std::pow(dFractionSurvived,2.) + std::pow(dFractionHit, 2.));
-                std::cout << "Fraction death : " <<  fractionDeath << " e: " << dFractionDeath << std::endl;
-
-                double percentDeath = 100.*fractionDeath/fractionHit;
-                double dPercentDeath = CalculateUncertaintyPercentageDeathPerHits(percentDeath, fractionHit, dFractionHit, fractionDeath, dFractionDeath);
-
-                // Adding percent killed to histogram
-                hitMultiplicity_Survival_Percentage_Histogram->SetBinContent(i+1, percentDeath);
-                hitMultiplicity_Survival_Percentage_Histogram->SetBinError(i+1,dPercentDeath);
-
-                // Storing percentage killed, separated by number of hits
-                if(i<11)
-                {
-                    percentDeathNumberHits[i].push_back(std::make_tuple(activity,percentDeath));
-                }
-            }
-        }
-
-        hitMultiplicity_Survival_Histogram->GetXaxis()->SetTitle("N Number of Hits to Cell Component by Alpha Particle");
-        hitMultiplicity_Survival_Histogram->GetYaxis()->SetTitle("Fraction of Cells Hit");
-
-        hitMultiplicity_Survival_Percentage_Histogram->GetXaxis()->SetTitle("N Number of Hits to Cell Component by Alpha Particle");
-        hitMultiplicity_Survival_Percentage_Histogram->GetYaxis()->SetTitle("Percentage of Cells Killed");
-
-
-        // hitMultiplicityHist->Write();
-    }
-
-
-    auto GraphDataPerNumberHits = [&](TGraph* gr_DataPerNumberHits, std::vector<std::tuple<double, double>> dataPerNumberHits_vec)
-    {
-        int graphPointN_data = 0;
-        for(auto & entry : dataPerNumberHits_vec)
-        {
-            double activity = std::get<0>(entry);
-            double percentDeath = std::get<1>(entry);
-
-            gr_DataPerNumberHits->SetPoint(graphPointN_data, activity, percentDeath);
-            graphPointN_data++;
-        }
-
+        return hHitMultiplicity_SurvivalFraction_OneActivity;
     };
 
-    for(int i=0; i<11; i++)
+
+
+    //-----------------------------
+    auto Fill_hHitMultiplicity_PercentKilled_OneActivity = [&](TH1D* hHitMultiplicity_SurvivalFraction_OneActivity, TH1D* hHitMultiplicity_OneActivity, TH1D* hHitMultiplicity_PercentKilled_OneActivity)
     {
-        std::string graphName_percentDeath = "gr_percentDeath_" + std::to_string(i) + "_NumberHits";
-        TGraph * gr_percentDeath_i = new TGraph();
-        gr_percentDeath_i->SetName(graphName_percentDeath.c_str());
-        GraphDataPerNumberHits(gr_percentDeath_i, percentDeathNumberHits[i]);
-        gr_percentDeath_i->GetXaxis()->SetTitle("Activity [kBq/mL]");
-        gr_percentDeath_i->GetYaxis()->SetTitle("Percent of Cells Killed");
-        gr_percentDeath_i->Write();
+        //----------------------------
+        auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double dFractionSurvivedNHits)
+        {
+            double dPercentDeathNHits = (100./fractionHitNHits)*dFractionSurvivedNHits;
 
-        std::string graphName_meanDose = "gr_meanDose_" + std::to_string(i) + "_NumberHits";
-        TGraph* gr_meanDose_i = new TGraph();
-        gr_meanDose_i->SetName(graphName_meanDose.c_str());
-        GraphDataPerNumberHits(gr_meanDose_i, meanDose_PerHits[i]);
-        gr_meanDose_i->GetXaxis()->SetTitle("Activity [kBq/mL]");
-        gr_meanDose_i->GetYaxis()->SetTitle("Mean Dose Delivered [Gy]");
-        gr_meanDose_i->Write();
+            return dPercentDeathNHits;
+        };
 
+        //-------------------------
+        // Looping over number of hits to cell component
+        for(int i=0; i<hHitMultiplicity_SurvivalFraction_OneActivity->GetNbinsX(); i++)
+        {
+            double fractionHitThisNHits = hHitMultiplicity_OneActivity->GetBinContent(i+1);
+
+            if(fractionHitThisNHits>0)
+            {
+                double fractionSurvivedThisNHits = hHitMultiplicity_SurvivalFraction_OneActivity->GetBinContent(i+1);
+                double dFractionSurvivedThisNHits = hHitMultiplicity_SurvivalFraction_OneActivity->GetBinError(i+1);
+
+                double percentKilled = 100.*(fractionHitThisNHits-fractionSurvivedThisNHits)/fractionHitThisNHits;
+                double dPercentKilled = CalculateUncertainty_PercentKilled_NHits(fractionHitThisNHits,dFractionSurvivedThisNHits);
+
+                hHitMultiplicity_PercentKilled_OneActivity->SetBinContent(i+1, percentKilled);
+                hHitMultiplicity_PercentKilled_OneActivity->SetBinError(i+1, dPercentKilled);
+            }
+        }
+
+        return hHitMultiplicity_PercentKilled_OneActivity;
+    };
+
+
+    //----------------------------
+    // Function returning average dose per NHits, for activites
+    auto Fill_grMeanDose_PerHits_OneActivity = [&](double activity, TH2D* hDose_hitsAlpha_CellComponent_OneActivity, TGraphErrors* grMeanDose_PerOneHit)
+    {
+        double intNHits = 0.;
+        int graphPointN = 0;
+
+        //---------------------------
+        // Looping over number of hits (y-axis)
+        for(int i=0; i<hDose_hitsAlpha_CellComponent_OneActivity->GetNbinsY();i++)
+        {
+            //---------------------------
+            // Extract dose histogram for i number of hits
+            std::string nameProjectedHist = "doseDelivered_NHits_" + std::to_string(i) + "_" + std::to_string((int)activity) + "kBq";
+            TH1D* projectedDose_ForNHits = hDose_hitsAlpha_CellComponent_OneActivity->ProjectionX(nameProjectedHist.c_str(),i+1,i+1);
+
+            double intDose_ThisN = projectedDose_ForNHits->Integral();
+
+            if(intDose_ThisN>0)
+            {
+                // Normalizing dose distribution
+                projectedDose_ForNHits->Scale(1./intDose_ThisN);
+
+                // expectation value of dose, and dose squared
+                double ei_di = 0.;
+                double ei_di_squared = 0.;
+
+                // Looping over all doses
+                for(int j=0; j<projectedDose_ForNHits->GetNbinsX();j++)
+                {
+                    double di = projectedDose_ForNHits->GetBinCenter(j+1);
+                    double pi = projectedDose_ForNHits->GetBinContent(j+1);
+                    ei_di += di*pi;
+                    ei_di_squared += std::pow(di,2.)*pi;
+                }
+
+                double ei_di_variance = ei_di_squared - std::pow(ei_di,2.);
+                double ei_di_std;
+                if(ei_di_variance<0.){ei_di_std = std::sqrt(ei_di_variance);}
+                else{ei_di_std = 0.05;}
+
+
+                grMeanDose_PerOneHit->SetPoint(graphPointN,((double)i),ei_di);
+                grMeanDose_PerOneHit->SetPointError(graphPointN,0.0,ei_di_std);
+                graphPointN++;
+
+            }
+            projectedDose_ForNHits->SetDirectory(0);
+        }
+        return grMeanDose_PerOneHit;
+    };
+
+
+    //----------------------------
+    // Function returning average dose per NHits, for activites
+    auto Fill_grMeanDose_PerHits_OneActivity_ASym = [&](double activity, TH2D* hDose_hitsAlpha_CellComponent_OneActivity, TGraphAsymmErrors* grMeanDose_PerOneHit_ASym)
+    {
+        int graphPointN = 0;
+
+        //---------------------------
+        // Looping over number of hits (y-axis)
+        for(int i=0; i<hDose_hitsAlpha_CellComponent_OneActivity->GetNbinsY();i++)
+        {
+            //---------------------------
+            // Extract dose histogram for i number of hits
+            std::string nameProjectedHist = "doseDelivered_NHits_" + std::to_string(i) + "_" + std::to_string((int)activity) + "kBq";
+            TH1D* projectedDose_ForNHits = hDose_hitsAlpha_CellComponent_OneActivity->ProjectionX(nameProjectedHist.c_str(),i+1,i+1);
+
+
+            double intDose_ThisN = projectedDose_ForNHits->Integral();
+
+            if(intDose_ThisN>0.)
+            {
+                // double meanDose = projectedDose_ForNHits->GetMean(1);
+                // int binAtMean = projectedDose_ForNHits->FindBin(meanDose);
+                // double confInterval = 0.5*intDose_ThisN;
+
+                // //-----------------------
+                // // Finding quartiles of dose distribution
+                // double doseAtIntervalPlus;
+                // double doseAtIntervalMinus;
+                // double binW = projectedDose_ForNHits->GetBinWidth(1);
+
+                // double integralPlusSide = 0.;
+                // int k = 0;
+                // while(integralPlusSide<(confInterval/2.))
+                // {
+                //     if(k==0){integralPlusSide = 0.5*projectedDose_ForNHits->Integral(binAtMean,binAtMean+k);}
+                //     else{integralPlusSide = projectedDose_ForNHits->Integral(binAtMean,binAtMean+k);}
+                //     doseAtIntervalPlus = projectedDose_ForNHits->GetBinCenter(binAtMean+k);
+                //     k++;
+                // }
+
+                // double integralMinusSide = 0.;
+                // k = 0;
+                // while(integralMinusSide<(confInterval/2.))
+                // {
+                //     if(k==0){integralMinusSide = 0.5*projectedDose_ForNHits->Integral(binAtMean,binAtMean-k);}
+                //     else{integralMinusSide = projectedDose_ForNHits->Integral(binAtMean,binAtMean-k);}
+                //     doseAtIntervalMinus = meanDose - k*binW;
+                //     k++;
+                // }
+
+                // double uncertaintyHigh = doseAtIntervalPlus - meanDose;
+                // double uncertaintyLow = meanDose - doseAtIntervalMinus;
+
+                // if(uncertaintyHigh<=0.)
+                // {
+                //     uncertaintyHigh = 0.02*meanDose;
+                //     uncertaintyLow = 0.01*meanDose;
+                // }
+
+                // // std::cout << "N : " << i << " M : " << meanDose << "+" << uncertaintyHigh << "-" << uncertaintyLow << std::endl;
+
+                int n = 3;
+                double x_q[3];
+                double y_q[3] = {0.25, 0.50, 0.75}; // quartile positions
+
+
+                projectedDose_ForNHits->GetQuantiles(n, x_q, y_q);
+                double doseAtQuartileMinus = x_q[0];
+                double doseAtMean = x_q[1];
+                double doseAtQuartilePlus = x_q[2];
+                //-------------------
+                // Setting points
+                grMeanDose_PerOneHit_ASym->SetPoint(graphPointN, ((double)i), doseAtMean);
+                grMeanDose_PerOneHit_ASym->SetPointEYhigh(graphPointN, doseAtQuartilePlus - doseAtMean);
+                grMeanDose_PerOneHit_ASym->SetPointEYlow(graphPointN, doseAtMean - doseAtQuartileMinus);
+                graphPointN++;
+            }
+            projectedDose_ForNHits->SetDirectory(0);
+        }
+        return grMeanDose_PerOneHit_ASym;
+    };
+
+
+    //---------------------------
+    // Filling histograms
+
+
+    std::vector<std::tuple<double, TH1D*>> hHitMultiplicity_vec = energyDepHistograms.Get_hHitMultiplicity_vec();
+
+    std::vector<std::tuple<double, TH2D*>> hDose_HitsCellComponent_Vec = energyDepHistograms.Get_hDose_HitsCellComponent_Vec();
+
+    std::vector<std::tuple<double,TH1D*>> hHitMultiplicity_PercentKilled_Vec;
+
+    std::vector<std::tuple<double,TGraphErrors*>> grMeanDose_PerHits_Vec;
+
+    //-----------------
+    // Looping over every activity
+    for(int i = 0; i<hHitMultiplicity_vec.size(); i++)
+    {
+        double activity = std::get<0>(hHitMultiplicity_vec[i]);
+        TH1D* hHitMultiplicity = std::get<1>(hHitMultiplicity_vec[i]);
+        TH2D* hDose_Hits = std::get<1>(hDose_HitsCellComponent_Vec[i]);
+        TH1D* hDose_mGy = std::get<2>(vec_activities_histograms[i]);
+
+
+        //-----------------------------
+        // Define number of bins and max number of hits
+        int nBins = hDose_Hits->GetNbinsY();
+        // double hitsMax = 700.;
+
+        double hitsMax = hHitMultiplicity->GetXaxis()->GetXmax();
+
+        //--------------------------
+        // Making histogram for cell survival fraction for hit multiplicity
+        std::string hHitMultiplicity_SurvivalFraction_ThisActivity_Name = "hHitMultiplicity_" + regionName + "_SurvivalFraction_" + std::to_string((int)activity) + "kBq";
+        TH1D* hHitMultiplicity_SurvivalFraction_ThisActivity = new TH1D(hHitMultiplicity_SurvivalFraction_ThisActivity_Name.c_str(), "Cell Survival Fraction per N Number of Hits by Alpha Particle", nBins, 0.,hitsMax);
+        hHitMultiplicity_SurvivalFraction_ThisActivity->GetXaxis()->SetTitle("N Number of Hits to Cell Component by Alpha Particle");
+        hHitMultiplicity_SurvivalFraction_ThisActivity->GetYaxis()->SetTitle("Fraction of Total Cells Survived");
+
+        //--------------------------
+        // Making histogram for percent of cells killed for hit multiplicity
+        std::string hHitMultiplicity_PercentKilled_Name = "hHitMultiplicity_" + regionName + "_PercentKilled_" + std::to_string((int)activity) + "kBq";
+        TH1D* hHitMultiplicity_PercentKilled = new TH1D(hHitMultiplicity_PercentKilled_Name.c_str(), "Cell Death per N Number of Hits by Alpha Particle", nBins, 0.,hitsMax);
+        hHitMultiplicity_PercentKilled->GetXaxis()->SetTitle("N Number of Hits to Cell Component by Alpha Particle");
+        hHitMultiplicity_PercentKilled->GetYaxis()->SetTitle("Percentage of Cells Killed");
+
+        //----------------------------
+        // Making graph for mean dose per number of hits for one activity
+        std::string grMeanDose_PerHits_OneActivity_Name = "grMeanDose_PerNHits_" + std::to_string((int)activity) +"kBq";
+        TGraphErrors* grMeanDose_PerHits_OneActivity = new TGraphErrors();
+        grMeanDose_PerHits_OneActivity->SetTitle("Mean Dose Delivered to Cell Component Per Number of Alpha-Particle Hits");
+        grMeanDose_PerHits_OneActivity->SetName(grMeanDose_PerHits_OneActivity_Name.c_str());
+        grMeanDose_PerHits_OneActivity->GetXaxis()->SetTitle("N Number of Hits to Cell Component by Alpha Particle");
+        grMeanDose_PerHits_OneActivity->GetYaxis()->SetTitle("Mean Dose Delivered to Cell Component");
+
+        //----------------------------
+        // Making graph for mean dose per number of hits for one activity, asymetrical errors
+        std::string grMeanDose_PerHits_OneActivity_ASym_Name = "grMeanDose_PerNHits_ASym_" + std::to_string((int)activity) +"kBq";
+        TGraphAsymmErrors* grMeanDose_PerHits_OneActivity_ASym = new TGraphAsymmErrors();
+        grMeanDose_PerHits_OneActivity_ASym->SetTitle("Mean Dose Delivered to Cell Component Per Number of Alpha-Particle Hits");
+        grMeanDose_PerHits_OneActivity_ASym->SetName(grMeanDose_PerHits_OneActivity_ASym_Name.c_str());
+        grMeanDose_PerHits_OneActivity_ASym->GetXaxis()->SetTitle("N Number of Hits to Cell Component by Alpha Particle");
+        grMeanDose_PerHits_OneActivity_ASym->GetYaxis()->SetTitle("Mean Dose Delivered to Cell Component");
+
+
+        //------------------------------------
+        hHitMultiplicity_SurvivalFraction_ThisActivity = Fill_hHitMultiplicity_SurvivalFraction_OneActivity(activity, hDose_Hits, hHitMultiplicity_SurvivalFraction_ThisActivity, hDose_mGy);
+
+        //-----------------------------------
+        hHitMultiplicity_PercentKilled = Fill_hHitMultiplicity_PercentKilled_OneActivity(hHitMultiplicity_SurvivalFraction_ThisActivity, hHitMultiplicity, hHitMultiplicity_PercentKilled);
+        hHitMultiplicity_PercentKilled_Vec.push_back(std::make_tuple(activity,hHitMultiplicity_PercentKilled));
+
+        //-------------------------------
+        grMeanDose_PerHits_OneActivity = Fill_grMeanDose_PerHits_OneActivity(activity, hDose_Hits, grMeanDose_PerHits_OneActivity);
+        grMeanDose_PerHits_Vec.push_back(std::make_tuple(activity,grMeanDose_PerHits_OneActivity));
+        grMeanDose_PerHits_OneActivity->Write();
+
+
+        //----------------------------
+        grMeanDose_PerHits_OneActivity_ASym = Fill_grMeanDose_PerHits_OneActivity_ASym(activity, hDose_Hits, grMeanDose_PerHits_OneActivity_ASym);
+        grMeanDose_PerHits_OneActivity_ASym->Write();
+
+
+
+        //-----------------------------
+        // 10 kBq case, saving the dose deposition histograms for different NHit
+        if(activity==25.)
+        {
+            for(int j=0; j<21; j++)
+            {
+                std::string nameProjectedHist = "hDoseDelivered_NHits_" + std::to_string(j) + "_" + std::to_string((int)activity) + "kBq";
+                TH1D* projectedDose_ForNHits = hDose_Hits->ProjectionX(nameProjectedHist.c_str(),j+1,j+1);
+                projectedDose_ForNHits->SetFillColorAlpha(kGreen+2, 0.3);
+                if(projectedDose_ForNHits->GetNbinsX()>0)
+                {
+                    projectedDose_ForNHits->Write();
+                }
+                projectedDose_ForNHits->SetDirectory(0);
+            }
+        }
     }
 
 
-    // gr_PercentKilledOneHits->Write();
-    // gr_PercentKilledTwoHits->Write();
-    // gr_PercentKilledThreeHits->Write();
+    //---------------------------
+    auto Fill_grPercentKilled_PerOneNHit = [&](int NHits, TGraphErrors* grPercentKilled_PerOneNHit)
+    {
+        std::vector<std::tuple<double,double,double>> percentKilled_Activity_ThisNHit_Vec;
+        for(int i=0; i<hHitMultiplicity_PercentKilled_Vec.size(); i++)
+        {
+            double activity = std::get<0>(hHitMultiplicity_PercentKilled_Vec[i]);
+            TH1D* hHitMultiplicity_PercentKilled_OneActivity = std::get<1>(hHitMultiplicity_PercentKilled_Vec[i]);
+
+            if(hHitMultiplicity_PercentKilled_OneActivity->GetNbinsX()>0)
+            {
+                double percentKilled_NHits = hHitMultiplicity_PercentKilled_OneActivity->GetBinContent(NHits+1);
+                double dPercentKilled_NHits = hHitMultiplicity_PercentKilled_OneActivity->GetBinError(NHits+1);
+                // std::cout << percentKilled_NHits << std::endl;
+
+                if(percentKilled_NHits>0.){percentKilled_Activity_ThisNHit_Vec.push_back(std::make_tuple(activity,percentKilled_NHits,dPercentKilled_NHits));}
+            }
+        }
+
+        for(int i=0; i<percentKilled_Activity_ThisNHit_Vec.size(); i++)
+        {
+            double activity = std::get<0>(percentKilled_Activity_ThisNHit_Vec[i]);
+            double percentKilled_NHits = std::get<1>(percentKilled_Activity_ThisNHit_Vec[i]);
+            double dPercentKilled_NHits = std::get<2>(percentKilled_Activity_ThisNHit_Vec[i]);
+
+            grPercentKilled_PerOneNHit->SetPoint(i, activity, percentKilled_NHits);
+            grPercentKilled_PerOneNHit->SetPointError(i, 0., dPercentKilled_NHits);
+        }
+        return percentKilled_Activity_ThisNHit_Vec;
+    };
+
+
+    //---------------------------------
+    auto Fill_grMeanDose_PerOneHit = [&](int NHits, TGraphErrors* grMeanDose_PerOneHit)
+    {
+        std::vector<std::tuple<double,double,double>> meanDose_Activity_ThisHit_Vec;
+        for(int i=0; i<grMeanDose_PerHits_Vec.size();i++)
+        {
+            double activity = std::get<0>(grMeanDose_PerHits_Vec[i]);
+            TGraphErrors* grMeanDose_OneActivity = std::get<1>(grMeanDose_PerHits_Vec[i]);
+
+            if(grMeanDose_OneActivity->GetN()>0)
+            {
+                double *hits = grMeanDose_OneActivity->GetX();
+                double *meanDose = grMeanDose_OneActivity->GetY();
+                double meanDoseAtNHits;
+                double dMeanDoseAtNHits;
+                for(int j=0; j<grMeanDose_OneActivity->GetN();j++)
+                {
+                    if(hits[j]==((double)NHits))
+                    {
+                        meanDoseAtNHits = meanDose[j];
+                        dMeanDoseAtNHits = grMeanDose_OneActivity->GetErrorY(j);
+                        break;
+                    }
+                }
+                double tolerance = std::pow(10.,-14.);
+                if(meanDoseAtNHits>tolerance){meanDose_Activity_ThisHit_Vec.push_back(std::make_tuple(activity,meanDoseAtNHits,dMeanDoseAtNHits));}
+            }
+
+        }
+
+        for(int i=0; i<meanDose_Activity_ThisHit_Vec.size();i++)
+        {
+            double activity = std::get<0>(meanDose_Activity_ThisHit_Vec[i]);
+            double meanDose = std::get<1>(meanDose_Activity_ThisHit_Vec[i]);
+            double dMeanDose = std::get<2>(meanDose_Activity_ThisHit_Vec[i]);
+
+            grMeanDose_PerOneHit->SetPoint(i, activity, meanDose);
+            grMeanDose_PerOneHit->SetPointError(i, 0.0, dMeanDose);
+        }
+
+        return meanDose_Activity_ThisHit_Vec;
+    };
+
+
+    //--------------------------------
+    // Making graph for average probability of death at N number of hits
+    TGraphErrors* grUWA_percentDeath_perN = new TGraphErrors();
+    grUWA_percentDeath_perN->SetName("grUWA_percentDeath");
+    grUWA_percentDeath_perN->GetXaxis()->SetTitle("Number of Hits by Alpha Particle");
+    grUWA_percentDeath_perN->GetYaxis()->SetTitle("Average Probability of Death at N Number of Hits");
+
+    //--------------------------------
+    // Making graph for average mean dose at N Number of hits
+    TGraphErrors* grUWA_meanDose_perN = new TGraphErrors();
+    grUWA_meanDose_perN->SetName("grUWA_meanDose_perN");
+    grUWA_meanDose_perN->GetXaxis()->SetTitle("Number of Hits by Alpha Particle");
+    grUWA_meanDose_perN->GetYaxis()->SetTitle("Average Mean Dose at N Number of Hits");
+
+
+    //--------------------------
+
+    double doseMax_histograms = (std::get<1>(hDose_HitsCellComponent_Vec[1]))->GetXaxis()->GetXmax();
+    double nBins_dose = (std::get<1>(hDose_HitsCellComponent_Vec[1]))->GetNbinsX();
+
+
+    std::vector<std::tuple<int,TH1D*>> overlappedDoses_PerNHit_Vec;
+
+    for(int i=0; i<21; i++)
+    {
+
+        //--------------------------------
+        // Making graph for mean dose for activity, for NHits
+        std::string grMeanDose_i_Name = "grMeanDose_" + std::to_string(i) + "_NumberHitsToCellComponent";
+        TGraphErrors* grMeanDose_i = new TGraphErrors();
+        grMeanDose_i->SetName(grMeanDose_i_Name.c_str());
+        grMeanDose_i->GetXaxis()->SetTitle("Activity [kBq/mL]");
+        grMeanDose_i->GetYaxis()->SetTitle("Mean Dose Delivered to Cell Component");
+
+        std::vector<std::tuple<double,double,double>> meanDose_Activity_Vec = Fill_grMeanDose_PerOneHit(i,grMeanDose_i);
+
+        if(meanDose_Activity_Vec.size()>0)
+        {
+            grMeanDose_i->Write();
+
+            //----------------------------------
+            // Calculating mean dose averaged over all activities per number of hits
+            double sum_w_i = 0.;
+            double sum_mu_i_w = 0.;
+
+            for(auto& entry : meanDose_Activity_Vec)
+            {
+                double meanDoseOneActivity = std::get<1>(entry);
+                double dMeanDoseOneActivity = std::get<2>(entry);
+
+                double w_i = 1./std::pow(dMeanDoseOneActivity,2.);
+                double mu_i_w = w_i*meanDoseOneActivity;
+
+                sum_w_i += w_i;
+                sum_mu_i_w += mu_i_w;
+            }
+
+            double UWA_meanDose_perN = sum_mu_i_w/sum_w_i;
+            double dUWA_meanDose_perN = 1./std::sqrt(sum_w_i);
+
+            grUWA_meanDose_perN->SetPoint(i, ((double)i), UWA_meanDose_perN);
+            grUWA_meanDose_perN->SetPointError(i, 0.0, dUWA_meanDose_perN);
+        }
+
+
+        //----------------------------
+        std::string gr_percentDeath_i_Name = "grProbabilityDeath_" + std::to_string(i) + "_NumberHitsToCellComponent";
+        TGraphErrors* gr_percentDeath_i = new TGraphErrors();
+        gr_percentDeath_i->SetName(gr_percentDeath_i_Name.c_str());
+        gr_percentDeath_i->GetXaxis()->SetTitle("Activity [kBq/mL]");
+        gr_percentDeath_i->GetYaxis()->SetTitle("Probability of Cell Death");
+
+        // Filling percent death for activity per number of hits
+        std::vector<std::tuple<double,double,double>> percentKilled_Activity_Vec = Fill_grPercentKilled_PerOneNHit(i,gr_percentDeath_i);
+        if(percentKilled_Activity_Vec.size()>0)
+        {
+            gr_percentDeath_i->Write();
+
+            //----------------------------------
+            // Calculating percent death averaged over all activities per number of hits
+            double sum_w_i = 0.;
+            double sum_mu_i_w = 0.;
+
+            for(auto & entry : percentKilled_Activity_Vec)
+            {
+                double percentDeathOneActivity = std::get<1>(entry);
+                double dPercentDeathOneActivity = std::get<2>(entry);
+                // std::cout << percentDeathOneActivity << " " << dPercentDeathOneActivity << std::endl;
+
+                double w_i = 1./std::pow(dPercentDeathOneActivity,2.);
+                double mu_i_w = w_i*percentDeathOneActivity;
+
+                sum_w_i += w_i;
+                sum_mu_i_w += mu_i_w;
+            }
+
+            double UWA_percentDeath_perN = sum_mu_i_w/sum_w_i;
+            // std::cout << sum_w_i << " " << sum_mu_i_w <<  std::endl;
+            double dUWA_percentDeath_perN = 1./std::sqrt(sum_w_i);
+
+            grUWA_percentDeath_perN->SetPoint(i, ((double)i), UWA_percentDeath_perN);
+            grUWA_percentDeath_perN->SetPointError(i, 0., dUWA_percentDeath_perN);
+        }
+
+        std::string hDose_ThisNHits_OverlappedAllActivities_Name = "hDose_NHits_" + std::to_string(i) + "_Overlapped_AllActivities";
+        TH1D* hDose_ThisNHits_OverlappedAllActivities = new TH1D(hDose_ThisNHits_OverlappedAllActivities_Name.c_str(),"Dose Delivered for one NHit, All Activities Overlapped", nBins_dose, 0., doseMax_histograms);
+        hDose_ThisNHits_OverlappedAllActivities->GetXaxis()->SetTitle("Dose Delivered [Gy]");
+        hDose_ThisNHits_OverlappedAllActivities->GetXaxis()->SetTitle("Fraction of Cells Hit with Dose");
+
+
+        int nHistogramsAdded = 0;
+        //------------------------------------
+        for(int j=0; j<hDose_HitsCellComponent_Vec.size(); j++)
+        {
+            double activity = std::get<0>(hDose_HitsCellComponent_Vec[j]);
+            TH2D* hDose_Hits = std::get<1>(hDose_HitsCellComponent_Vec[j]);
+
+            std::string hDose_ThisNHits_Name = "hDose_ThisNHits";
+            TH1D* hDose_ThisNHits = hDose_Hits->ProjectionX(hDose_ThisNHits_Name.c_str(),i+1,i+1);
+            if(hDose_ThisNHits->Integral()>0.)
+            {
+                hDose_ThisNHits_OverlappedAllActivities->Add(hDose_ThisNHits);
+                nHistogramsAdded++;
+            }
+            hDose_ThisNHits->SetDirectory(0);
+        }
+
+        hDose_ThisNHits_OverlappedAllActivities->Scale(1./((double)nHistogramsAdded));
+
+        overlappedDoses_PerNHit_Vec.push_back(std::make_tuple(i,hDose_ThisNHits_OverlappedAllActivities));
+        hDose_ThisNHits_OverlappedAllActivities->Write();
+        hDose_ThisNHits_OverlappedAllActivities->SetDirectory(0);
+
+    }
+
+    grUWA_percentDeath_perN->SetTitle("Uncertainty Weighted Average of Probability of Cell Death For N Number of Alpha-Particle Hits");
+    grUWA_percentDeath_perN->Write();
+    grUWA_meanDose_perN->SetTitle("Uncertainty Weighted Average of Mean Dose For N Number of Alpha-Particle Hits");
+    grUWA_meanDose_perN->Write();
+
+
+    //---------------------------------
+    std::string gr_MeanDose_PerNHit_OverlappedActivities_Name = "grUWA_meanDose_OverlappedActivities";
+    TGraphAsymmErrors* gr_MeanDose_PerNHit_OverlappedActivities = new TGraphAsymmErrors();
+    gr_MeanDose_PerNHit_OverlappedActivities->SetName(gr_MeanDose_PerNHit_OverlappedActivities_Name.c_str());
+    gr_MeanDose_PerNHit_OverlappedActivities->SetTitle("Mean Dose Per Alpha-Particle Hit to Cell Component, Averaged Over All Activities");
+    gr_MeanDose_PerNHit_OverlappedActivities->GetXaxis()->SetTitle("N Number of Alpha-Particle Hits");
+    gr_MeanDose_PerNHit_OverlappedActivities->GetYaxis()->SetTitle("Mean Dose Delivered [Gy]");
+
+    int NGraphPoint = 0;
+    for(int i=0; i<overlappedDoses_PerNHit_Vec.size(); i++)
+    {
+        int NHits = std::get<0>(overlappedDoses_PerNHit_Vec[i]);
+        TH1D* hOverlappedDose = std::get<1>(overlappedDoses_PerNHit_Vec[i]);
+
+        int n = 3;
+        double x_q[3];
+        double y_q[3] = {0.25, 0.50, 0.75}; // quartile positions
+
+        hOverlappedDose->GetQuantiles(n, x_q, y_q);
+        double doseAtQuartileMinus = x_q[0];
+        double doseAtMean = x_q[1];
+        double doseAtQuartilePlus = x_q[2];
+
+        if(doseAtMean>0)
+        {
+            gr_MeanDose_PerNHit_OverlappedActivities->SetPoint(NGraphPoint, ((double)NHits), doseAtMean);
+            gr_MeanDose_PerNHit_OverlappedActivities->SetPointEYhigh(NGraphPoint, doseAtQuartilePlus - doseAtMean);
+            gr_MeanDose_PerNHit_OverlappedActivities->SetPointEYlow(NGraphPoint, doseAtMean - doseAtQuartileMinus);
+            NGraphPoint++;
+        }
+
+    }
+
+    gr_MeanDose_PerNHit_OverlappedActivities->Write();
+
 
     outputFile->Write();
     outputFile->Close();
-
-
 }
+
 
 
 
@@ -736,10 +1123,10 @@ void mainFittingCode()
 
     // CellSurvival cellSurvival_PC3_PIP = CellSurvival("PC3_PIP");
     // cellSurvival_PC3_PIP.AddCellSurvivalData(data_cellSurvival_PC3_PIP);
-    // FitCellSurvival(cellSurvival_PC3_PIP, "LM", 1);
-    // FitCellSurvival(cellSurvival_PC3_PIP, "LM", 2);
+    // // FitCellSurvival(cellSurvival_PC3_PIP, "LM", 1);
+    // // FitCellSurvival(cellSurvival_PC3_PIP, "LM", 2);
     // FitCellSurvival(cellSurvival_PC3_PIP, "LM", 3);
-    // FitCellSurvival(cellSurvival_PC3_PIP, "LM", 4);
+    // // FitCellSurvival(cellSurvival_PC3_PIP, "LM", 4);
 
 
     // std::vector<std::tuple<double,double,double>> data_cellSurvival_PC3_Flu;
@@ -754,13 +1141,13 @@ void mainFittingCode()
 
     // CellSurvival cellSurvival_PC3_Flu = CellSurvival("PC3_Flu");
     // cellSurvival_PC3_Flu.AddCellSurvivalData(data_cellSurvival_PC3_Flu);
-    // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 1);
-    // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 2);
-    // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 3);
-    //  FitCellSurvival(cellSurvival_PC3_Flu, "LM", 4);
+    // // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 1);
+    // // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 2);
+    // FitCellSurvival(cellSurvival_PC3_Flu, "LQ", 3);
+    // // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 4);
 
     std::vector<std::tuple<double,double,double>> data_cellSurvival_C4_2;
-    // data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.0));
+    // data_cellSurvival_C4_2.push_back(make_tuple(0.0,    1.0,    0.05));
     data_cellSurvival_C4_2.push_back(make_tuple(5.0,    0.86,   std::sqrt(std::pow(0.117,2.) + std::pow(0.1*0.86,2.))));
     data_cellSurvival_C4_2.push_back(make_tuple(10.0,    0.69,    std::sqrt(std::pow(0.014,2.0) + std::pow(0.1*0.69,2.))));
     data_cellSurvival_C4_2.push_back(make_tuple(25.0,    0.51,    std::sqrt(std::pow(0.096,2.) + std::pow(0.1*0.51,2.))));
@@ -773,10 +1160,10 @@ void mainFittingCode()
     cellSurvival_C4_2.AddCellSurvivalData(data_cellSurvival_C4_2);
     // cellSurvival_C4_2.GraphCellSurvivalData();
 
-    // // std::vector<double,double> C4_2_Parameters;
+    // std::vector<double,double> C4_2_Parameters;
     // FitCellSurvival(cellSurvival_C4_2, "LM", 1);
     // FitCellSurvival(cellSurvival_C4_2, "LM", 2);
-    // FitCellSurvival(cellSurvival_C4_2, "LM", 3);
-    FitCellSurvival(cellSurvival_C4_2, "LM", 4);
+    FitCellSurvival(cellSurvival_C4_2, "LM", 3);
+    // FitCellSurvival(cellSurvival_C4_2, "LM", 4);
 
 };

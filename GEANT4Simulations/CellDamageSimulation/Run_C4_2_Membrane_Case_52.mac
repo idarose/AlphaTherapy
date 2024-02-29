@@ -1,13 +1,13 @@
 /run/initialize
 /run/printProgress 10000
-/Sim/setSeed 36064
-/Sim/setOutputFileName Output_Pb212_C4_2_Activity100kBq_Membrane_Thread_2.root
+/Sim/setSeed 17871
+/Sim/setOutputFileName Output_Pb212_C4_2_Activity50kBq_Membrane_Thread_2.root
 /Sim/SetInitialRadionuclide_Z 82
 /Sim/SetInitialRadionuclide_A 212
 /Sim/SetInitialRadionuclide_excitationEnergy 0.0
 /Sim/DefineInitialRadionuclide
 /Sim/SetInitialRadionuclide_location 1
-/Sim/SetSampleActivity 100
+/Sim/SetSampleActivity 50
 /Sim/SetCellLineName C4_2
 /Sim/SetDecayCurveRadionuclide
-/run/beamOn 36054
+/run/beamOn 17861
