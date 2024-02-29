@@ -265,6 +265,66 @@ set(EXAMPLEB4A_SCRIPTS
     Run_C4_2_Cytoplasm_Case_67.mac
     Run_C4_2_Cytoplasm_Case_68.mac
     Run_C4_2_Cytoplasm_Case_69.mac
+    Run_C4_2_Solution_Case_70.mac
+    Run_C4_2_Solution_Case_71.mac
+    Run_C4_2_Solution_Case_72.mac
+    Run_C4_2_Solution_Case_73.mac
+    Run_C4_2_Solution_Case_74.mac
+    Run_C4_2_Solution_Case_75.mac
+    Run_C4_2_Solution_Case_76.mac
+    Run_C4_2_Solution_Case_77.mac
+    Run_C4_2_Solution_Case_78.mac
+    Run_C4_2_Solution_Case_79.mac
+    Run_C4_2_Membrane_Case_70.mac
+    Run_C4_2_Membrane_Case_71.mac
+    Run_C4_2_Membrane_Case_72.mac
+    Run_C4_2_Membrane_Case_73.mac
+    Run_C4_2_Membrane_Case_74.mac
+    Run_C4_2_Membrane_Case_75.mac
+    Run_C4_2_Membrane_Case_76.mac
+    Run_C4_2_Membrane_Case_77.mac
+    Run_C4_2_Membrane_Case_78.mac
+    Run_C4_2_Membrane_Case_79.mac
+    Run_C4_2_Cytoplasm_Case_70.mac
+    Run_C4_2_Cytoplasm_Case_71.mac
+    Run_C4_2_Cytoplasm_Case_72.mac
+    Run_C4_2_Cytoplasm_Case_73.mac
+    Run_C4_2_Cytoplasm_Case_74.mac
+    Run_C4_2_Cytoplasm_Case_75.mac
+    Run_C4_2_Cytoplasm_Case_76.mac
+    Run_C4_2_Cytoplasm_Case_77.mac
+    Run_C4_2_Cytoplasm_Case_78.mac
+    Run_C4_2_Cytoplasm_Case_79.mac
+    Run_C4_2_Solution_Case_80.mac
+    Run_C4_2_Solution_Case_81.mac
+    Run_C4_2_Solution_Case_82.mac
+    Run_C4_2_Solution_Case_83.mac
+    Run_C4_2_Solution_Case_84.mac
+    Run_C4_2_Solution_Case_85.mac
+    Run_C4_2_Solution_Case_86.mac
+    Run_C4_2_Solution_Case_87.mac
+    Run_C4_2_Solution_Case_88.mac
+    Run_C4_2_Solution_Case_89.mac
+    Run_C4_2_Membrane_Case_80.mac
+    Run_C4_2_Membrane_Case_81.mac
+    Run_C4_2_Membrane_Case_82.mac
+    Run_C4_2_Membrane_Case_83.mac
+    Run_C4_2_Membrane_Case_84.mac
+    Run_C4_2_Membrane_Case_85.mac
+    Run_C4_2_Membrane_Case_86.mac
+    Run_C4_2_Membrane_Case_87.mac
+    Run_C4_2_Membrane_Case_88.mac
+    Run_C4_2_Membrane_Case_89.mac
+    Run_C4_2_Cytoplasm_Case_80.mac
+    Run_C4_2_Cytoplasm_Case_81.mac
+    Run_C4_2_Cytoplasm_Case_82.mac
+    Run_C4_2_Cytoplasm_Case_83.mac
+    Run_C4_2_Cytoplasm_Case_84.mac
+    Run_C4_2_Cytoplasm_Case_85.mac
+    Run_C4_2_Cytoplasm_Case_86.mac
+    Run_C4_2_Cytoplasm_Case_87.mac
+    Run_C4_2_Cytoplasm_Case_88.mac
+    Run_C4_2_Cytoplasm_Case_89.mac
     Run_PC3_PIP_Solution_Case_0.mac
     Run_PC3_PIP_Solution_Case_1.mac
     Run_PC3_PIP_Solution_Case_2.mac
@@ -445,6 +505,96 @@ set(EXAMPLEB4A_SCRIPTS
     Run_PC3_PIP_Cytoplasm_Case_57.mac
     Run_PC3_PIP_Cytoplasm_Case_58.mac
     Run_PC3_PIP_Cytoplasm_Case_59.mac
+    Run_PC3_PIP_Solution_Case_60.mac
+    Run_PC3_PIP_Solution_Case_61.mac
+    Run_PC3_PIP_Solution_Case_62.mac
+    Run_PC3_PIP_Solution_Case_63.mac
+    Run_PC3_PIP_Solution_Case_64.mac
+    Run_PC3_PIP_Solution_Case_65.mac
+    Run_PC3_PIP_Solution_Case_66.mac
+    Run_PC3_PIP_Solution_Case_67.mac
+    Run_PC3_PIP_Solution_Case_68.mac
+    Run_PC3_PIP_Solution_Case_69.mac
+    Run_PC3_PIP_Membrane_Case_60.mac
+    Run_PC3_PIP_Membrane_Case_61.mac
+    Run_PC3_PIP_Membrane_Case_62.mac
+    Run_PC3_PIP_Membrane_Case_63.mac
+    Run_PC3_PIP_Membrane_Case_64.mac
+    Run_PC3_PIP_Membrane_Case_65.mac
+    Run_PC3_PIP_Membrane_Case_66.mac
+    Run_PC3_PIP_Membrane_Case_67.mac
+    Run_PC3_PIP_Membrane_Case_68.mac
+    Run_PC3_PIP_Membrane_Case_69.mac
+    Run_PC3_PIP_Cytoplasm_Case_60.mac
+    Run_PC3_PIP_Cytoplasm_Case_61.mac
+    Run_PC3_PIP_Cytoplasm_Case_62.mac
+    Run_PC3_PIP_Cytoplasm_Case_63.mac
+    Run_PC3_PIP_Cytoplasm_Case_64.mac
+    Run_PC3_PIP_Cytoplasm_Case_65.mac
+    Run_PC3_PIP_Cytoplasm_Case_66.mac
+    Run_PC3_PIP_Cytoplasm_Case_67.mac
+    Run_PC3_PIP_Cytoplasm_Case_68.mac
+    Run_PC3_PIP_Cytoplasm_Case_69.mac
+    Run_PC3_PIP_Solution_Case_70.mac
+    Run_PC3_PIP_Solution_Case_71.mac
+    Run_PC3_PIP_Solution_Case_72.mac
+    Run_PC3_PIP_Solution_Case_73.mac
+    Run_PC3_PIP_Solution_Case_74.mac
+    Run_PC3_PIP_Solution_Case_75.mac
+    Run_PC3_PIP_Solution_Case_76.mac
+    Run_PC3_PIP_Solution_Case_77.mac
+    Run_PC3_PIP_Solution_Case_78.mac
+    Run_PC3_PIP_Solution_Case_79.mac
+    Run_PC3_PIP_Membrane_Case_70.mac
+    Run_PC3_PIP_Membrane_Case_71.mac
+    Run_PC3_PIP_Membrane_Case_72.mac
+    Run_PC3_PIP_Membrane_Case_73.mac
+    Run_PC3_PIP_Membrane_Case_74.mac
+    Run_PC3_PIP_Membrane_Case_75.mac
+    Run_PC3_PIP_Membrane_Case_76.mac
+    Run_PC3_PIP_Membrane_Case_77.mac
+    Run_PC3_PIP_Membrane_Case_78.mac
+    Run_PC3_PIP_Membrane_Case_79.mac
+    Run_PC3_PIP_Cytoplasm_Case_70.mac
+    Run_PC3_PIP_Cytoplasm_Case_71.mac
+    Run_PC3_PIP_Cytoplasm_Case_72.mac
+    Run_PC3_PIP_Cytoplasm_Case_73.mac
+    Run_PC3_PIP_Cytoplasm_Case_74.mac
+    Run_PC3_PIP_Cytoplasm_Case_75.mac
+    Run_PC3_PIP_Cytoplasm_Case_76.mac
+    Run_PC3_PIP_Cytoplasm_Case_77.mac
+    Run_PC3_PIP_Cytoplasm_Case_78.mac
+    Run_PC3_PIP_Cytoplasm_Case_79.mac
+    Run_PC3_PIP_Solution_Case_80.mac
+    Run_PC3_PIP_Solution_Case_81.mac
+    Run_PC3_PIP_Solution_Case_82.mac
+    Run_PC3_PIP_Solution_Case_83.mac
+    Run_PC3_PIP_Solution_Case_84.mac
+    Run_PC3_PIP_Solution_Case_85.mac
+    Run_PC3_PIP_Solution_Case_86.mac
+    Run_PC3_PIP_Solution_Case_87.mac
+    Run_PC3_PIP_Solution_Case_88.mac
+    Run_PC3_PIP_Solution_Case_89.mac
+    Run_PC3_PIP_Membrane_Case_80.mac
+    Run_PC3_PIP_Membrane_Case_81.mac
+    Run_PC3_PIP_Membrane_Case_82.mac
+    Run_PC3_PIP_Membrane_Case_83.mac
+    Run_PC3_PIP_Membrane_Case_84.mac
+    Run_PC3_PIP_Membrane_Case_85.mac
+    Run_PC3_PIP_Membrane_Case_86.mac
+    Run_PC3_PIP_Membrane_Case_87.mac
+    Run_PC3_PIP_Membrane_Case_88.mac
+    Run_PC3_PIP_Membrane_Case_89.mac
+    Run_PC3_PIP_Cytoplasm_Case_80.mac
+    Run_PC3_PIP_Cytoplasm_Case_81.mac
+    Run_PC3_PIP_Cytoplasm_Case_82.mac
+    Run_PC3_PIP_Cytoplasm_Case_83.mac
+    Run_PC3_PIP_Cytoplasm_Case_84.mac
+    Run_PC3_PIP_Cytoplasm_Case_85.mac
+    Run_PC3_PIP_Cytoplasm_Case_86.mac
+    Run_PC3_PIP_Cytoplasm_Case_87.mac
+    Run_PC3_PIP_Cytoplasm_Case_88.mac
+    Run_PC3_PIP_Cytoplasm_Case_89.mac
     Run_PC3_Flu_Solution_Case_0.mac
     Run_PC3_Flu_Solution_Case_1.mac
     Run_PC3_Flu_Solution_Case_2.mac
@@ -505,6 +655,36 @@ set(EXAMPLEB4A_SCRIPTS
     Run_PC3_Flu_Solution_Case_57.mac
     Run_PC3_Flu_Solution_Case_58.mac
     Run_PC3_Flu_Solution_Case_59.mac
+    Run_PC3_Flu_Solution_Case_60.mac
+    Run_PC3_Flu_Solution_Case_61.mac
+    Run_PC3_Flu_Solution_Case_62.mac
+    Run_PC3_Flu_Solution_Case_63.mac
+    Run_PC3_Flu_Solution_Case_64.mac
+    Run_PC3_Flu_Solution_Case_65.mac
+    Run_PC3_Flu_Solution_Case_66.mac
+    Run_PC3_Flu_Solution_Case_67.mac
+    Run_PC3_Flu_Solution_Case_68.mac
+    Run_PC3_Flu_Solution_Case_69.mac
+    Run_PC3_Flu_Solution_Case_70.mac
+    Run_PC3_Flu_Solution_Case_71.mac
+    Run_PC3_Flu_Solution_Case_72.mac
+    Run_PC3_Flu_Solution_Case_73.mac
+    Run_PC3_Flu_Solution_Case_74.mac
+    Run_PC3_Flu_Solution_Case_75.mac
+    Run_PC3_Flu_Solution_Case_76.mac
+    Run_PC3_Flu_Solution_Case_77.mac
+    Run_PC3_Flu_Solution_Case_78.mac
+    Run_PC3_Flu_Solution_Case_79.mac
+    Run_PC3_Flu_Solution_Case_80.mac
+    Run_PC3_Flu_Solution_Case_81.mac
+    Run_PC3_Flu_Solution_Case_82.mac
+    Run_PC3_Flu_Solution_Case_83.mac
+    Run_PC3_Flu_Solution_Case_84.mac
+    Run_PC3_Flu_Solution_Case_85.mac
+    Run_PC3_Flu_Solution_Case_86.mac
+    Run_PC3_Flu_Solution_Case_87.mac
+    Run_PC3_Flu_Solution_Case_88.mac
+    Run_PC3_Flu_Solution_Case_89.mac
     vis.mac
     jobScript_C4_2_Solution.sh
     jobScript_C4_2_Membrane.sh
