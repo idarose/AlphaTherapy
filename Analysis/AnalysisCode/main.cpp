@@ -574,15 +574,20 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     EnergyDepositionHistograms histMain = EnergyDepositionHistograms(100., 0);
     histMain.GenerateEmptyHistograms(decayDynamicsInstance);
 
-    // Making intsnace of added histograms
+    // Making instance of added histograms
     AddEnergyDepositionHistograms addHistograms;
 
+    std::cout << "Test 1" << std::endl;
     //------------------–----------
     std::string filepathSimulationOutput = "../../GEANT4Simulations/OutputCellDamageSimulation/";
+
+    std::cout << "Test 1" << std::endl;
 
     std::vector<TFile*> inputFiles_solution;
     std::vector<TFile*> inputFiles_membrane;
     std::vector<TFile*> inputFiles_cytoplasm;
+
+    std::cout << "Test 2" << std::endl;
 
     for(int i=0; i<numberIterations; i++)
     {
@@ -594,6 +599,8 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
         inputFiles_membrane.push_back(new TFile(filepathMembraneIteration_i.c_str(), "READ"));
         inputFiles_cytoplasm.push_back(new TFile(filepathCytoplasmIteration_i.c_str(), "READ"));
     }
+
+    std::cout << "Test 2" << std::endl;
 
     //------------------–----------
     // Filling histgrams
