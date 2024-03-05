@@ -3,9 +3,9 @@
 #SBATCH --job-name AlphaTherapy
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=idapro@fys.uio.no
-#SBATCH --time=0-04:00:00
+#SBATCH --time=0-10:00:00
 #SBATCH --mem-per-cpu=5G
-#SBATCH --ntasks=1 --cpus-per-task=10
+#SBATCH --ntasks=1 --cpus-per-task=40
 ##SBATCH --array=150
 #SBATCH --array=1,3,5,10,25,50,75,100,150
 
@@ -17,7 +17,7 @@ ACTIVITY=$SLURM_ARRAY_TASK_ID
 OUTPUTFILE="TerminalOutput_C4_2_${ACTIVITY}kBq.txt"
 
 CELLLINE=C4_2
-NUMBERITERATIONS=10
+NUMBERITERATIONS=40
 
 
 ./$EXECUTABLE $CELLLINE $ACTIVITY $NUMBERITERATIONS  > $OUTPUTFILE
