@@ -624,6 +624,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     for (int i=0; i < numberIterations; ++i) {
         try {
             if (threads[i].joinable()) {
+                std::cout << "Joining thread " << i << std::endl;
                 threads[i].join();
             }
         } catch (const std::system_error& e) {
