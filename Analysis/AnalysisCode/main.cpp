@@ -578,7 +578,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     AddEnergyDepositionHistograms addHistograms;
 
     //------------------–----------
-    std::string filepathSimulationOutput = "/Volumes/SamsungT7/OutputFromSaga/";
+    std::string filepathSimulationOutput = "../../GEANT4Simulations/OutputCellDamageSimulation/";
 
     std::vector<TFile*> inputFiles_solution;
     std::vector<TFile*> inputFiles_membrane;
@@ -704,101 +704,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-// int main2()
-// {
-//     int numberIterations = 2;
-
-
-//     ROOT::EnableThreadSafety();
-//     TH1::AddDirectory(false);
-
-//     //------------------–----------
-//     // Defining decay dynamics
-
-
-
-//     // C4-2 Cells
-
-//     DecayDynamics decays_A3kBq_C4_2 = DecayDynamics(3,"C4_2");
-//     DecayDynamics decays_A5kBq_C4_2 = DecayDynamics(5,"C4_2");
-//     DecayDynamics decays_A10kBq_C4_2 = DecayDynamics(10,"C4_2");
-//     DecayDynamics decays_A25kBq_C4_2 = DecayDynamics(25,"C4_2");
-//     DecayDynamics decays_A50kBq_C4_2 = DecayDynamics(50,"C4_2");
-//     DecayDynamics decays_A75kBq_C4_2 = DecayDynamics(75,"C4_2");
-//     DecayDynamics decays_A100kBq_C4_2 = DecayDynamics(100,"C4_2");
-//     DecayDynamics decays_A150kBq_C4_2 = DecayDynamics(150,"C4_2");
-
-
-//     // PC3 PIP Cells
-
-//     DecayDynamics decays_A10kBq_PC3_PIP = DecayDynamics(10,"PC3_PIP");
-//     DecayDynamics decays_A25kBq_PC3_PIP = DecayDynamics(25,"PC3_PIP");
-//     DecayDynamics decays_A50kBq_PC3_PIP = DecayDynamics(50,"PC3_PIP");
-//     DecayDynamics decays_A75kBq_PC3_PIP = DecayDynamics(75,"PC3_PIP");
-//     DecayDynamics decays_A100kBq_PC3_PIP = DecayDynamics(100,"PC3_PIP");
-//     DecayDynamics decays_A150kBq_PC3_PIP = DecayDynamics(150,"PC3_PIP");
-
-
-//     // PC3 Flu Cells
-//     DecayDynamics decays_A10kBq_PC3_Flu = DecayDynamics(10,"PC3_Flu");
-//     DecayDynamics decays_A25kBq_PC3_Flu = DecayDynamics(25,"PC3_Flu");
-//     DecayDynamics decays_A50kBq_PC3_Flu = DecayDynamics(50,"PC3_Flu");
-//     DecayDynamics decays_A75kBq_PC3_Flu = DecayDynamics(75,"PC3_Flu");
-//     DecayDynamics decays_A100kBq_PC3_Flu = DecayDynamics(100,"PC3_Flu");
-//     DecayDynamics decays_A150kBq_PC3_Flu = DecayDynamics(150,"PC3_Flu");
-
-
-
-//     //------------------–----------
-//     // Loading decay dynamics calculations
-
-//     std::string mathematicaOutput = "../../Mathematica/Output";
-
-//     decays_A5kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A10kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A25kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A50kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A75kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A100kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A150kBq_C4_2.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-
-//     decays_A10kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A25kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A50kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A75kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A100kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A150kBq_PC3_PIP.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-
-//     decays_A10kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A25kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A50kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A75kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A100kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-//     decays_A150kBq_PC3_Flu.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
-
-
-
-//     //-------------------------------------
-//     // Creating energy deposition histograms
-
-//     // EnergyDepositionHistograms Hist_A150kBq_PC3_Flu = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_Flu, numberIterations);
-//     // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_Flu_150kBq.root", "RECREATE");
-//     // Hist_A150kBq_PC3_Flu.WriteHistogramsToFile();
-//     // output->Write();
-//     // output->Close();
-
-//     // EnergyDepositionHistograms Hist_A150kBq_PC3_PIP = AnalyzeHistogramsFromSimulation(decays_A150kBq_PC3_PIP, numberIterations);
-//     // auto output = new TFile("/Volumes/SamsungT7/OutputFromAnalysis/Output_PC3_PIP_150kBq.root", "RECREATE");
-//     // Hist_A150kBq_PC3_PIP.WriteHistogramsToFile();
-//     // output->Write();
-//     // output->Close();
-
-//     EnergyDepositionHistograms Hist_A5kBq_C4_2 = AnalyzeHistogramsFromSimulation(decays_A5kBq_C4_2, numberIterations);
-//     auto output = new TFile("Output_C4_2_5kBq_test.root", "RECREATE");
-//     Hist_A5kBq_C4_2.WriteHistogramsToFile();
-//     output->Write();
-//     output->Close();
-
-//     return 0;
-// }

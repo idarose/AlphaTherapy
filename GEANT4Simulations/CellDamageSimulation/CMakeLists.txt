@@ -693,7 +693,6 @@ set(EXAMPLEB4A_SCRIPTS
     jobScript_PC3_PIP_Membrane.sh
     jobScript_PC3_PIP_Cytoplasm.sh
     jobScript_PC3_Flu_Solution.sh
-    jobScript0.sh
   )
 
 foreach(_script ${EXAMPLEB4A_SCRIPTS})
