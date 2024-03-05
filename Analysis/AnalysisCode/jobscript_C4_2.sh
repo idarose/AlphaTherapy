@@ -4,10 +4,10 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=idapro@fys.uio.no
 #SBATCH --time=0-02:00:00
-#SBATCH --mem-per-cpu=4G
+#SBATCH --mem-per-cpu=5G
 #SBATCH --ntasks=1 --cpus-per-task=10
-#SBATCH --array=150
-##SBATCH --array=1,3,5,10,25,50,75,100,150
+##SBATCH --array=150
+#SBATCH --array=1,3,5,10,25,50,75,100,150
 
 ##export DISPLAY=:0
 
