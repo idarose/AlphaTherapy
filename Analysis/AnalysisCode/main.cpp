@@ -696,7 +696,7 @@ int main(int argc, char *argv[])
         return 5;
     }
 
-    std::cout << "Cell line: " << cellLine << ", Activity: " << activity <<  ", Number Iterations: " << std::endl;
+    std::cout << "Cell line: " << cellLine << ", Activity: " << activity <<  ", Number Iterations: " << numberIterations  << std::endl;
 
 
     //------------------–----------
