@@ -615,9 +615,24 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
 
     std::cout << "Test 4" << std::endl;
 
-    for(int i=0; i<numberIterations; i++)
-    {
-        threads[i].join();
+    // for(int i=0; i<numberIterations; i++)
+    // {
+    //     threads[i].join();
+    // }
+
+    // Join threads and handle exceptions.
+    for (int i=0; i < numberIterations; ++i) {
+        try {
+            if (threads[i].joinable()) {
+                threads[i].join();
+            }
+        } catch (const std::system_error& e) {
+            std::cerr << "System error while joining thread " << i << ": " << e.what() << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception while joining thread " << i << ": " << e.what() << std::endl;
+        } catch (...) {
+            std::cerr << "Unknown exception while joining thread " << i << std::endl;
+        }
     }
 
     std::cout << "Test 4" << std::endl;
