@@ -23,8 +23,8 @@ void makeUptakeInterpolated()
             yVals_cytoplasm.push_back(U0Cytoplasm);
         }
 
-        ROOT::Math::Interpolator interpolator_total(xVals, yVals_total, ROOT::Math::Interpolation::kLINEAR);
-        ROOT::Math::Interpolator interpolator_cytoplasm(xVals, yVals_cytoplasm, ROOT::Math::Interpolation::kLINEAR);
+        ROOT::Math::Interpolator interpolator_total(xVals, yVals_total, ROOT::Math::Interpolation::kCSPLINE);
+        ROOT::Math::Interpolator interpolator_cytoplasm(xVals, yVals_cytoplasm, ROOT::Math::Interpolation::kCSPLINE );
 
         std::ofstream file;
 
