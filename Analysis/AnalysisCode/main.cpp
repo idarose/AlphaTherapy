@@ -204,7 +204,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                                 // Track has been counted before in this cell, just in a different component of the cell
                                                 firstTimeCountingTrackInCell = false;
 
-                                                if(volumeTypesSolutionSim[i]==get<2>(particleHitsInfoForEventVec[iii]))
+                                                if(volumeTypesSolutionSim[i]==std::get<2>(particleHitsInfoForEventVec[iii]))
                                                 {
                                                     // Track already counted in this cell and cell component
                                                     trackAlreadyRegisteredInThisCellComponent = true;
