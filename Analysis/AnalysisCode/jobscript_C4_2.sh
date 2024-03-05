@@ -3,7 +3,7 @@
 #SBATCH --job-name AlphaTherapy
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=idapro@fys.uio.no
-#SBATCH --time=0-02:00:00
+#SBATCH --time=0-04:00:00
 #SBATCH --mem-per-cpu=5G
 #SBATCH --ntasks=1 --cpus-per-task=10
 ##SBATCH --array=150
