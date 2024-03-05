@@ -1,4 +1,5 @@
 #!/bin/bash
+export DISPLAY=:0 # Or localhost:10.0
 #SBATCH --account=NN9895K
 #SBATCH --job-name AlphaTherapy
 #SBATCH --mail-type=ALL
