@@ -1,5 +1,4 @@
 #!/bin/bash
-export DISPLAY=:0 # Or localhost:10.0
 #SBATCH --account=NN9895K
 #SBATCH --job-name AlphaTherapy
 #SBATCH --mail-type=ALL
@@ -9,6 +8,8 @@ export DISPLAY=:0 # Or localhost:10.0
 #SBATCH --ntasks=1 --cpus-per-task=10
 #SBATCH --array=5
 ##SBATCH --array=1,3,5,10,25,50,75,100,150
+
+export DISPLAY=:0
 
 EXECUTABLE=main
 
