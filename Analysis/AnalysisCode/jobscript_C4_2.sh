@@ -5,20 +5,19 @@
 #SBATCH --mail-user=idapro@fys.uio.no
 #SBATCH --time=0-00:10:00
 #SBATCH --mem-per-cpu=2000
-#SBATCH --ntasks=1 --cpus-per-task=1
+#SBATCH --ntasks=1 --cpus-per-task=10
 #SBATCH --array=5
 ##SBATCH --array=1,3,5,10,25,50,75,100,150
 
-export DISPLAY=:0
+##export DISPLAY=:0
 
 EXECUTABLE=main
 
 ACTIVITY=$SLURM_ARRAY_TASK_ID
 OUTPUTFILE="TerminalOutput_C4_2_${ACTIVITY}kBq.txt"
-ACTIVITY="${ACTIVITY}"
 
-CELLLINE="C4_2"
-NUMBERITERATIONS="1"
+CELLLINE=C4_2
+NUMBERITERATIONS=10
 
 
 ./$EXECUTABLE $CELLLINE $ACTIVITY $NUMBERITERATIONS  > $OUTPUTFILE
