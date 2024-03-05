@@ -602,6 +602,8 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
 
     std::cout << "Test 2" << std::endl;
 
+    std::cout << "Test 3" << std::endl;
+
     //------------------–----------
     // Filling histgrams
     for(int i=0; i<numberIterations; i++)
@@ -609,16 +611,26 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
         threads.push_back(std::thread(MakeHistogramOneIteration, inputFiles_solution[i], inputFiles_membrane[i], inputFiles_cytoplasm[i], i+1));
     }
 
+    std::cout << "Test 3" << std::endl;
+
+    std::cout << "Test 4" << std::endl;
+
     for(int i=0; i<numberIterations; i++)
     {
         threads[i].join();
     }
+
+    std::cout << "Test 4" << std::endl;
+
+    std::cout << "Test 5" << std::endl;
 
 
     // Retrieve and print the results from the futures
     for (auto &future : futures) {
         addHistograms.AddHistograms(histMain, future.get());
     }
+
+    std::cout << "Test 5" << std::endl;
 
 
     //------------------–----------
