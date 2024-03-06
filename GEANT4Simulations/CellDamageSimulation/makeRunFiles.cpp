@@ -114,7 +114,7 @@ void makeRunFiles()
     double decaysMembrane;
     double decaysCytoplasm;
 
-    int numInterations = 10;
+    int numInterations = 40;
 
     //-------------------------
     // Making files for C4-2

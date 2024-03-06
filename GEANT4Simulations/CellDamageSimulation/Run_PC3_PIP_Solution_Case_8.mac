@@ -1,6 +1,6 @@
 /run/initialize
 /run/printProgress 10000
-/Sim/setSeed 2285
+/Sim/setSeed 2315
 /Sim/setOutputFileName Output_Pb212_PC3_PIP_Activity1kBq_Solution_Thread_8.root
 /Sim/SetInitialRadionuclide_Z 82
 /Sim/SetInitialRadionuclide_A 212
