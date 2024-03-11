@@ -4,8 +4,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=idapro@fys.uio.no
 #SBATCH --time=1-10:00:00
-#SBATCH --mem-per-cpu=8G
-#SBATCH --ntasks=1 --cpus-per-task=20
+#SBATCH --mem-per-cpu=16G
+#SBATCH --ntasks=1 --cpus-per-task=10
 #SBATCH --array=150
 
 EXECUTABLE=main
