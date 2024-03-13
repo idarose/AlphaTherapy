@@ -406,22 +406,22 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
 
     // Naming axis
     hKineticEnergyAlphaTotalCell_FromSolution->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
-    hKineticEnergyAlphaTotalCell_FromSolution->GetYaxis()->SetTitle("Fraction of Cells hit with Alpha Particle with this Kinetic Energy");
+    hKineticEnergyAlphaTotalCell_FromSolution->GetYaxis()->SetTitle("Fraction of Alpha Particles with this Kinetic Energy");
 
     hKineticEnergyAlphaTotalCell_FromMembrane->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
-    hKineticEnergyAlphaTotalCell_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells hit with Alpha Particle with this Kinetic Energy");
+    hKineticEnergyAlphaTotalCell_FromMembrane->GetYaxis()->SetTitle("Fraction of Alpha Particles with this Kinetic Energy");
 
     hKineticEnergyAlphaTotalCell_FromCytoplasm->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
-    hKineticEnergyAlphaTotalCell_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells hit with Alpha Particle with this Kinetic Energy");
+    hKineticEnergyAlphaTotalCell_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Alpha Particles with this Kinetic Energy");
 
     hKineticEnergyAlphaNucleus_FromSolution->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
-    hKineticEnergyAlphaNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Cell Nuclei hit with Alpha Particle with this Kinetic Energy");
+    hKineticEnergyAlphaNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Alpha Particles with this Kinetic Energy");
 
     hKineticEnergyAlphaNucleus_FromMembrane->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
-    hKineticEnergyAlphaNucleus_FromMembrane->GetYaxis()->SetTitle("Fraction of Cell Nuclei hit with Alpha Particle with this Kinetic Energy");
+    hKineticEnergyAlphaNucleus_FromMembrane->GetYaxis()->SetTitle("Fraction of Alpha Particles with this Kinetic Energy");
 
     hKineticEnergyAlphaNucleus_FromCytoplasm->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
-    hKineticEnergyAlphaNucleus_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cell Nuclei hit with Alpha Particle with this Kinetic Energy");
+    hKineticEnergyAlphaNucleus_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Alpha Particles with this Kinetic Energy");
 
 }
 
