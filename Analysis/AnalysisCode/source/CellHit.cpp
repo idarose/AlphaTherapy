@@ -29,13 +29,13 @@ CellHit::CellHit(int cellID_in)
     energyDepTotalCell_FromMembrane = 0.0;
     energyDepTotalCell_FromCytoplasm = 0.0;
 
-    energyDepNucleus_FromAlpha = 0.;
-    energyDepMembrane_FromAlpha = 0.;
-    energyDepCytoplasm_FromAlpha = 0.;
-    energyDepTotalCell_FromAlpha = 0.;
+    // energyDepNucleus_FromAlpha = 0.;
+    // energyDepMembrane_FromAlpha = 0.;
+    // energyDepCytoplasm_FromAlpha = 0.;
+    // energyDepTotalCell_FromAlpha = 0.;
 
-    numberHitsAlphas = 0;
-    numberHitsBetas = 0;
+    // numberHitsAlphas = 0;
+    // numberHitsBetas = 0;
 
     double densityWater = 1000. ; // kg/m^3
     double radiusCell = 9.0e-6; // m
@@ -59,20 +59,56 @@ void CellHit::AddEnergyDeposition(double energyDep_in, int volumeTypeInteraction
 
 
 //------------------–----------
-void CellHit::HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha)
+void CellHit::HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha, int volumeTypeOriginDecay_in, double kineticEnergyAlpha)
 {
-    if(volumeTypeHit==1){numberHitsAlphas_Membrane++;}
-    if(volumeTypeHit==2){numberHitsAlphas_Cytoplasm++;}
-    if(volumeTypeHit==3){nummberHitsAlphas_Nucleus++;}
+    if(volumeTypeHit==1)
+    {
+        numberHitsAlphas_Membrane++;
+    }
+    if(volumeTypeHit==2)
+    {
+        numberHitsAlphas_Cytoplasm++;
+    }
+    if(volumeTypeHit==3)
+    {
+        nummberHitsAlphas_Nucleus++;
+        if(volumeTypeOriginDecay_in==0)
+        {
+            kineticEnergyAlphaNucleus_FromSolution_Vec.push_back(kineticEnergyAlpha);
+        }
+        if(volumeTypeOriginDecay_in==1)
+        {
+            kineticEnergyAlphaNucleus_FromMembrane_Vec.push_back(kineticEnergyAlpha);
+        }
+        if(volumeTypeOriginDecay_in==2)
+        {
+            kineticEnergyAlphaNucleus_FromCytoplasm_Vec.push_back(kineticEnergyAlpha);
+        }
+    }
 
-    if(firstTimeCountingAlpha){numberHitsAlphas_TotalCell++;}
+    if(firstTimeCountingAlpha)
+    {
+        numberHitsAlphas_TotalCell++;
+        if(volumeTypeOriginDecay_in==0)
+        {
+            kineticEnergyAlphaTotalCell_FromSolution_Vec.push_back(kineticEnergyAlpha);
+        }
+        if(volumeTypeOriginDecay_in==1)
+        {
+            kineticEnergyAlphaTotalCell_FromMembrane_Vec.push_back(kineticEnergyAlpha);
+        }
+        if(volumeTypeOriginDecay_in==2)
+        {
+            kineticEnergyAlphaTotalCell_FromMembrane_Vec.push_back(kineticEnergyAlpha);
+        }
+    }
 }
 
-//----------------------------
-void CellHit::HitByBetaParticle()
-{
-    numberHitsBetas ++;
-}
+// //----------------------------
+// void CellHit::HitByBetaParticle()
+// {
+//     numberHitsBetas ++;
+// }
 
 
 //------------------–----------
@@ -103,10 +139,10 @@ void CellHit::FinalizeCellHit()
             if(originVolume == 1){energyDepMembrane_FromMembrane += energyDepInteraction;}
             if(originVolume == 2){energyDepMembrane_FromCytoplasm += energyDepInteraction;}
 
-            if(particleType==1000020040)
-            {
-                energyDepMembrane_FromAlpha += energyDepInteraction;
-            }
+            // if(particleType==1000020040)
+            // {
+            //     energyDepMembrane_FromAlpha += energyDepInteraction;
+            // }
         }
         if(interactionVolume==2)
         {
@@ -116,10 +152,10 @@ void CellHit::FinalizeCellHit()
             if(originVolume == 1){energyDepCytoplasm_FromMembrane += energyDepInteraction;}
             if(originVolume == 2){energyDepCytoplasm_FromCytoplasm += energyDepInteraction;}
 
-            if(particleType==1000020040)
-            {
-                energyDepCytoplasm_FromAlpha += energyDepInteraction;
-            }
+            // if(particleType==1000020040)
+            // {
+            //     energyDepCytoplasm_FromAlpha += energyDepInteraction;
+            // }
         }
         if(interactionVolume==3)
         {
@@ -128,14 +164,23 @@ void CellHit::FinalizeCellHit()
             if(originVolume == 0){energyDepNucleus_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepNucleus_FromMembrane += energyDepInteraction;}
             if(originVolume == 2){energyDepNucleus_FromCytoplasm += energyDepInteraction;}
-
-            if(particleType==1000020040)
-            {
-                energyDepNucleus_FromAlpha += energyDepInteraction;
-            }
         }
 
     }
+
+    // //-----------------------------
+    // // Finding fractions for origin of decay
+    // fractionEnergyDepMembrane_FromSolution = energyDepMembrane_FromSolution/energyDepMembrane;
+    // fractionEnergyDepMembrane_FromMembrane = energyDepMembrane_FromMembrane/energyDepMembrane;
+    // fractionEnergyDepMembrane_FromCytoplasm = energyDepMembrane_FromCytoplasm/energyDepMembrane;
+
+    // fractionEnergyDepCytoplasm_FromSolution = energyDepCytoplasm_FromSolution/energyDepCytoplasm;
+    // fractionEnergyDepCytoplasm_FromMembrane = energyDepCytoplasm_FromMembrane/energyDepCytoplasm;
+    // fractionEnergyDepCytoplasm_FromCytoplasm = energyDepCytoplasm_FromCytoplasm/energyDepCytoplasm;
+
+    // fractionEnergyDepNucleus_FromSolution = energyDepNucleus_FromSolution/energyDepNucleus;
+    // fractionEnergyDepNucleus_FromMembrane = energyDepNucleus_FromMembrane/energyDepNucleus;
+    // fractionEnergyDepNucleus_FromCytoplasm = energyDepNucleus_FromCytoplasm/energyDepNucleus;
 
     energyDepTotalCell = energyDepMembrane + energyDepCytoplasm + energyDepNucleus;
 
@@ -143,6 +188,10 @@ void CellHit::FinalizeCellHit()
     energyDepTotalCell_FromMembrane = energyDepMembrane_FromMembrane + energyDepCytoplasm_FromMembrane + energyDepNucleus_FromMembrane;
     energyDepTotalCell_FromCytoplasm = energyDepMembrane_FromCytoplasm + energyDepCytoplasm_FromCytoplasm + energyDepNucleus_FromCytoplasm;
 
-    energyDepTotalCell_FromAlpha = energyDepMembrane_FromAlpha + energyDepNucleus_FromAlpha + energyDepCytoplasm_FromAlpha;
+    // fractionEnergyDepTotalCell_FromSolution = energyDepTotalCell_FromSolution/energyDepTotalCell;
+    // fractionEnergyDepTotalCell_FromMembrane = energyDepTotalCell_FromMembrane/energyDepTotalCell;
+    // fractionEnergyDepTotalCell_FromCytoplasm = energyDepTotalCell_FromCytoplasm/energyDepTotalCell;
+
+    // energyDepTotalCell_FromAlpha = energyDepMembrane_FromAlpha + energyDepNucleus_FromAlpha + energyDepCytoplasm_FromAlpha;
 
 }

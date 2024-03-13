@@ -177,8 +177,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                 // Add energy deposition to cell that has already been hit before
                                 if(cellIDsSolutionSim[i]==storedCellHits[ii].GetCellID())
                                 {
-                                    // Add energy deposition
-                                    // std::cout << "Interaction volume " << volumeTypesSolutionSim[i] << std::endl;
+
                                     storedCellHits[ii].AddEnergyDeposition(energyDepsSolutionSim[i],volumeTypesSolutionSim[i],decayOriginSolution, particleTypeSolutionSim[i]);
 
                                     // Update boolean
@@ -219,7 +218,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                         // If alpha particle type
                                         if(particleTypeSolutionSim[i]==1000020040)
                                         {
-                                            storedCellHits[ii].HitByAlphaParticle(volumeTypesSolutionSim[i],firstTimeCountingTrackInCell);
+                                            storedCellHits[ii].HitByAlphaParticle(volumeTypesSolutionSim[i],firstTimeCountingTrackInCell,decayOriginSolution,kineticEnergySolutionSim[i]);
                                         }
 
                                         // Save the hit and cellID
@@ -243,7 +242,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                 // If alpha particle
                                 if(particleTypeSolutionSim[i]==1000020040)
                                 {
-                                    aNewCellHit.HitByAlphaParticle(volumeTypesSolutionSim[i],true);
+                                    aNewCellHit.HitByAlphaParticle(volumeTypesSolutionSim[i],true,decayOriginSolution,kineticEnergySolutionSim[i]);
                                 }
 
                                 std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsSolutionSim[i],trackIDSolutionSim[i],volumeTypesSolutionSim[i]);
@@ -360,7 +359,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                             // If alpha particle type
                                             if(particleTypeMembraneSim[i]==1000020040)
                                             {
-                                                storedCellHits[ii].HitByAlphaParticle(volumeTypesMembraneSim[i],firstTimeCountingTrackInCell);
+                                                storedCellHits[ii].HitByAlphaParticle(volumeTypesMembraneSim[i],firstTimeCountingTrackInCell,decayOriginMembrane,kineticEnergyMembraneSim[i]);
                                             }
 
                                             // Save the hit and cellID
@@ -383,7 +382,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                     // If alpha particle
                                     if(particleTypeMembraneSim[i]==1000020040)
                                     {
-                                        aNewCellHit.HitByAlphaParticle(volumeTypesMembraneSim[i],true);
+                                        aNewCellHit.HitByAlphaParticle(volumeTypesMembraneSim[i],true,decayOriginMembrane,kineticEnergyMembraneSim[i]);
                                     }
 
                                     std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsMembraneSim[i],trackIDMembraneSim[i],volumeTypesMembraneSim[i]);
@@ -503,8 +502,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                             // If alapha particle type
                                             if(particleTypeCytoplasmSim[i]==1000020040)
                                             {
-                                                storedCellHits[ii].HitByAlphaParticle(volumeTypesCytoplasmSim[i],firstTimeCountingTrackInCell);
-                                                // std::cout << "New track : "<< cellIDsCytoplasmSim[i] << " , " << trackIDCytoplasmSim[i] << " , " << particleTypeCytoplasmSim[i] << std::endl;
+                                                storedCellHits[ii].HitByAlphaParticle(volumeTypesCytoplasmSim[i],firstTimeCountingTrackInCell,decayOriginCytoplasm,kineticEnergyCytoplasmSim[i]);
                                             }
 
                                             // Save the hit and cellID
@@ -526,7 +524,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                     // If alpha particle
                                     if(particleTypeCytoplasmSim[i]==1000020040)
                                     {
-                                        aNewCellHit.HitByAlphaParticle(volumeTypesCytoplasmSim[i],true);
+                                        aNewCellHit.HitByAlphaParticle(volumeTypesCytoplasmSim[i],true,decayOriginCytoplasm, kineticEnergyCytoplasmSim[i]);
                                     }
 
                                     std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsCytoplasmSim[i],trackIDCytoplasmSim[i],volumeTypesCytoplasmSim[i]);
@@ -548,19 +546,27 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
         }
 
 
+        int totalNumberHitsAlphaTotalCell = 0;
+        int totalNumberHitsAlphaNucleus = 0;
+
         //------------------–----------
         // Looping over all stored cell energy depositions
         for(int i=0; i<storedCellHits.size(); i++)
         {
             // Adding cell energy depositions to histograms
             storedCellHits[i].FinalizeCellHit();
-            // energyDepCytoplasmVec.push_back(storedCellHits[i].GetEnergyDepositionCytoplasm());
+
+            totalNumberHitsAlphaTotalCell += storedCellHits[i].GetNumberHitsAlphas_TotalCell();
+            totalNumberHitsAlphaNucleus += storedCellHits[i].GetNumberHitsAlphas_Nucleus();
+
             energyDepHistograms.AddCellHitsToHistograms(storedCellHits[i]);
-
-
         }
 
+        energyDepHistograms.ScaleHistogramKineticEnergyAlphas_PerIteration((double)totalNumberHitsAlphaTotalCell, ((double)totalNumberHitsAlphaNucleus));
+
         promises[itNum-1].set_value(energyDepHistograms);
+
+        std::cout << "In cell : " << totalNumberHitsAlphaTotalCell << " In nucleus : " << totalNumberHitsAlphaNucleus << std::endl;
 
     };
 
@@ -577,17 +583,12 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     // Making instance of added histograms
     AddEnergyDepositionHistograms addHistograms;
 
-    std::cout << "Test 1" << std::endl;
     //------------------–----------
     std::string filepathSimulationOutput = "../../GEANT4Simulations/OutputCellDamageSimulation/";
-
-    std::cout << "Test 1" << std::endl;
 
     std::vector<TFile*> inputFiles_solution;
     std::vector<TFile*> inputFiles_membrane;
     std::vector<TFile*> inputFiles_cytoplasm;
-
-    std::cout << "Test 2" << std::endl;
 
     for(int i=0; i<numberIterations; i++)
     {
@@ -600,9 +601,6 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
         inputFiles_cytoplasm.push_back(new TFile(filepathCytoplasmIteration_i.c_str(), "READ"));
     }
 
-    std::cout << "Test 2" << std::endl;
-
-    std::cout << "Test 3" << std::endl;
 
     //------------------–----------
     // Filling histgrams
@@ -610,15 +608,6 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     {
         threads.push_back(std::thread(MakeHistogramOneIteration, inputFiles_solution[i], inputFiles_membrane[i], inputFiles_cytoplasm[i], i+1));
     }
-
-    std::cout << "Test 3" << std::endl;
-
-    std::cout << "Test 4" << std::endl;
-
-    // for(int i=0; i<numberIterations; i++)
-    // {
-    //     threads[i].join();
-    // }
 
     // Join threads and handle exceptions.
     for (int i=0; i < numberIterations; ++i) {
@@ -636,23 +625,16 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
         }
     }
 
-    std::cout << "Test 4" << std::endl;
-
-    std::cout << "Test 5" << std::endl;
-
 
     // Retrieve and print the results from the futures
     for (auto &future : futures) {
         addHistograms.AddHistograms(histMain, future.get());
     }
 
-    std::cout << "Test 5" << std::endl;
-
-
     //------------------–----------
     // Scaling histograms
-    double scalingFactor = decayDynamicsInstance.GetNumberCells()*((double) numberIterations);
-    histMain.ScaleHistograms(1./scalingFactor);
+    // double scalingFactor = decayDynamicsInstance.GetNumberCells()*((double) numberIterations);
+    histMain.ScaleHistograms(decayDynamicsInstance.GetNumberCells(), ((double)numberIterations));
 
 
     //------------------–----------

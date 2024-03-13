@@ -13,25 +13,29 @@ EnergyDepositionHistograms::EnergyDepositionHistograms(double EMax_in, int itera
 //------------------–----------
 void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDynamicsInstance)
 {
-    int NBins_eVBinning = std::pow(10.,6.);
-    double EMin_eVBinning = 0.;
-    double EMax_eVBinning = 1.;
+    int NBins_eVBinning = std::pow(10.,6.); // 1 eV binning
+    double EMin_eVBinning = 0.; //MeV
+    double EMax_eVBinning = 1.; //MeV
 
-    int NBins_keVBinning = 3.*std::pow(10.,4.);
-    double EMin_keVBinning = 0.;
-    double EMax_keVBinning = 300.;
+    int NBins_keVBinning = 3.*std::pow(10.,4.); // 10 keV binning
+    double EMin_keVBinning = 0.; //MeV
+    double EMax_keVBinning = 300.; //MeV
 
-    int NBins_Hits = 700;
+    int NBins_Hits = 700; // 1 hit binning
     double MaxHits = 700.;
     double MinHits = 0.;
 
-    int NBins_mGyBinning = 8.*std::pow(10.,4.);
-    double MaxDose_mGyBinning = 800.;
-    double MinDose_mGyBinning = 0.;
+    int NBins_mGyBinning = 8.*std::pow(10.,4.); // 1 m Gy binning
+    double MaxDose_mGyBinning = 800.; //Gy
+    double MinDose_mGyBinning = 0.; //Gy
 
-    int NBins_uGyBinning = std::pow(10.,6.);
-    double MaxDose_uGyBinning = 10.;
-    double MinDose_uGyBinning = 0.;
+    int NBins_uGyBinning = std::pow(10.,6.); // 1 mu Gy binning
+    double MaxDose_uGyBinning = 10.; //Gy
+    double MinDose_uGyBinning = 0.; //Gy
+
+    int NBins_KineticEnergy = std::pow(10.,6.); // 10 eV Binning
+    double Ekin_Max = 10.; //MeV
+    double EkinMin = 0.; //MeV
 
 
 
@@ -83,76 +87,76 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
     hEnergyDepsCytoplasm_keVBinning = new TH1D(histogramNameCytoplasm_keVBinning.c_str(), "Energy Deposition in Cell Cytoplasm", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
     hEnergyDepsTotalCell_keVBinning = new TH1D(histogramNameTotalCell_keVBinning.c_str(), "Energy Deposition in Cell", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
-    hEnergyDepsNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Solution) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Energy Deposition in Cell Nucleus (Decay originated in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Energy Deposition in Cell Nucleus (from Decays originating in Solution) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Energy Deposition in Cell Nucleus (from Decays originating in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Energy Deposition in Cell Nucleus (from Decays originating in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
-    hEnergyDepsMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Solution) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Energy Deposition in Cell Membrane (Decay originated in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Energy Deposition in Cell Membrane (from Decays originating in Solution)", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Energy Deposition in Cell Membrane (from Decays originating in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Energy Deposition in Cell Membrane (from Decays originating in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
-    hEnergyDepsCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Solution) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Energy Deposition in Cell Cytoplasm (Decay originated in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Energy Deposition in Cell Cytoplasm (from Decays originating in Solution) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Energy Deposition in Cell Cytoplasm (from Decays originating in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Energy Deposition in Cell Cytoplasm (from Decays originating in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
-    hEnergyDepsTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Energy Deposition in Cell (Decay originated in Solution) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Energy Deposition in Cell (Decay originated in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
-    hEnergyDepsTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Energy Deposition in Cell (Decay originated in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Energy Deposition in Cell (from Decays originating in Solution) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Energy Deposition in Cell (from Decays originating in Membrane) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
+    hEnergyDepsTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Energy Deposition in Cell (from Decays originating in Cytoplasm) ", NBins_keVBinning, EMin_keVBinning, EMax_keVBinning);
 
 
     // naming axis
     hEnergyDepsMembrane_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembrane_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsMembrane_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Membrane");
 
     hEnergyDepsCytoplasm_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCytoplasm_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsCytoplasm_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Cytoplasm");
 
     hEnergyDepsNucleus_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleus_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsNucleus_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Nucleus");
 
     hEnergyDepsTotalCell_eVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
     hEnergyDepsTotalCell_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
 
     hEnergyDepsMembrane_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembrane_keVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsMembrane_keVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Membrane");
 
     hEnergyDepsCytoplasm_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCytoplasm_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsCytoplasm_keVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Cytoplasm");
 
     hEnergyDepsNucleus_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleus_eVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsNucleus_keVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Nucleus");
 
     hEnergyDepsTotalCell_keVBinning->GetXaxis()->SetTitle("Energy Deposition [MeV]");
     hEnergyDepsTotalCell_keVBinning->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
 
     hEnergyDepsNucleus_FromSolution->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Nucleus");
 
     hEnergyDepsNucleus_FromMembrane->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleus_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsNucleus_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Nucleus");
 
     hEnergyDepsNucleus_FromCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsNucleus_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsNucleus_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Nucleus");
 
 
     hEnergyDepsMembrane_FromSolution->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembrane_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsMembrane_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Membrane");
 
     hEnergyDepsMembrane_FromMembrane->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembrane_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsMembrane_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Membrane");
 
     hEnergyDepsMembrane_FromCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsMembrane_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsMembrane_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Membrane");
 
 
     hEnergyDepsCytoplasm_FromSolution->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCytoplasm_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsCytoplasm_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Cytoplasm");
 
     hEnergyDepsCytoplasm_FromMembrane->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCytoplasm_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsCytoplasm_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Cytoplasm");
 
     hEnergyDepsCytoplasm_FromCytoplasm->GetXaxis()->SetTitle("Energy Deposition [MeV]");
-    hEnergyDepsCytoplasm_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy");
+    hEnergyDepsCytoplasm_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit With this Energy in Cytoplasm");
 
 
     hEnergyDepsTotalCell_FromSolution->GetXaxis()->SetTitle("Energy Deposition [MeV]");
@@ -182,16 +186,16 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
 
 
     // Naming axis
-    hEnergyDepsTotalCell_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsTotalCell_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition in Cell [MeV]");
     hEnergyDepsTotalCell_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
 
-    hEnergyDepsNucleus_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsNucleus_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition in Nucleus [MeV]");
     hEnergyDepsNucleus_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
 
-    hEnergyDepsMembrane_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsMembrane_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition in Membrane [MeV]");
     hEnergyDepsMembrane_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
 
-    hEnergyDepsCytoplasm_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition [MeV]");
+    hEnergyDepsCytoplasm_HitsAlpha->GetXaxis()->SetTitle("Energy Deposition in Cytoplasm [MeV]");
     hEnergyDepsCytoplasm_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
 
 
@@ -212,16 +216,16 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
 
     // Naming axis
     hFractionHitsAlpha_TotalCell->GetXaxis()->SetTitle("N Number of hits by Alpha Particle");
-    hFractionHitsAlpha_TotalCell->GetYaxis()->SetTitle("Fraction of cells hit");
+    hFractionHitsAlpha_TotalCell->GetYaxis()->SetTitle("Fraction of cells hit N Number of Times");
 
     hFractionHitsAlpha_Nucleus->GetXaxis()->SetTitle("N Number of hits by Alpha Particle");
-    hFractionHitsAlpha_Nucleus->GetYaxis()->SetTitle("Fraction of cells hit");
+    hFractionHitsAlpha_Nucleus->GetYaxis()->SetTitle("Fraction of cells hit N Number of Times");
 
     hFractionHitsAlpha_Membrane->GetXaxis()->SetTitle("N Number of hits by Alpha Particle");
-    hFractionHitsAlpha_Membrane->GetYaxis()->SetTitle("Fraction of cells hit");
+    hFractionHitsAlpha_Membrane->GetYaxis()->SetTitle("Fraction of cells hit N Number of Times");
 
     hFractionHitsAlpha_Cytoplasm->GetXaxis()->SetTitle("N Number of hits by Alpha Particle");
-    hFractionHitsAlpha_Cytoplasm->GetYaxis()->SetTitle("Fraction of cells hit");
+    hFractionHitsAlpha_Cytoplasm->GetYaxis()->SetTitle("Fraction of cells hit N Number of Times");
 
 
     //-----------------------------
@@ -267,75 +271,75 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
     hDoseCytoplasm_mGyBinning = new TH1D(histogramNameCytoplasm_mGyBinning.c_str(), "Dose Delivered in Cell Cytoplasm", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
     hDoseTotalCell_mGyBinning = new TH1D(histogramNameTotalCell_mGyBinning.c_str(), "Dose Delivered in Cell", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Dose Delivered in Cell Nucleus (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Dose Delivered in Cell Nucleus (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Dose Delivered in Cell Nucleus (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Dose Delivered in Cell Nucleus (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Dose Delivered in Cell Membrane (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Dose Delivered in Cell Membrane (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Dose Delivered in Cell Cytoplasm (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Dose Delivered in Cell Cytoplasm (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Dose Delivered in Cell Cytoplasm (from Decays originating in Cytoplasm)  ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
-    hDoseTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Dose Delivered in Cell (Decay originated in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Dose Delivered in Cell (Decay originated in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Dose Delivered in Cell (Decay originated in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Dose Delivered in Cell (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Dose Delivered in Cell (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Dose Delivered in Cell (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
     // Naming axis
     hDoseMembrane_uGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseMembrane_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with this Dose");
+    hDoseMembrane_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with this Dose in Membrane");
 
     hDoseCytoplasm_uGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseCytoplasm_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseCytoplasm_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Cytoplasm");
 
     hDoseNucleus_uGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseNucleus_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseNucleus_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Nucleus");
 
-    hDoseTotalCell_uGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
+    hDoseTotalCell_uGyBinning->GetXaxis()->SetTitle("Dose Delivered in Cell [Gy]");
     hDoseTotalCell_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
 
     hDoseMembrane_mGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseMembrane_mGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseMembrane_mGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Membrane");
 
     hDoseCytoplasm_mGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseCytoplasm_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseCytoplasm_mGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Cytoplasm");
 
     hDoseNucleus_mGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseNucleus_uGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseNucleus_mGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Nucleus");
 
     hDoseTotalCell_mGyBinning->GetXaxis()->SetTitle("Dose Delivered [Gy]");
     hDoseTotalCell_mGyBinning->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
 
     hDoseNucleus_FromSolution->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Nucleus");
 
     hDoseNucleus_FromMembrane->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseNucleus_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseNucleus_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Nucleus");
 
     hDoseNucleus_FromCytoplasm->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseNucleus_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseNucleus_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Nucleus");
 
 
     hDoseMembrane_FromSolution->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseMembrane_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseMembrane_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Membrane");
 
     hDoseMembrane_FromMembrane->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseMembrane_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseMembrane_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Membrane");
 
     hDoseMembrane_FromCytoplasm->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseMembrane_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseMembrane_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Membrane");
 
 
     hDoseCytoplasm_FromSolution->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseCytoplasm_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseCytoplasm_FromSolution->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Cytoplasm");
 
     hDoseCytoplasm_FromMembrane->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseCytoplasm_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseCytoplasm_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Cytoplasm");
 
     hDoseCytoplasm_FromCytoplasm->GetXaxis()->SetTitle("Dose Delivered [Gy]");
-    hDoseCytoplasm_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose");
+    hDoseCytoplasm_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells Hit with This Dose in Cytoplasm");
 
 
     hDoseTotalCell_FromSolution->GetXaxis()->SetTitle("Dose Delivered [Gy]");
@@ -364,17 +368,61 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
 
 
     // Naming axis
-    hDoseTotalCell_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered[Gy]");
+    hDoseTotalCell_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered in Cell [Gy]");
     hDoseTotalCell_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
 
-    hDoseNucleus_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered[Gy]");
+    hDoseNucleus_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered in Nucleus [Gy]");
     hDoseNucleus_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
 
-    hDoseMembrane_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered[Gy]");
+    hDoseMembrane_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered in Membrane [Gy]");
     hDoseMembrane_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
 
-    hDoseCytoplasm_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered[Gy]");
+    hDoseCytoplasm_HitsAlpha->GetXaxis()->SetTitle("Dose Delivered in Cytoplasm [Gy]");
     hDoseCytoplasm_HitsAlpha->GetYaxis()->SetTitle("N Number of Hits by Alpha Particle");
+
+
+    //----------------------------
+    // Histograms for kinetic energy of the alpha particle
+
+    // Setting names
+    std::string histogramNameKineticEnergyAlpha_generalName = "i" + std::to_string(it) + "_hKineticEnergyAlpha_212Pb_" + decayDynamicsInstance.GetCellLine() + "_" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_";
+
+    std::string historamNameKineticEnergyTotalCell_FromSolution = histogramNameKineticEnergyAlpha_generalName + "TotalCell_FromSolution";
+    std::string historamNameKineticEnergyTotalCell_FromMembrane = histogramNameKineticEnergyAlpha_generalName + "TotalCell_FromMembrane";
+    std::string historamNameKineticEnergyTotalCell_FromCytoplasm = histogramNameKineticEnergyAlpha_generalName + "TotalCell_FromCytoplasm";
+
+    std::string historamNameKineticEnergyNucleus_FromSolution = histogramNameKineticEnergyAlpha_generalName + "Nucleus_FromSolution";
+    std::string historamNameKineticEnergyNucleus_FromMembrane = histogramNameKineticEnergyAlpha_generalName + "Nucleus_FromMembrane";
+    std::string historamNameKineticEnergyNucleus_FromCytoplasm = histogramNameKineticEnergyAlpha_generalName + "Nucleus_FromCytoplasm";
+
+    // Making empty histograms
+    hKineticEnergyAlphaTotalCell_FromSolution = new TH1D(historamNameKineticEnergyTotalCell_FromSolution.c_str(), "Kinetic Energy of Alpha Particle when First Entering Cell (from Decays Originating in Solution)", NBins_KineticEnergy, EkinMin, Ekin_Max);
+    hKineticEnergyAlphaTotalCell_FromMembrane =  new TH1D(historamNameKineticEnergyTotalCell_FromMembrane.c_str(), "Kinetic Energy of Alpha Particle when First Entering Cell (from Decays Originating in Membrane)", NBins_KineticEnergy, EkinMin, Ekin_Max);
+    hKineticEnergyAlphaTotalCell_FromCytoplasm = new TH1D(historamNameKineticEnergyTotalCell_FromCytoplasm.c_str(), "Kinetic Energy of Alpha Particle when First Entering Cell (from Decays Originating in Cytoplasm)", NBins_KineticEnergy, EkinMin, Ekin_Max);
+
+    hKineticEnergyAlphaNucleus_FromSolution = new TH1D(historamNameKineticEnergyNucleus_FromSolution.c_str(), "Kinetic Energy of Alpha Particle when First Entering Cell Nucleus (from Decays Originating in Solution)", NBins_KineticEnergy, EkinMin, Ekin_Max);
+    hKineticEnergyAlphaNucleus_FromMembrane = new TH1D(historamNameKineticEnergyNucleus_FromMembrane.c_str(), "Kinetic Energy of Alpha Particle when First Entering Cell Nucleus (from Decays Originating in Membrane)", NBins_KineticEnergy, EkinMin, Ekin_Max);
+    hKineticEnergyAlphaNucleus_FromCytoplasm = new TH1D(historamNameKineticEnergyNucleus_FromCytoplasm.c_str(), "Kinetic Energy of Alpha Particle when First Entering Cell Nucleus (from Decays Originating in Cytoplasm)", NBins_KineticEnergy, EkinMin, Ekin_Max);
+
+    // Naming axis
+    hKineticEnergyAlphaTotalCell_FromSolution->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
+    hKineticEnergyAlphaTotalCell_FromSolution->GetYaxis()->SetTitle("Fraction of Cells hit with Alpha Particle with this Kinetic Energy");
+
+    hKineticEnergyAlphaTotalCell_FromMembrane->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
+    hKineticEnergyAlphaTotalCell_FromMembrane->GetYaxis()->SetTitle("Fraction of Cells hit with Alpha Particle with this Kinetic Energy");
+
+    hKineticEnergyAlphaTotalCell_FromCytoplasm->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
+    hKineticEnergyAlphaTotalCell_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cells hit with Alpha Particle with this Kinetic Energy");
+
+    hKineticEnergyAlphaNucleus_FromSolution->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
+    hKineticEnergyAlphaNucleus_FromSolution->GetYaxis()->SetTitle("Fraction of Cell Nuclei hit with Alpha Particle with this Kinetic Energy");
+
+    hKineticEnergyAlphaNucleus_FromMembrane->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
+    hKineticEnergyAlphaNucleus_FromMembrane->GetYaxis()->SetTitle("Fraction of Cell Nuclei hit with Alpha Particle with this Kinetic Energy");
+
+    hKineticEnergyAlphaNucleus_FromCytoplasm->GetXaxis()->SetTitle("Kinetic Energy of Alpha Particle [MeV]");
+    hKineticEnergyAlphaNucleus_FromCytoplasm->GetYaxis()->SetTitle("Fraction of Cell Nuclei hit with Alpha Particle with this Kinetic Energy");
+
 }
 
 //------------------–----------
@@ -536,89 +584,140 @@ void EnergyDepositionHistograms::AddCellHitsToHistograms(CellHit cellHit)
     if(cellHit.GetEnergyDepositionMembrane()>0.0){hFractionHitsAlpha_Membrane->Fill(cellHit.GetNumberHitsAlphas_Membrane());}
     if(cellHit.GetEnergyDepositionCytoplasm()>0.0){hFractionHitsAlpha_Cytoplasm->Fill(cellHit.GetNumberHitsAlphas_Cytoplasm());}
 
+    //-------------------------------
+    // Filling alpha particle kinetic energy histograms
+
+    // Total cell
+    for(int i=0; i<cellHit.GetKineticEnergyAlphaTotalCell_FromSolution_Vec().size(); i++)
+    {
+        hKineticEnergyAlphaTotalCell_FromSolution->Fill(cellHit.GetKineticEnergyAlphaTotalCell_FromSolution_Vec()[i]);
+    }
+    for(int i=0; i<cellHit.GetKineticEnergyAlphaTotalCell_FromMembrane_Vec().size(); i++)
+    {
+        hKineticEnergyAlphaTotalCell_FromMembrane->Fill(cellHit.GetKineticEnergyAlphaTotalCell_FromMembrane_Vec()[i]);
+    }
+    for(int i=0; i<cellHit.GetKineticEnergyAlphaTotalCell_FromCytoplasm_Vec().size(); i++)
+    {
+        hKineticEnergyAlphaTotalCell_FromCytoplasm->Fill(cellHit.GetKineticEnergyAlphaTotalCell_FromCytoplasm_Vec()[i]);
+    }
+
+    // Nucleus
+    for(int i=0; i<cellHit.GetKineticEnergyAlphaNucleus_FromSolution_Vec().size(); i++)
+    {
+        hKineticEnergyAlphaNucleus_FromSolution->Fill(cellHit.GetKineticEnergyAlphaNucleus_FromSolution_Vec()[i]);
+    }
+    for(int i=0; i<cellHit.GetKineticEnergyAlphaNucleus_FromMembrane_Vec().size(); i++)
+    {
+        hKineticEnergyAlphaNucleus_FromMembrane->Fill(cellHit.GetKineticEnergyAlphaNucleus_FromMembrane_Vec()[i]);
+    }
+    for(int i=0; i<cellHit.GetKineticEnergyAlphaNucleus_FromCytoplasm_Vec().size(); i++)
+    {
+        hKineticEnergyAlphaNucleus_FromCytoplasm->Fill(cellHit.GetKineticEnergyAlphaNucleus_FromCytoplasm_Vec()[i]);
+    }
 }
 
 //------------------–----------
-void EnergyDepositionHistograms::ScaleHistograms(double factor)
+void EnergyDepositionHistograms::ScaleHistograms(double numberCells_in, double numberIterations_in)
 {
     //---------------------------
     // Scaling histograms
 
     //--------------------
     // Energy deposition histograms
-    hEnergyDepsMembrane_eVBinning->Scale(factor);
-    hEnergyDepsCytoplasm_eVBinning->Scale(factor);
-    hEnergyDepsNucleus_eVBinning->Scale(factor);
-    hEnergyDepsTotalCell_eVBinning->Scale(factor);
+    hEnergyDepsMembrane_eVBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsCytoplasm_eVBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsNucleus_eVBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsTotalCell_eVBinning->Scale(1./(numberCells_in*numberIterations_in));
 
-    hEnergyDepsMembrane_keVBinning->Scale(factor);
-    hEnergyDepsCytoplasm_keVBinning->Scale(factor);
-    hEnergyDepsNucleus_keVBinning->Scale(factor);
-    hEnergyDepsTotalCell_keVBinning->Scale(factor);
+    hEnergyDepsMembrane_keVBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsCytoplasm_keVBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsNucleus_keVBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsTotalCell_keVBinning->Scale(1./(numberCells_in*numberIterations_in));
 
-    hEnergyDepsNucleus_FromSolution->Scale(factor);
-    hEnergyDepsNucleus_FromMembrane->Scale(factor);
-    hEnergyDepsNucleus_FromCytoplasm->Scale(factor);
+    hEnergyDepsNucleus_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsNucleus_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsNucleus_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
-    hEnergyDepsMembrane_FromSolution->Scale(factor);
-    hEnergyDepsMembrane_FromMembrane->Scale(factor);
-    hEnergyDepsMembrane_FromCytoplasm->Scale(factor);
+    hEnergyDepsMembrane_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsMembrane_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsMembrane_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
-    hEnergyDepsCytoplasm_FromSolution->Scale(factor);
-    hEnergyDepsCytoplasm_FromMembrane->Scale(factor);
-    hEnergyDepsCytoplasm_FromCytoplasm->Scale(factor);
+    hEnergyDepsCytoplasm_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsCytoplasm_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsCytoplasm_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
-    hEnergyDepsTotalCell_FromSolution->Scale(factor);
-    hEnergyDepsTotalCell_FromMembrane->Scale(factor);
-    hEnergyDepsTotalCell_FromCytoplasm->Scale(factor);
+    hEnergyDepsTotalCell_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsTotalCell_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsTotalCell_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
     //--------------------------------
     // Dose histograms
 
-    hDoseMembrane_uGyBinning->Scale(factor);
-    hDoseCytoplasm_uGyBinning->Scale(factor);
-    hDoseNucleus_uGyBinning->Scale(factor);
-    hDoseTotalCell_uGyBinning->Scale(factor);
+    hDoseMembrane_uGyBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseCytoplasm_uGyBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseNucleus_uGyBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseTotalCell_uGyBinning->Scale(1./(numberCells_in*numberIterations_in));
 
-    hDoseMembrane_mGyBinning->Scale(factor);
-    hDoseCytoplasm_mGyBinning->Scale(factor);
-    hDoseNucleus_mGyBinning->Scale(factor);
-    hDoseTotalCell_mGyBinning->Scale(factor);
+    hDoseMembrane_mGyBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseCytoplasm_mGyBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseNucleus_mGyBinning->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseTotalCell_mGyBinning->Scale(1./(numberCells_in*numberIterations_in));
 
-    hDoseNucleus_FromSolution->Scale(factor);
-    hDoseNucleus_FromMembrane->Scale(factor);
-    hDoseNucleus_FromCytoplasm->Scale(factor);
+    hDoseNucleus_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseNucleus_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseNucleus_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
-    hDoseMembrane_FromSolution->Scale(factor);
-    hDoseMembrane_FromMembrane->Scale(factor);
-    hDoseMembrane_FromCytoplasm->Scale(factor);
+    hDoseMembrane_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseMembrane_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseMembrane_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
-    hDoseCytoplasm_FromSolution->Scale(factor);
-    hDoseCytoplasm_FromMembrane->Scale(factor);
-    hDoseCytoplasm_FromCytoplasm->Scale(factor);
+    hDoseCytoplasm_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseCytoplasm_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseCytoplasm_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
-    hDoseTotalCell_FromSolution->Scale(factor);
-    hDoseTotalCell_FromMembrane->Scale(factor);
-    hDoseTotalCell_FromCytoplasm->Scale(factor);
+    hDoseTotalCell_FromSolution->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseTotalCell_FromMembrane->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseTotalCell_FromCytoplasm->Scale(1./(numberCells_in*numberIterations_in));
 
     //--------------------------------
     // Number of times hit vs energy deposition 2D histograms
-    hEnergyDepsTotalCell_HitsAlpha->Scale(factor);
-    hEnergyDepsNucleus_HitsAlpha->Scale(factor);
-    hEnergyDepsMembrane_HitsAlpha->Scale(factor);
-    hEnergyDepsCytoplasm_HitsAlpha->Scale(factor);
+    hEnergyDepsTotalCell_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsNucleus_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsMembrane_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsCytoplasm_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
 
-    hDoseTotalCell_HitsAlpha->Scale(factor);
-    hDoseNucleus_HitsAlpha->Scale(factor);
-    hDoseMembrane_HitsAlpha->Scale(factor);
-    hDoseCytoplasm_HitsAlpha->Scale(factor);
+    hDoseTotalCell_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseNucleus_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseMembrane_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hDoseCytoplasm_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
 
     //-------------------------------
     // Hit multiplicity histograms
-    hFractionHitsAlpha_TotalCell->Scale(factor);
-    hFractionHitsAlpha_Nucleus->Scale(factor);
-    hFractionHitsAlpha_Membrane->Scale(factor);
-    hFractionHitsAlpha_Cytoplasm->Scale(factor);
+    hFractionHitsAlpha_TotalCell->Scale(1./(numberCells_in*numberIterations_in));
+    hFractionHitsAlpha_Nucleus->Scale(1./(numberCells_in*numberIterations_in));
+    hFractionHitsAlpha_Membrane->Scale(1./(numberCells_in*numberIterations_in));
+    hFractionHitsAlpha_Cytoplasm->Scale(1./(numberCells_in*numberIterations_in));
+
+    // Kinetic energy of alphas histogram
+    hKineticEnergyAlphaTotalCell_FromSolution->Scale(1./numberIterations_in);
+    hKineticEnergyAlphaTotalCell_FromMembrane->Scale(1./numberIterations_in);
+    hKineticEnergyAlphaTotalCell_FromCytoplasm->Scale(1./numberIterations_in);
+
+    hKineticEnergyAlphaNucleus_FromSolution->Scale(1./numberIterations_in);
+    hKineticEnergyAlphaNucleus_FromMembrane->Scale(1./numberIterations_in);
+    hKineticEnergyAlphaNucleus_FromCytoplasm->Scale(1./numberIterations_in);
+}
+
+void EnergyDepositionHistograms::ScaleHistogramKineticEnergyAlphas_PerIteration(double numberHitsAlphasTotalCell_ThisIteration, double numberHitsAlphasNucleus_ThisIteration)
+{
+    // Kinetic energy of alphas histogram
+    hKineticEnergyAlphaTotalCell_FromSolution->Scale(1./numberHitsAlphasTotalCell_ThisIteration);
+    hKineticEnergyAlphaTotalCell_FromMembrane->Scale(1./numberHitsAlphasTotalCell_ThisIteration);
+    hKineticEnergyAlphaTotalCell_FromCytoplasm->Scale(1./numberHitsAlphasTotalCell_ThisIteration);
+
+    hKineticEnergyAlphaNucleus_FromSolution->Scale(1./numberHitsAlphasNucleus_ThisIteration);
+    hKineticEnergyAlphaNucleus_FromMembrane->Scale(1./numberHitsAlphasNucleus_ThisIteration);
+    hKineticEnergyAlphaNucleus_FromCytoplasm->Scale(1./numberHitsAlphasNucleus_ThisIteration);
 }
 
 //------------------–----------
@@ -706,6 +805,16 @@ void EnergyDepositionHistograms::WriteHistogramsToFile()
     hFractionHitsAlpha_Nucleus->Write();
     hFractionHitsAlpha_Membrane->Write();
     hFractionHitsAlpha_Cytoplasm->Write();
+
+
+    // Kinetic energy of alphas histogram
+    hKineticEnergyAlphaTotalCell_FromSolution->Write();
+    hKineticEnergyAlphaTotalCell_FromMembrane->Write();
+    hKineticEnergyAlphaTotalCell_FromCytoplasm->Write();
+
+    hKineticEnergyAlphaNucleus_FromSolution->Write();
+    hKineticEnergyAlphaNucleus_FromMembrane->Write();
+    hKineticEnergyAlphaNucleus_FromCytoplasm->Write();
 }
 
 void EnergyDepositionHistograms::ResetHistograms()
@@ -789,4 +898,6 @@ void EnergyDepositionHistograms::ResetHistograms()
     hFractionHitsAlpha_Nucleus->Reset();
     hFractionHitsAlpha_Membrane->Reset();
     hFractionHitsAlpha_Cytoplasm->Reset();
+
+
 }

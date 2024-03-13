@@ -33,7 +33,8 @@ class EnergyDepositionHistograms
 
         void GenerateEmptyHistograms(DecayDynamics decayDynamicsInstance);
         void AddCellHitsToHistograms(CellHit cellHit);
-        void ScaleHistograms(double factor);
+        void ScaleHistograms(double numberCells_in, double numberIterations_in);
+        void ScaleHistogramKineticEnergyAlphas_PerIteration(double numberHitsAlphasTotalCell_ThisIteration, double numberHitsAlphasNucleus_ThisIteration);
         void WriteHistogramsToFile();
         void ResetHistograms();
 
@@ -60,7 +61,6 @@ class EnergyDepositionHistograms
         TH1D *hEnergyDepsMembrane_FromMembrane;
         TH1D *hEnergyDepsMembrane_FromCytoplasm;
 
-
         // Histogram for total energy deposited in one cytoplasm per number of cells
         TH1D *hEnergyDepsCytoplasm_eVBinning;
         TH1D *hEnergyDepsCytoplasm_keVBinning;
@@ -80,12 +80,6 @@ class EnergyDepositionHistograms
         TH2D *hEnergyDepsNucleus_HitsAlpha;
         TH2D *hEnergyDepsMembrane_HitsAlpha;
         TH2D *hEnergyDepsCytoplasm_HitsAlpha;
-
-        // General hit histogram
-        TH1D *hFractionHitsAlpha_TotalCell;
-        TH1D *hFractionHitsAlpha_Nucleus;
-        TH1D *hFractionHitsAlpha_Membrane;
-        TH1D *hFractionHitsAlpha_Cytoplasm;
 
         //--------------------------
         // Dose histograms
@@ -119,11 +113,31 @@ class EnergyDepositionHistograms
         TH1D *hDoseTotalCell_FromMembrane;
         TH1D *hDoseTotalCell_FromCytoplasm;
 
-        // Histograms for number of hits by alpha particles
+        // Histograms for dose per number of hits by alpha particles
         TH2D* hDoseTotalCell_HitsAlpha;
         TH2D* hDoseNucleus_HitsAlpha;
         TH2D* hDoseMembrane_HitsAlpha;
         TH2D* hDoseCytoplasm_HitsAlpha;
+
+        //-------------------------
+        // Alpha particle hits histograms
+
+        //--------------------------
+        // Hit multiplicity histograms
+        TH1D *hFractionHitsAlpha_TotalCell;
+        TH1D *hFractionHitsAlpha_Nucleus;
+        TH1D *hFractionHitsAlpha_Membrane;
+        TH1D *hFractionHitsAlpha_Cytoplasm;
+
+        //-----------------------
+        // Histrogram for kinetic energy of alpha particle before entering a volume
+        TH1D* hKineticEnergyAlphaTotalCell_FromSolution;
+        TH1D* hKineticEnergyAlphaTotalCell_FromMembrane;
+        TH1D* hKineticEnergyAlphaTotalCell_FromCytoplasm;
+
+        TH1D* hKineticEnergyAlphaNucleus_FromSolution;
+        TH1D* hKineticEnergyAlphaNucleus_FromMembrane;
+        TH1D* hKineticEnergyAlphaNucleus_FromCytoplasm;
 };
 
 #endif // ENERGYDEPOSITIONHISTOGRAMS_HPP

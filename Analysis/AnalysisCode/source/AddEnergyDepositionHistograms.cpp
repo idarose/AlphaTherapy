@@ -76,9 +76,24 @@ void AddEnergyDepositionHistograms::AddHistograms(EnergyDepositionHistograms& h1
         h1.hDoseTotalCell_FromMembrane->Add(h2.hDoseTotalCell_FromMembrane);
         h1.hDoseTotalCell_FromCytoplasm->Add(h2.hDoseTotalCell_FromCytoplasm);
 
+        //--------------------------
+        // Hits by alpha alpha particle
+
         // Histograms for number of hits by alpha particles
         h1.hDoseTotalCell_HitsAlpha->Add(h2.hDoseTotalCell_HitsAlpha);
         h1.hDoseNucleus_HitsAlpha->Add(h2.hDoseNucleus_HitsAlpha);
         h1.hDoseMembrane_HitsAlpha->Add(h2.hDoseMembrane_HitsAlpha);
         h1.hDoseCytoplasm_HitsAlpha->Add(h2.hDoseCytoplasm_HitsAlpha);
+
+
+        //-----------------------
+        // Histrogram for kinetic energy of alpha particle before entering a volume
+        h1.hKineticEnergyAlphaTotalCell_FromSolution->Add(h2.hKineticEnergyAlphaTotalCell_FromSolution);
+        h1.hKineticEnergyAlphaTotalCell_FromMembrane->Add(h2.hKineticEnergyAlphaTotalCell_FromMembrane);
+        h1.hKineticEnergyAlphaTotalCell_FromCytoplasm->Add(h2.hKineticEnergyAlphaTotalCell_FromCytoplasm);
+
+        h1.hKineticEnergyAlphaNucleus_FromSolution->Add(h2.hKineticEnergyAlphaNucleus_FromSolution);
+        h1.hKineticEnergyAlphaNucleus_FromMembrane->Add(h2.hKineticEnergyAlphaNucleus_FromMembrane);
+        h1.hKineticEnergyAlphaNucleus_FromCytoplasm->Add(h2.hKineticEnergyAlphaNucleus_FromCytoplasm);
+
 }

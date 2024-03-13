@@ -92,7 +92,7 @@ void EnergyDepositionHistograms::LoadHistogramsFromAnalysis(CellSurvival cellSur
 {
     std::vector<std::tuple<double,double,double>> cellSurvivalData = cellSurvivalInstance.GetCellSurvivalData();
     // General filepath to output
-    std::string generalFilePath = "/Volumes/SamsungT7/OutputFromAnalysis/Output_" + cellSurvivalInstance.GetCellLine() + "_";
+    std::string generalFilePath = "../AnalysisCode/OutputAnalysisCode/Output_" + cellSurvivalInstance.GetCellLine() + "_";
 
     // Specific filepath
     std::string filePath;
