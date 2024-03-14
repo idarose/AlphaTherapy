@@ -4,10 +4,18 @@
 CellHit::CellHit(int cellID_in)
 {
     cellID = cellID_in;
-    nummberHitsAlphas_Nucleus = 0;
+    numberHitsAlphas_Nucleus = 0;
     numberHitsAlphas_Membrane = 0;
     numberHitsAlphas_Cytoplasm = 0;
     numberHitsAlphas_TotalCell = 0;
+
+    numberHitsAlphasTotalCell_FromSolution = 0;
+    numberHitsAlphasTotalCell_FromMembrane = 0;
+    numberHitsAlphasTotalCell_FromCytoplasm = 0;
+
+    numberHitsAlphasNucleus_FromSolution = 0;
+    numberHitsAlphasNucleus_FromMembrane = 0;
+    numberHitsAlphasNucleus_FromCytoplasm = 0;
 
     energyDepMembrane = 0.0;
     energyDepCytoplasm = 0.0;
@@ -28,14 +36,6 @@ CellHit::CellHit(int cellID_in)
     energyDepTotalCell_FromSolution = 0.0;
     energyDepTotalCell_FromMembrane = 0.0;
     energyDepTotalCell_FromCytoplasm = 0.0;
-
-    // energyDepNucleus_FromAlpha = 0.;
-    // energyDepMembrane_FromAlpha = 0.;
-    // energyDepCytoplasm_FromAlpha = 0.;
-    // energyDepTotalCell_FromAlpha = 0.;
-
-    // numberHitsAlphas = 0;
-    // numberHitsBetas = 0;
 
     double densityWater = 1000. ; // kg/m^3
     double radiusCell = 9.0e-6; // m
@@ -61,55 +61,72 @@ void CellHit::AddEnergyDeposition(double energyDep_in, int volumeTypeInteraction
 //------------------–----------
 void CellHit::HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha, int volumeTypeOriginDecay_in, double kineticEnergyAlpha)
 {
+    // If membrane hit
     if(volumeTypeHit==1)
     {
         numberHitsAlphas_Membrane++;
     }
+    // If cytoplasm hit
     if(volumeTypeHit==2)
     {
         numberHitsAlphas_Cytoplasm++;
     }
+    // If nucleus hit
     if(volumeTypeHit==3)
     {
-        nummberHitsAlphas_Nucleus++;
+        numberHitsAlphas_Nucleus++;
+
+        // If decay originated in solution
         if(volumeTypeOriginDecay_in==0)
         {
             kineticEnergyAlphaNucleus_FromSolution_Vec.push_back(kineticEnergyAlpha);
+            numberHitsAlphasNucleus_FromSolution++;
         }
+
+        // If decay originated in membrane
         if(volumeTypeOriginDecay_in==1)
         {
             kineticEnergyAlphaNucleus_FromMembrane_Vec.push_back(kineticEnergyAlpha);
+            numberHitsAlphasNucleus_FromMembrane++;
         }
+
+        // If decay originated in cytoplasm
         if(volumeTypeOriginDecay_in==2)
         {
             kineticEnergyAlphaNucleus_FromCytoplasm_Vec.push_back(kineticEnergyAlpha);
+            numberHitsAlphasNucleus_FromCytoplasm++;
         }
     }
 
+    // If it's the first time the alpha is registered in the cell
     if(firstTimeCountingAlpha)
     {
+        // Count alpha hit for whole cell
         numberHitsAlphas_TotalCell++;
+
+        // If decay originated in solution
         if(volumeTypeOriginDecay_in==0)
         {
             kineticEnergyAlphaTotalCell_FromSolution_Vec.push_back(kineticEnergyAlpha);
+            // std::cout << "Filled alpha hit cell in solution" << std::endl;
+            numberHitsAlphasTotalCell_FromSolution++;
         }
+
+        // If decay originated in membrane
         if(volumeTypeOriginDecay_in==1)
         {
             kineticEnergyAlphaTotalCell_FromMembrane_Vec.push_back(kineticEnergyAlpha);
+            numberHitsAlphasTotalCell_FromMembrane++;
         }
+
+        // If decay originated in cytoplasm
         if(volumeTypeOriginDecay_in==2)
         {
-            kineticEnergyAlphaTotalCell_FromMembrane_Vec.push_back(kineticEnergyAlpha);
+            kineticEnergyAlphaTotalCell_FromCytoplasm_Vec.push_back(kineticEnergyAlpha);
+            numberHitsAlphasTotalCell_FromCytoplasm++;
         }
     }
 }
-
-// //----------------------------
-// void CellHit::HitByBetaParticle()
-// {
-//     numberHitsBetas ++;
-// }
-
 
 //------------------–----------
 void CellHit::FinalizeCellHit()
@@ -130,36 +147,25 @@ void CellHit::FinalizeCellHit()
         originVolume = std::get<2>(energyDepsVec[i]);
         particleType = std::get<3>(energyDepsVec[i]);
 
-
+        // If in membrane
         if(interactionVolume==1)
         {
-            // std::cout << "In membrane: " << energyDepInteraction << std::endl;
             energyDepMembrane += energyDepInteraction;
             if(originVolume == 0){energyDepMembrane_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepMembrane_FromMembrane += energyDepInteraction;}
             if(originVolume == 2){energyDepMembrane_FromCytoplasm += energyDepInteraction;}
-
-            // if(particleType==1000020040)
-            // {
-            //     energyDepMembrane_FromAlpha += energyDepInteraction;
-            // }
         }
+        // If in cytoplasm
         if(interactionVolume==2)
         {
-            // std::cout << "In cytoplasm : " << energyDepInteraction << std::endl;
             energyDepCytoplasm += energyDepInteraction;
             if(originVolume == 0){energyDepCytoplasm_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepCytoplasm_FromMembrane += energyDepInteraction;}
             if(originVolume == 2){energyDepCytoplasm_FromCytoplasm += energyDepInteraction;}
-
-            // if(particleType==1000020040)
-            // {
-            //     energyDepCytoplasm_FromAlpha += energyDepInteraction;
-            // }
         }
+        // If in nucleus
         if(interactionVolume==3)
         {
-            // std::cout << "In nucleus : " << energyDepInteraction << std::endl;
             energyDepNucleus += energyDepInteraction;
             if(originVolume == 0){energyDepNucleus_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepNucleus_FromMembrane += energyDepInteraction;}
@@ -168,19 +174,19 @@ void CellHit::FinalizeCellHit()
 
     }
 
-    // //-----------------------------
-    // // Finding fractions for origin of decay
-    // fractionEnergyDepMembrane_FromSolution = energyDepMembrane_FromSolution/energyDepMembrane;
-    // fractionEnergyDepMembrane_FromMembrane = energyDepMembrane_FromMembrane/energyDepMembrane;
-    // fractionEnergyDepMembrane_FromCytoplasm = energyDepMembrane_FromCytoplasm/energyDepMembrane;
+    //-----------------------------
+    // Finding fractions for origin of decay
+    fractionEnergyDepMembrane_FromSolution = energyDepMembrane_FromSolution/energyDepMembrane;
+    fractionEnergyDepMembrane_FromMembrane = energyDepMembrane_FromMembrane/energyDepMembrane;
+    fractionEnergyDepMembrane_FromCytoplasm = energyDepMembrane_FromCytoplasm/energyDepMembrane;
 
-    // fractionEnergyDepCytoplasm_FromSolution = energyDepCytoplasm_FromSolution/energyDepCytoplasm;
-    // fractionEnergyDepCytoplasm_FromMembrane = energyDepCytoplasm_FromMembrane/energyDepCytoplasm;
-    // fractionEnergyDepCytoplasm_FromCytoplasm = energyDepCytoplasm_FromCytoplasm/energyDepCytoplasm;
+    fractionEnergyDepCytoplasm_FromSolution = energyDepCytoplasm_FromSolution/energyDepCytoplasm;
+    fractionEnergyDepCytoplasm_FromMembrane = energyDepCytoplasm_FromMembrane/energyDepCytoplasm;
+    fractionEnergyDepCytoplasm_FromCytoplasm = energyDepCytoplasm_FromCytoplasm/energyDepCytoplasm;
 
-    // fractionEnergyDepNucleus_FromSolution = energyDepNucleus_FromSolution/energyDepNucleus;
-    // fractionEnergyDepNucleus_FromMembrane = energyDepNucleus_FromMembrane/energyDepNucleus;
-    // fractionEnergyDepNucleus_FromCytoplasm = energyDepNucleus_FromCytoplasm/energyDepNucleus;
+    fractionEnergyDepNucleus_FromSolution = energyDepNucleus_FromSolution/energyDepNucleus;
+    fractionEnergyDepNucleus_FromMembrane = energyDepNucleus_FromMembrane/energyDepNucleus;
+    fractionEnergyDepNucleus_FromCytoplasm = energyDepNucleus_FromCytoplasm/energyDepNucleus;
 
     energyDepTotalCell = energyDepMembrane + energyDepCytoplasm + energyDepNucleus;
 
@@ -188,10 +194,9 @@ void CellHit::FinalizeCellHit()
     energyDepTotalCell_FromMembrane = energyDepMembrane_FromMembrane + energyDepCytoplasm_FromMembrane + energyDepNucleus_FromMembrane;
     energyDepTotalCell_FromCytoplasm = energyDepMembrane_FromCytoplasm + energyDepCytoplasm_FromCytoplasm + energyDepNucleus_FromCytoplasm;
 
-    // fractionEnergyDepTotalCell_FromSolution = energyDepTotalCell_FromSolution/energyDepTotalCell;
-    // fractionEnergyDepTotalCell_FromMembrane = energyDepTotalCell_FromMembrane/energyDepTotalCell;
-    // fractionEnergyDepTotalCell_FromCytoplasm = energyDepTotalCell_FromCytoplasm/energyDepTotalCell;
+    fractionEnergyDepTotalCell_FromSolution = energyDepTotalCell_FromSolution/energyDepTotalCell;
+    fractionEnergyDepTotalCell_FromMembrane = energyDepTotalCell_FromMembrane/energyDepTotalCell;
+    fractionEnergyDepTotalCell_FromCytoplasm = energyDepTotalCell_FromCytoplasm/energyDepTotalCell;
 
-    // energyDepTotalCell_FromAlpha = energyDepMembrane_FromAlpha + energyDepNucleus_FromAlpha + energyDepCytoplasm_FromAlpha;
 
 }

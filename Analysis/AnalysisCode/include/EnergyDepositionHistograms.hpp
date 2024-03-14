@@ -34,9 +34,9 @@ class EnergyDepositionHistograms
         void GenerateEmptyHistograms(DecayDynamics decayDynamicsInstance);
         void AddCellHitsToHistograms(CellHit cellHit);
         void ScaleHistograms(double numberCells_in, double numberIterations_in);
-        void ScaleHistogramKineticEnergyAlphas_PerIteration(double numberHitsAlphasTotalCell_ThisIteration, double numberHitsAlphasNucleus_ThisIteration);
+        void ScaleHistogramKineticEnergyAlphas_PerIteration(std::vector<int> numberHitsAlphasForScaling_in);
         void WriteHistogramsToFile();
-        void ResetHistograms();
+
 
         friend class AddEnergyDepositionHistograms;
 
@@ -54,12 +54,20 @@ class EnergyDepositionHistograms
         TH1D *hEnergyDepsNucleus_FromMembrane;
         TH1D *hEnergyDepsNucleus_FromCytoplasm;
 
+        TH1D *hEnergyDepsNucleus_FractionFromSolution;
+        TH1D *hEnergyDepsNucleus_FractionFromMembrane;
+        TH1D *hEnergyDepsNucleus_FractionFromCytoplasm;
+
         // Histogram for total energy deposited in one membrane per number of cells
         TH1D *hEnergyDepsMembrane_eVBinning;
         TH1D *hEnergyDepsMembrane_keVBinning;
         TH1D *hEnergyDepsMembrane_FromSolution;
         TH1D *hEnergyDepsMembrane_FromMembrane;
         TH1D *hEnergyDepsMembrane_FromCytoplasm;
+
+        TH1D *hEnergyDepsMembrane_FractionFromSolution;
+        TH1D *hEnergyDepsMembrane_FractionFromMembrane;
+        TH1D *hEnergyDepsMembrane_FractionFromCytoplasm;
 
         // Histogram for total energy deposited in one cytoplasm per number of cells
         TH1D *hEnergyDepsCytoplasm_eVBinning;
@@ -68,12 +76,20 @@ class EnergyDepositionHistograms
         TH1D *hEnergyDepsCytoplasm_FromMembrane;
         TH1D *hEnergyDepsCytoplasm_FromCytoplasm;
 
+        TH1D *hEnergyDepsCytoplasm_FractionFromSolution;
+        TH1D *hEnergyDepsCytoplasm_FractionFromMembrane;
+        TH1D *hEnergyDepsCytoplasm_FractionFromCytoplasm;
+
         // Histogram for total energy deposited in one cell per number of cells
         TH1D *hEnergyDepsTotalCell_eVBinning;
         TH1D *hEnergyDepsTotalCell_keVBinning;
         TH1D *hEnergyDepsTotalCell_FromSolution;
         TH1D *hEnergyDepsTotalCell_FromMembrane;
         TH1D *hEnergyDepsTotalCell_FromCytoplasm;
+
+        TH1D *hEnergyDepsTotalCell_FractionFromSolution;
+        TH1D *hEnergyDepsTotalCell_FractionFromMembrane;
+        TH1D *hEnergyDepsTotalCell_FractionFromCytoplasm;
 
         // Histograms for number of hits by alpha particles
         TH2D *hEnergyDepsTotalCell_HitsAlpha;
@@ -84,34 +100,50 @@ class EnergyDepositionHistograms
         //--------------------------
         // Dose histograms
 
-        // Histogram for total energy deposited in one nuclei per number of cells
+        // Histogram for total dose deposited in one nuclei per number of cells
         TH1D *hDoseNucleus_mGyBinning;
         TH1D *hDoseNucleus_uGyBinning;
         TH1D *hDoseNucleus_FromSolution;
         TH1D *hDoseNucleus_FromMembrane;
         TH1D *hDoseNucleus_FromCytoplasm;
 
-        // Histogram for total energy deposited in one membrane per number of cells
+        TH1D *hDoseNucleus_FractionFromSolution;
+        TH1D *hDoseNucleus_FractionFromMembrane;
+        TH1D *hDoseNucleus_FractionFromCytoplasm;
+
+
+        // Histogram for total dose deposited in one membrane per number of cells
         TH1D *hDoseMembrane_mGyBinning;
         TH1D *hDoseMembrane_uGyBinning;
         TH1D *hDoseMembrane_FromSolution;
         TH1D *hDoseMembrane_FromMembrane;
         TH1D *hDoseMembrane_FromCytoplasm;
 
+        TH1D *hDoseMembrane_FractionFromSolution;
+        TH1D *hDoseMembrane_FractionFromMembrane;
+        TH1D *hDoseMembrane_FractionFromCytoplasm;
 
-        // Histogram for total energy deposited in one cytoplasm per number of cells
+        // Histogram for total dose deposited in one cytoplasm per number of cells
         TH1D *hDoseCytoplasm_mGyBinning;
         TH1D *hDoseCytoplasm_uGyBinning;
         TH1D *hDoseCytoplasm_FromSolution;
         TH1D *hDoseCytoplasm_FromMembrane;
         TH1D *hDoseCytoplasm_FromCytoplasm;
 
-        // Histogram for total energy deposited in one cell per number of cells
+        TH1D *hDoseCytoplasm_FractionFromSolution;
+        TH1D *hDoseCytoplasm_FractionFromMembrane;
+        TH1D *hDoseCytoplasm_FractionFromCytoplasm;
+
+        // Histogram for total dose deposited in one cell per number of cells
         TH1D *hDoseTotalCell_mGyBinning;
         TH1D *hDoseTotalCell_uGyBinning;
         TH1D *hDoseTotalCell_FromSolution;
         TH1D *hDoseTotalCell_FromMembrane;
         TH1D *hDoseTotalCell_FromCytoplasm;
+
+        TH1D *hDoseTotalCell_FractionFromSolution;
+        TH1D *hDoseTotalCell_FractionFromMembrane;
+        TH1D *hDoseTotalCell_FractionFromCytoplasm;
 
         // Histograms for dose per number of hits by alpha particles
         TH2D* hDoseTotalCell_HitsAlpha;

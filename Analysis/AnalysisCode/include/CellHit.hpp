@@ -59,47 +59,52 @@ class CellHit
         double GetEnergyDepositionMembrane_FromMembrane(){return energyDepMembrane_FromMembrane;};
         double GetEnergyDepositionMembrane_FromCytoplasm(){return energyDepMembrane_FromCytoplasm;};
 
-        // double GetFractionEnergyDepMembrane_FromSolution(){return fractionEnergyDepMembrane_FromSolution;}
-        // double GetFractionEnergyDepMembrane_FromMembrane(){return fractionEnergyDepMembrane_FromMembrane;}
-        // double GetFractionEnergyDepMembrane_FromCytoplasm(){return fractionEnergyDepMembrane_FromCytoplasm;}
+        double GetFractionEnergyDepMembrane_FromSolution(){return fractionEnergyDepMembrane_FromSolution;}
+        double GetFractionEnergyDepMembrane_FromMembrane(){return fractionEnergyDepMembrane_FromMembrane;}
+        double GetFractionEnergyDepMembrane_FromCytoplasm(){return fractionEnergyDepMembrane_FromCytoplasm;}
 
         //---------------------------
         double GetEnergyDepositionCytoplasm_FromSolution(){return energyDepCytoplasm_FromSolution;};
         double GetEnergyDepositionCytoplasm_FromMembrane(){return energyDepCytoplasm_FromMembrane;};
         double GetEnergyDepositionCytoplasm_FromCytoplasm(){return energyDepCytoplasm_FromCytoplasm;};
 
-        // double GetFractionEnergyDepCytoplasm_FromSolution(){return fractionEnergyDepCytoplasm_FromSolution;}
-        // double GetFractionEnergyDepCytoplasm_FromMembrane(){return fractionEnergyDepCytoplasm_FromMembrane;}
-        // double GetFractionEnergyDepCytoplasm_FromCytoplasm(){return fractionEnergyDepCytoplasm_FromCytoplasm;}
+        double GetFractionEnergyDepCytoplasm_FromSolution(){return fractionEnergyDepCytoplasm_FromSolution;}
+        double GetFractionEnergyDepCytoplasm_FromMembrane(){return fractionEnergyDepCytoplasm_FromMembrane;}
+        double GetFractionEnergyDepCytoplasm_FromCytoplasm(){return fractionEnergyDepCytoplasm_FromCytoplasm;}
 
         //---------------------------
         double GetEnergyDepositionNucleus_FromSolution(){return energyDepNucleus_FromSolution;};
         double GetEnergyDepositionNucleus_FromMembrane(){return energyDepNucleus_FromMembrane;};
         double GetEnergyDepositionNucleus_FromCytoplasm(){return energyDepNucleus_FromCytoplasm;};
 
-        // double GetFractionEnergyDepNucleus_FromSolution(){return fractionEnergyDepNucleus_FromSolution;}
-        // double GetFractionEnergyDepNucleus_FromMembrane(){return fractionEnergyDepNucleus_FromMembrane;}
-        // double GetFractionEnergyDepNucleus_FromCytoplasm(){return fractionEnergyDepNucleus_FromCytoplasm;}
+        double GetFractionEnergyDepNucleus_FromSolution(){return fractionEnergyDepNucleus_FromSolution;}
+        double GetFractionEnergyDepNucleus_FromMembrane(){return fractionEnergyDepNucleus_FromMembrane;}
+        double GetFractionEnergyDepNucleus_FromCytoplasm(){return fractionEnergyDepNucleus_FromCytoplasm;}
 
         //---------------------------
         double GetEnergyDepositionTotalCell_FromSolution(){return energyDepTotalCell_FromSolution;};
         double GetEnergyDepositionTotalCell_FromMembrane(){return energyDepTotalCell_FromMembrane;};
         double GetEnergyDepositionTotalCell_FromCytoplasm(){return energyDepTotalCell_FromCytoplasm;};
 
-        // double GetFractionEnergyDepTotalCell_FromSolution(){return fractionEnergyDepTotalCell_FromSolution;}
-        // double GetFractionEnergyDepTotalCell_FromMembrane(){return fractionEnergyDepTotalCell_FromMembrane;}
-        // double GetFractionEnergyDepTotalCell_FromCytoplasm(){return fractionEnergyDepTotalCell_FromCytoplasm;}
-
-        // double GetEnergyDepositionNucleus_FromAlpha(){return energyDepNucleus_FromAlpha;};
-        // double GetEnergyDepositionMembrane_FromAlpha(){return energyDepMembrane_FromAlpha;};
-        // double GetEnergyDepositionCytoplasm_FromAlpha(){return energyDepCytoplasm_FromAlpha;};
-        // double GetEnergyDepositionTotalCell_FromAlpha(){return energyDepTotalCell_FromAlpha;};
+        double GetFractionEnergyDepTotalCell_FromSolution(){return fractionEnergyDepTotalCell_FromSolution;}
+        double GetFractionEnergyDepTotalCell_FromMembrane(){return fractionEnergyDepTotalCell_FromMembrane;}
+        double GetFractionEnergyDepTotalCell_FromCytoplasm(){return fractionEnergyDepTotalCell_FromCytoplasm;}
 
         //---------------------------
         int GetNumberHitsAlphas_TotalCell(){return numberHitsAlphas_TotalCell;};
-        int GetNumberHitsAlphas_Nucleus(){return nummberHitsAlphas_Nucleus;};
+        int GetNumberHitsAlphas_Nucleus(){return numberHitsAlphas_Nucleus;};
         int GetNumberHitsAlphas_Membrane(){return numberHitsAlphas_Membrane;};
         int GetNumberHitsAlphas_Cytoplasm(){return numberHitsAlphas_Cytoplasm;};
+
+
+        int GetNumberHitsAlphasTotalCell_FromSolution(){return numberHitsAlphasTotalCell_FromSolution;};
+        int GetNumberHitsAlphasTotalCell_FromMembrane(){return numberHitsAlphasTotalCell_FromMembrane;};
+        int GetNumberHitsAlphasTotalCell_FromCytoplasm(){return numberHitsAlphasTotalCell_FromCytoplasm;};
+
+        int GetNumberHitsAlphasNucleus_FromSolution(){return numberHitsAlphasNucleus_FromSolution;};
+        int GetNumberHitsAlphasNucleus_FromMembrane(){return numberHitsAlphasNucleus_FromMembrane;};
+        int GetNumberHitsAlphasNucleus_FromCytoplasm(){return numberHitsAlphasNucleus_FromCytoplasm;};
+
 
         //---------------------------
         std::vector<double> GetKineticEnergyAlphaTotalCell_FromSolution_Vec(){return kineticEnergyAlphaTotalCell_FromSolution_Vec;};
@@ -123,9 +128,17 @@ class CellHit
         double massMembrane;
 
         int numberHitsAlphas_TotalCell;
-        int nummberHitsAlphas_Nucleus;
+        int numberHitsAlphas_Nucleus;
         int numberHitsAlphas_Membrane;
         int numberHitsAlphas_Cytoplasm;
+
+        int numberHitsAlphasTotalCell_FromSolution;
+        int numberHitsAlphasTotalCell_FromMembrane;
+        int numberHitsAlphasTotalCell_FromCytoplasm;
+
+        int numberHitsAlphasNucleus_FromSolution;
+        int numberHitsAlphasNucleus_FromMembrane;
+        int numberHitsAlphasNucleus_FromCytoplasm;
 
         // A vector of tuples for every interaction <volume type of interaction, energydep in that interaction, origin of decay volume type, track ID, parent track ID>
         std::vector<std::tuple<int,double, int, int>> energyDepsVec;
@@ -135,39 +148,43 @@ class CellHit
         double energyDepNucleus;
         double energyDepTotalCell;
 
-
+        //-------------------------
         double energyDepMembrane_FromSolution;
         double energyDepMembrane_FromMembrane;
         double energyDepMembrane_FromCytoplasm;
 
-        // double fractionEnergyDepMembrane_FromSolution;
-        // double fractionEnergyDepMembrane_FromMembrane;
-        // double fractionEnergyDepMembrane_FromCytoplasm;
+        double fractionEnergyDepMembrane_FromSolution;
+        double fractionEnergyDepMembrane_FromMembrane;
+        double fractionEnergyDepMembrane_FromCytoplasm;
 
+        //-------------------------
         double energyDepCytoplasm_FromSolution;
         double energyDepCytoplasm_FromMembrane;
         double energyDepCytoplasm_FromCytoplasm;
 
-        // double fractionEnergyDepCytoplasm_FromSolution;
-        // double fractionEnergyDepCytoplasm_FromMembrane;
-        // double fractionEnergyDepCytoplasm_FromCytoplasm;
+        double fractionEnergyDepCytoplasm_FromSolution;
+        double fractionEnergyDepCytoplasm_FromMembrane;
+        double fractionEnergyDepCytoplasm_FromCytoplasm;
 
+        //-------------------------
         double energyDepNucleus_FromSolution;
         double energyDepNucleus_FromMembrane;
         double energyDepNucleus_FromCytoplasm;
 
-        // double fractionEnergyDepNucleus_FromSolution;
-        // double fractionEnergyDepNucleus_FromMembrane;
-        // double fractionEnergyDepNucleus_FromCytoplasm;
+        double fractionEnergyDepNucleus_FromSolution;
+        double fractionEnergyDepNucleus_FromMembrane;
+        double fractionEnergyDepNucleus_FromCytoplasm;
 
+        //-------------------------
         double energyDepTotalCell_FromSolution;
         double energyDepTotalCell_FromMembrane;
         double energyDepTotalCell_FromCytoplasm;
 
-        // double fractionEnergyDepTotalCell_FromSolution;
-        // double fractionEnergyDepTotalCell_FromMembrane;
-        // double fractionEnergyDepTotalCell_FromCytoplasm;
+        double fractionEnergyDepTotalCell_FromSolution;
+        double fractionEnergyDepTotalCell_FromMembrane;
+        double fractionEnergyDepTotalCell_FromCytoplasm;
 
+        //-------------------------
         std::vector<double> kineticEnergyAlphaTotalCell_FromSolution_Vec;
         std::vector<double> kineticEnergyAlphaTotalCell_FromMembrane_Vec;
         std::vector<double> kineticEnergyAlphaTotalCell_FromCytoplasm_Vec;

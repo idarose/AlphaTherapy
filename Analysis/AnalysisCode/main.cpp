@@ -243,6 +243,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                 if(particleTypeSolutionSim[i]==1000020040)
                                 {
                                     aNewCellHit.HitByAlphaParticle(volumeTypesSolutionSim[i],true,decayOriginSolution,kineticEnergySolutionSim[i]);
+                                    // std::cout << "Cell hit " << decayOriginSolution << std::endl;
                                 }
 
                                 std::tuple<int,int,int> particleHit = std::make_tuple(cellIDsSolutionSim[i],trackIDSolutionSim[i],volumeTypesSolutionSim[i]);
@@ -546,8 +547,13 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
         }
 
 
-        int totalNumberHitsAlphaTotalCell = 0;
-        int totalNumberHitsAlphaNucleus = 0;
+        int totalNumberHitsAlphaTotalCell_FromSolution = 0;
+        int totalNumberHitsAlphaTotalCell_FromMembrane = 0;
+        int totalNumberHitsAlphaTotalCell_FromCytoplasm = 0;
+
+        int totalNumberHitsAlphaNucleus_FromSolution = 0;
+        int totalNumberHitsAlphaNucleus_FromMembrane = 0;
+        int totalNumberHitsAlphaNucleus_FromCytoplasm = 0;
 
         //------------------–----------
         // Looping over all stored cell energy depositions
@@ -556,17 +562,25 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
             // Adding cell energy depositions to histograms
             storedCellHits[i].FinalizeCellHit();
 
-            totalNumberHitsAlphaTotalCell += storedCellHits[i].GetNumberHitsAlphas_TotalCell();
-            totalNumberHitsAlphaNucleus += storedCellHits[i].GetNumberHitsAlphas_Nucleus();
+            totalNumberHitsAlphaTotalCell_FromSolution += storedCellHits[i].GetNumberHitsAlphasTotalCell_FromSolution();
+            totalNumberHitsAlphaTotalCell_FromMembrane += storedCellHits[i].GetNumberHitsAlphasTotalCell_FromMembrane();
+            totalNumberHitsAlphaTotalCell_FromCytoplasm += storedCellHits[i].GetNumberHitsAlphasTotalCell_FromCytoplasm();
+
+            totalNumberHitsAlphaNucleus_FromSolution += storedCellHits[i].GetNumberHitsAlphasNucleus_FromSolution();
+            totalNumberHitsAlphaNucleus_FromMembrane += storedCellHits[i].GetNumberHitsAlphasNucleus_FromMembrane();
+            totalNumberHitsAlphaNucleus_FromCytoplasm += storedCellHits[i].GetNumberHitsAlphasNucleus_FromCytoplasm();
+
 
             energyDepHistograms.AddCellHitsToHistograms(storedCellHits[i]);
+
         }
 
-        energyDepHistograms.ScaleHistogramKineticEnergyAlphas_PerIteration((double)totalNumberHitsAlphaTotalCell, ((double)totalNumberHitsAlphaNucleus));
+        std::vector<int> numberHitsAlphasForScaling = {totalNumberHitsAlphaTotalCell_FromSolution, totalNumberHitsAlphaTotalCell_FromMembrane, totalNumberHitsAlphaTotalCell_FromCytoplasm, totalNumberHitsAlphaNucleus_FromSolution, totalNumberHitsAlphaNucleus_FromMembrane, totalNumberHitsAlphaNucleus_FromCytoplasm};
+        energyDepHistograms.ScaleHistogramKineticEnergyAlphas_PerIteration(numberHitsAlphasForScaling);
+
+
 
         promises[itNum-1].set_value(energyDepHistograms);
-
-        std::cout << "In cell : " << totalNumberHitsAlphaTotalCell << " In nucleus : " << totalNumberHitsAlphaNucleus << std::endl;
 
     };
 
