@@ -92,7 +92,7 @@ void EnergyDepositionHistograms::LoadHistogramsFromAnalysis(CellSurvival cellSur
 {
     std::vector<std::tuple<double,double,double>> cellSurvivalData = cellSurvivalInstance.GetCellSurvivalData();
     // General filepath to output
-    std::string generalFilePath = "../AnalysisCode/OutputAnalysisCode/Output_" + cellSurvivalInstance.GetCellLine() + "_";
+    std::string generalFilePath = "../OutputAnalysisCode/Output_" + cellSurvivalInstance.GetCellLine() + "_";
 
     // Specific filepath
     std::string filePath;
@@ -946,7 +946,7 @@ void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName, i
 
     std::vector<std::tuple<int,TH1D*>> overlappedDoses_PerNHit_Vec;
 
-    for(int i=0; i<21; i++)
+    for(int i=0; i<41; i++)
     {
 
         //--------------------------------
@@ -1143,7 +1143,7 @@ void mainFittingCode()
     // cellSurvival_PC3_Flu.AddCellSurvivalData(data_cellSurvival_PC3_Flu);
     // // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 1);
     // // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 2);
-    // FitCellSurvival(cellSurvival_PC3_Flu, "LQ", 3);
+    // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 3);
     // // FitCellSurvival(cellSurvival_PC3_Flu, "LM", 4);
 
     std::vector<std::tuple<double,double,double>> data_cellSurvival_C4_2;

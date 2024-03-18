@@ -983,10 +983,11 @@ void EnergyDepositionHistograms::ScaleHistograms(double numberCells_in, double n
     hDoseMembrane_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
     hDoseCytoplasm_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
 
-    hDoseTotalCell_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
-    hDoseNucleus_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
-    hDoseMembrane_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
-    hDoseCytoplasm_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+
+    hEnergyDepsTotalCell_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsNucleus_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsMembrane_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
+    hEnergyDepsCytoplasm_HitsAlpha->Scale(1./(numberCells_in*numberIterations_in));
 
     //-------------------------------
     // Hit multiplicity histograms

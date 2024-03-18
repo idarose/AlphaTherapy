@@ -649,6 +649,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     // Scaling histograms
     // double scalingFactor = decayDynamicsInstance.GetNumberCells()*((double) numberIterations);
     histMain.ScaleHistograms(decayDynamicsInstance.GetNumberCells(), ((double)numberIterations));
+    // std::cout << decayDynamicsInstance.GetNumberCells()*((double)numberIterations) << std::endl;
 
 
     //------------------–----------
