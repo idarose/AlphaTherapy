@@ -1,7 +1,7 @@
-#include "include/DecayDynamics.hpp"
-#include "include/CellHit.hpp"
-#include "include/EnergyDepositionHistograms.hpp"
-#include "include/AddEnergyDepositionHistograms.hpp"
+#include "../include/DecayDynamics.hpp"
+#include "../include/CellHit.hpp"
+#include "../include/EnergyDepositionHistograms.hpp"
+#include "../include/AddEnergyDepositionHistograms.hpp"
 #include <future>
 #include <thread>
 #include <TROOT.h>
@@ -724,7 +724,7 @@ int main(int argc, char *argv[])
     //------------------–----------
     // Loading decay dynamics calculations
 
-    std::string mathematicaOutput = "../../Mathematica/Output";
+    std::string mathematicaOutput = "../../../Mathematica/Output";
     decays.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
 
     EnergyDepositionHistograms hists = AnalyzeHistogramsFromSimulation(decays, numberIterations);
