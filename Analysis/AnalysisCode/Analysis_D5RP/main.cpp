@@ -598,7 +598,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     AddEnergyDepositionHistograms addHistograms;
 
     //------------------–----------
-    std::string filepathSimulationOutput = "../../../GEANT4Simulations/CellDamageSimulation_Nucleus2_RandPos-build/";
+    std::string filepathSimulationOutput = "../../../GEANT4Simulations/CellDamageSimulation_D5RP-build/";
 
     std::vector<TFile*> inputFiles_solution;
     std::vector<TFile*> inputFiles_membrane;
