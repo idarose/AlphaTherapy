@@ -1783,6 +1783,8 @@ foreach(_script ${EXAMPLEB4A_SCRIPTS})
     )
 endforeach()
 
+#-----------------
+
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
