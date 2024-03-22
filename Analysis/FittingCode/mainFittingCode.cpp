@@ -151,7 +151,7 @@ void EnergyDepositionHistograms::LoadHistogramsFromAnalysis(CellSurvival cellSur
     //-------------------------------------
     // Extracting hit multiplicity histogram for cell component
     TH1D* hHitMultiplicity_CellComponent = nullptr;
-    std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)firstActivity)) +"kBq_" + regionName;
+    std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_" + regionName;
 
     inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_CellComponent);
     hHitMultiplicity_CellComponent->SetDirectory(0);

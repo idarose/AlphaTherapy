@@ -560,7 +560,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
         for(int i=0; i<storedCellHits.size(); i++)
         {
             // Adding cell energy depositions to histograms
-            storedCellHits[i].FinalizeCellHit();
+            storedCellHits[i].FinalizeCellHit("D5RP");
 
             totalNumberHitsAlphaTotalCell_FromSolution += storedCellHits[i].GetNumberHitsAlphasTotalCell_FromSolution();
             totalNumberHitsAlphaTotalCell_FromMembrane += storedCellHits[i].GetNumberHitsAlphasTotalCell_FromMembrane();

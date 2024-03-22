@@ -40,7 +40,7 @@ class CellHit
         void AddEnergyDeposition(double energyDep_in, int volumeTypeInteraction_in, int volumeTypeOriginDecay_in, int particleType_in);
         void HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha, int volumeTypeOriginDecay_in, double kineticEnergyAlpha);
         // void HitByBetaParticle();
-        void FinalizeCellHit();
+        void FinalizeCellHit(std::string cellGeometry);
 
         //---------------------------
         double GetMassNucleus(){return massNucleus;};

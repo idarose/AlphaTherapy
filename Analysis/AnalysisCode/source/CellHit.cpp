@@ -36,16 +36,6 @@ CellHit::CellHit(int cellID_in)
     energyDepTotalCell_FromSolution = 0.0;
     energyDepTotalCell_FromMembrane = 0.0;
     energyDepTotalCell_FromCytoplasm = 0.0;
-
-    double densityWater = 1000. ; // kg/m^3
-    double radiusCell = 9.0e-6; // m
-    double radiusNucleus = 6.0e-6; // m
-    double radiusCytoplasm = radiusCell - 4.0e-9; // m
-
-    massNucleus = (4./3.)*TMath::Pi()*std::pow(radiusNucleus,3.)*densityWater; // kg
-    massCytoplasm = (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater - massNucleus; // kg
-    massCell = (4./3.)*TMath::Pi()*std::pow(radiusCell,3.)*densityWater; // kg
-    massMembrane = massCell - (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater; // kg
 }
 
 
@@ -129,8 +119,28 @@ void CellHit::HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha,
 }
 
 //------------------–----------
-void CellHit::FinalizeCellHit()
+void CellHit::FinalizeCellHit(std::string cellGeometry)
 {
+    double densityWater = 1000. ; // kg/m^3
+    double radiusCell = 9.0e-6; // m
+    double radiusCytoplasm = radiusCell - 4.0e-9; // m
+
+    double radiusNucleus;
+
+    if(cellGeometry=="D12RP"||cellGeometry=="D12CP")
+    {
+        radiusNucleus = 6.0e-6; // m
+    }
+
+    if(cellGeometry=="D5RP"||cellGeometry=="D5CP")
+    {
+        radiusNucleus = 2.5e-6; // m
+    }
+
+    massNucleus = (4./3.)*TMath::Pi()*std::pow(radiusNucleus,3.)*densityWater; // kg
+    massCytoplasm = (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater - massNucleus; // kg
+    massCell = (4./3.)*TMath::Pi()*std::pow(radiusCell,3.)*densityWater; // kg
+    massMembrane = massCell - (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater; // kg
 
     //----------------------
     // Sum the energy depositions per cell component
