@@ -10,13 +10,13 @@ int main(int argc, char *argv[])
 
 
     std::vector<std::tuple<double,double,double>> data_cellSurvival_C4_2;
-    data_cellSurvival_C4_2.push_back(std::make_tuple(5.0,    0.86,   std::sqrt(std::pow(0.117,2.) + std::pow(0.1*0.86,2.))));
-    data_cellSurvival_C4_2.push_back(std::make_tuple(10.0,    0.69,    std::sqrt(std::pow(0.014,2.0) + std::pow(0.1*0.69,2.))));
-    data_cellSurvival_C4_2.push_back(std::make_tuple(25.0,    0.51,    std::sqrt(std::pow(0.096,2.) + std::pow(0.1*0.51,2.))));
-    data_cellSurvival_C4_2.push_back(std::make_tuple(50.0,    0.26,   std::sqrt(std::pow(0.035,2.) + std::pow(0.1*0.26,2.))));
-    data_cellSurvival_C4_2.push_back(std::make_tuple(75.0,    0.13,    std::sqrt(std::pow(0.031,2.) + std::pow(0.1*0.13,2.))));
-    data_cellSurvival_C4_2.push_back(std::make_tuple(100.0,    0.08,    std::sqrt(std::pow(0.035,2.) + std::pow(0.1*0.08,2.))));
-    data_cellSurvival_C4_2.push_back(std::make_tuple(150.0,    0.04,    std::sqrt(std::pow(0.024,2.) + std::pow(0.1*0.04,2.))));
+    data_cellSurvival_C4_2.push_back(std::make_tuple(5.0,    0.86,   std::sqrt(std::pow(0.117,2.) + std::pow(0.05*0.86,2.))));
+    data_cellSurvival_C4_2.push_back(std::make_tuple(10.0,    0.69,    std::sqrt(std::pow(0.014,2.0) + std::pow(0.05*0.69,2.))));
+    data_cellSurvival_C4_2.push_back(std::make_tuple(25.0,    0.51,    std::sqrt(std::pow(0.096,2.) + std::pow(0.05*0.51,2.))));
+    data_cellSurvival_C4_2.push_back(std::make_tuple(50.0,    0.26,   std::sqrt(std::pow(0.035,2.) + std::pow(0.05*0.26,2.))));
+    data_cellSurvival_C4_2.push_back(std::make_tuple(75.0,    0.13,    std::sqrt(std::pow(0.031,2.) + std::pow(0.05*0.13,2.))));
+    data_cellSurvival_C4_2.push_back(std::make_tuple(100.0,    0.08,    std::sqrt(std::pow(0.035,2.) + std::pow(0.05*0.08,2.))));
+    data_cellSurvival_C4_2.push_back(std::make_tuple(150.0,    0.04,    std::sqrt(std::pow(0.024,2.) + std::pow(0.05*0.04,2.))));
 
 
     std::vector<std::tuple<double,double,double>> data_cellSurvival_PC3_Flu;
