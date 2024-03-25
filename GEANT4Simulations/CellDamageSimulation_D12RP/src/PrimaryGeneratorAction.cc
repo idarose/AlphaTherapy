@@ -215,7 +215,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         if(r<=y)
         {
             fParticleGun->SetParticleTime(x*3600.*s);
-            // G4cout << "Decay time generated : " << x << G4endl;
             foundDecayTime = true;
         }
     };

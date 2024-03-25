@@ -27,7 +27,7 @@ class DecayDynamics
     //  Assumes the output file from Mathematica is structured in a specific way
 
     public:
-        DecayDynamics(int activitySample_in, std::string cellLine_in);
+        DecayDynamics(int activitySample_in, std::string cellLine_in, std::string cellGeometry_in);
 
         std::vector<double> ReadFileFromMathematica(std::string filename);
         void LoadDataFromMathematicaCalculations(std::string filepathToMathematicaOutput);
@@ -39,19 +39,27 @@ class DecayDynamics
         double GetVolumeRatio(){return volumeRatio;};
         double GetNumberCells(){return numberCells;};
 
+        double GetMassNucleus(){return massNucleus;};
+        double GetMassMembrane(){return massMembrane;};
+        double GetMassCytoplasm(){return massCytoplasm;};
+        double GetMassCell(){return massCell;};
+
+
         int GetActivity(){return activitySample;};
         std::string GetCellLine(){return cellLine;};
+        std::string GetCellGeometry(){return cellGeometry;};
 
     private:
+
+        int activitySample;
 
         // These number of decays are calculated in Mathematica for a sample of 0.2mL in volume
         double numberDecays212PbInSolution1hTo2h;
         double numberDecays212PbInMembrane1h2To26h;
         double numberDecays212PbInCytoplasm1hTo26h;
 
-        // double U0PerCell; // Number radionuclides absorbed per cell
-        // double U0InternalizedPerCell; // Number of absorbed radionuclides that are found in cytoplasm
-        int activitySample;  // Given in kBq/1mL
+        //------------------------------
+        std::string cellGeometry;
         std::string cellLine;
 
         // Volume ratio between simulation and actual sample volume
@@ -59,6 +67,11 @@ class DecayDynamics
 
         // Number of cells in simualted volume
         double numberCells;
+
+        double massNucleus;
+        double massCell;
+        double massMembrane;
+        double massCytoplasm;
 
 
 };

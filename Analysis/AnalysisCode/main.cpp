@@ -154,6 +154,10 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                 // looping over all steps for one event/decay
                 for(int i=0; i<energyDepsSolutionSim.GetSize(); i++)
                 {
+                    if(volumeTypesSolutionSim[i]==3)
+                    {
+                        std::cout << energyDepsSolutionSim[i] << std::endl;
+                    }
 
                     // Only add if actual energy deposition
                     if(energyDepsSolutionSim[i]>0.)
@@ -234,7 +238,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                             if(!cellAlreadyHit)
                             {
                                 // std::cout << "Interaction volume " << volumeTypesSolutionSim[i] << std::endl;
-                                CellHit aNewCellHit = CellHit(cellIDsSolutionSim[i]);
+                                CellHit aNewCellHit = CellHit(cellIDsSolutionSim[i],decayDynamicsInstance);
                                 aNewCellHit.AddEnergyDeposition(energyDepsSolutionSim[i], volumeTypesSolutionSim[i],decayOriginSolution,particleTypeSolutionSim[i]);
                                 storedCellHits.push_back(aNewCellHit);
 
@@ -308,6 +312,10 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                         // Only add if actual energy deposition
                         if(energyDepsMembraneSim[i]>0.)
                         {
+                            if(volumeTypesMembraneSim[i]==3)
+                            {
+                                std::cout << energyDepsMembraneSim[i] << std::endl;
+                            }
 
                             // Only add if interaction happened between hour 1 and hour 26
                             if(interactionTimeMembraneSim[i]/3600.0 >= 1. && interactionTimeMembraneSim[i]/3600.0 <= 26.)
@@ -376,7 +384,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                 {
                                     // std::cout << "Interaction volume " << volumeTypesSolutionSim[i] << std::endl;
 
-                                    CellHit aNewCellHit = CellHit(cellIDsMembraneSim[i]);
+                                    CellHit aNewCellHit = CellHit(cellIDsMembraneSim[i],decayDynamicsInstance);
                                     aNewCellHit.AddEnergyDeposition(energyDepsMembraneSim[i], volumeTypesMembraneSim[i], decayOriginMembrane,particleTypeMembraneSim[i]);
                                     storedCellHits.push_back(aNewCellHit);
 
@@ -452,6 +460,10 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                         // Only add if actual energy deposition
                         if(energyDepsCytoplasmSim[i]>0.)
                         {
+                            if(volumeTypesCytoplasmSim[i]==3)
+                            {
+                                std::cout << energyDepsCytoplasmSim[i] << std::endl;
+                            }
 
                             // Only add if interaction happened within between hour 1 and hour 26
                             if(interactionTimeCytoplasmSim[i]/3600.0 >= 1. && interactionTimeCytoplasmSim[i]/3600.0 <= 26.)
@@ -518,7 +530,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                                 {
                                     // std::cout << "Interaction volume " << volumeTypesSolutionSim[i] << std::endl;
 
-                                    CellHit aNewCellHit = CellHit(cellIDsCytoplasmSim[i]);
+                                    CellHit aNewCellHit = CellHit(cellIDsCytoplasmSim[i],decayDynamicsInstance);
                                     aNewCellHit.AddEnergyDeposition(energyDepsCytoplasmSim[i], volumeTypesCytoplasmSim[i],decayOriginCytoplasm,particleTypeCytoplasmSim[i]);
                                     storedCellHits.push_back(aNewCellHit);
 
@@ -598,7 +610,9 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     AddEnergyDepositionHistograms addHistograms;
 
     //------------------–----------
-    std::string filepathSimulationOutput = "../../GEANT4Simulations/OutputCellDamageSimulation/";
+    std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation_" + decayDynamicsInstance.GetCellGeometry() + "-build/";
+
+    std::cout << filepathSimulationOutput << std::endl;
 
     std::vector<TFile*> inputFiles_solution;
     std::vector<TFile*> inputFiles_membrane;
@@ -667,6 +681,7 @@ int main(int argc, char *argv[])
 
     //------------------–----------
     std::string cellLine = argv[1];
+    std::string cellGeometry = "D12CP";
     int activity;
     int numberIterations;
 
@@ -719,7 +734,7 @@ int main(int argc, char *argv[])
     //------------------–----------
     // Defining decay dynamics
 
-    DecayDynamics decays = DecayDynamics(activity, cellLine);
+    DecayDynamics decays = DecayDynamics(activity,cellLine,cellGeometry);
 
     //------------------–----------
     // Loading decay dynamics calculations
@@ -728,7 +743,7 @@ int main(int argc, char *argv[])
     decays.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
 
     EnergyDepositionHistograms hists = AnalyzeHistogramsFromSimulation(decays, numberIterations);
-    std::string outputName = "Output_" + cellLine + "_" + std::to_string(activity) + "kBq.root";
+    std::string outputName = "Output_" + cellGeometry + "/Output_" + cellLine + "_" + std::to_string(activity) + "kBq.root";
     auto output = new TFile(outputName.c_str(), "RECREATE");
     hists.WriteHistogramsToFile();
     output->Write();

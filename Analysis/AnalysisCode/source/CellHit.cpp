@@ -1,7 +1,7 @@
 #include "../include/CellHit.hpp"
 
 //------------------–----------
-CellHit::CellHit(int cellID_in)
+CellHit::CellHit(int cellID_in, DecayDynamics decayDynamicsInstance)
 {
     cellID = cellID_in;
     numberHitsAlphas_Nucleus = 0;
@@ -36,6 +36,12 @@ CellHit::CellHit(int cellID_in)
     energyDepTotalCell_FromSolution = 0.0;
     energyDepTotalCell_FromMembrane = 0.0;
     energyDepTotalCell_FromCytoplasm = 0.0;
+
+
+    massNucleus = decayDynamicsInstance.GetMassNucleus();
+    massMembrane = decayDynamicsInstance.GetMassMembrane();
+    massCytoplasm = decayDynamicsInstance.GetMassCytoplasm();
+    massCell = decayDynamicsInstance.GetMassCell();
 }
 
 
@@ -119,29 +125,8 @@ void CellHit::HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha,
 }
 
 //------------------–----------
-void CellHit::FinalizeCellHit(std::string cellGeometry)
+void CellHit::FinalizeCellHit()
 {
-    double densityWater = 1000. ; // kg/m^3
-    double radiusCell = 9.0e-6; // m
-    double radiusCytoplasm = radiusCell - 4.0e-9; // m
-
-    double radiusNucleus;
-
-    if(cellGeometry=="D12RP"||cellGeometry=="D12CP")
-    {
-        radiusNucleus = 6.0e-6; // m
-    }
-
-    if(cellGeometry=="D5RP"||cellGeometry=="D5CP")
-    {
-        radiusNucleus = 2.5e-6; // m
-    }
-
-    massNucleus = (4./3.)*TMath::Pi()*std::pow(radiusNucleus,3.)*densityWater; // kg
-    massCytoplasm = (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater - massNucleus; // kg
-    massCell = (4./3.)*TMath::Pi()*std::pow(radiusCell,3.)*densityWater; // kg
-    massMembrane = massCell - (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater; // kg
-
     //----------------------
     // Sum the energy depositions per cell component
 
@@ -176,6 +161,7 @@ void CellHit::FinalizeCellHit(std::string cellGeometry)
         // If in nucleus
         if(interactionVolume==3)
         {
+            std::cout << "Nucleus : " << energyDepNucleus << std::endl;
             energyDepNucleus += energyDepInteraction;
             if(originVolume == 0){energyDepNucleus_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepNucleus_FromMembrane += energyDepInteraction;}

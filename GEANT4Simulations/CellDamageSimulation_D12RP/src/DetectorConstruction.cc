@@ -209,15 +209,10 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     G4double volumeCellTube = CLHEP::pi*std::pow(cellTubeRMin,2.0)*cellTubeHeight;
 
     numberCells = volumeCellTube*cellDensity_sample;
-    // numberCells = 10;
-
-
 
     //Defining the G4Region for the cell cytoplasm
     G4Region* region_cellCytoplasm = new G4Region("region_cellCytoplasm");
 
-    // This linking should not be done here, but rather below in the for loop for each logical volume of the cell cytoplasm
-    // region_cellCytoplasm->AddRootLogicalVolume(cellCytoplasmLV);
 
     //Defining the G4ProductionCut for the cell cytoplasm
     G4ProductionCuts* cut_cellCytoplasm= new G4ProductionCuts;
@@ -241,14 +236,13 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                     cellCytoplasmSTheta,
                     cellCytoplasmETheta);
 
-        //Making cell logical shape
+        //Making cell cytoplasm logical shape
         G4LogicalVolume* cellCytoplasmLV =
         new G4LogicalVolume(cellCytoplasmSV,
                             cell_mat,
                             "Cell");
 
         auto cellCytoplasmVisAtt = new G4VisAttributes(false);
-        // cellcellMembraneVisAtt->SetForceSolid(true);
         cellCytoplasmLV->SetVisAttributes(cellCytoplasmVisAtt);
 
         cellCytoplasmLVVec.push_back(cellCytoplasmLV);
@@ -301,7 +295,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
 
     auto cellMembraneVisAtt = new G4VisAttributes(G4Colour(0.0,0.5,1.0));
-    // cellcellMembraneVisAtt->SetForceSolid(true);
     cellMembraneLV->SetVisAttributes(cellMembraneVisAtt);
 
     //-------------------------------
@@ -348,12 +341,14 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     //Counter
     G4int numberCells_counter = 0;
 
+    //-------------------------
+    G4double cellRmax = cellCytoplasmRMax + thickness_cellMembrane;
     while(numberCells_counter < numberCells)
     {
         //Generating uniformly distributed position inside cell tube
-        G4double r_cell = std::pow(CLHEP::RandFlat::shoot(), 1.0/2) * (cellTubeRMin - cellCytoplasmRMax);
+        G4double r_cell = std::pow(CLHEP::RandFlat::shoot(), 1./2.) * (cellTubeRMin - cellRmax);
         G4double theta_cell = CLHEP::RandFlat::shoot()*2*CLHEP::pi;
-        G4double z_cell = (CLHEP::RandFlat::shoot() - 0.5)*(cellTubeHeight - 2*cellCytoplasmRMax);
+        G4double z_cell = (CLHEP::RandFlat::shoot() - 0.5)*(cellTubeHeight - 2*cellRmax);
 
         G4double x_cell = r_cell*std::cos(theta_cell);
         G4double y_cell = r_cell*std::sin(theta_cell);
@@ -372,7 +367,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             G4double diffDistance = diffVec.mag();
 
             //Make bolean false if overlap
-            if(diffDistance <= (2*cellCytoplasmRMax))
+            if(diffDistance <= (2*cellRmax))
             {
                 foundNewPosition = false;
             }
@@ -412,7 +407,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
 
             //----------------------------
-            //Placing cell memebrane
+            //Placing cell membrane
             new G4PVPlacement(0,
                             newVec,
                             cellMembraneLV,
@@ -435,20 +430,22 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
 
             //------------------------
-            //Generate uniformly distributed cell nuclei
-            G4double r_nucleus = std::pow(CLHEP::RandFlat::shoot(),1.0/3) * (cellCytoplasmRMax - thickness_cellMembrane - cellNucleusRMax);
-            G4double theta_nucleus = std::acos(1 - 2*CLHEP::RandFlat::shoot());
+            // Generate uniformly distributed cell nucleus
+            // Will generate a random position within the cell cytoplasm
+
+            G4double r_nucleus = std::pow(CLHEP::RandFlat::shoot(),1./3.) * (cellCytoplasmRMax - cellNucleusRMax);
+            G4double theta_nucleus = std::acos(1. - 2.*CLHEP::RandFlat::shoot());
             G4double phi_nucleus = 2*CLHEP::pi*CLHEP::RandFlat::shoot();
 
             G4double x_nucleus = r_nucleus*std::sin(theta_nucleus)*std::cos(phi_nucleus);
             G4double y_nucleus = r_nucleus*std::sin(theta_nucleus)*std::sin(phi_nucleus);
             G4double z_nucleus = r_nucleus*std::cos(theta_nucleus);
 
-            G4ThreeVector nucluesPosition = G4ThreeVector(x_nucleus,y_nucleus,z_nucleus);
+            G4ThreeVector nucleusPosition = G4ThreeVector(x_nucleus,y_nucleus,z_nucleus);
 
             //Placing cell nucleus
             new G4PVPlacement(0,
-                            nucluesPosition,
+                            nucleusPosition,
                             cellNucleusLV,
                             "CellNucleus",
                             cellCytoplasmLV,
@@ -457,8 +454,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                             fCheckOverlaps);
         }
     }
-
-
     return worldPV;
 }
 

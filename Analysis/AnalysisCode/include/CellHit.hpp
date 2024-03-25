@@ -15,9 +15,12 @@
 #include <tuple>
 #include <future>
 #include <thread>
+#include "DecayDynamics.hpp"
 
 #ifndef CELLHIT_HPP
 #define CELLHIT_HPP
+
+class DecayDynamics;
 
 //------------------–----------
 class CellHit
@@ -30,7 +33,7 @@ class CellHit
     //  the cell is hit by the radiation
 
     public:
-        CellHit(int cellID_in);
+        CellHit(int cellID_in, DecayDynamics decayDynamicsInstance);
         // ~CellHit();
 
         int GetCellID(){return cellID;};
@@ -40,7 +43,7 @@ class CellHit
         void AddEnergyDeposition(double energyDep_in, int volumeTypeInteraction_in, int volumeTypeOriginDecay_in, int particleType_in);
         void HitByAlphaParticle(int volumeTypeHit, bool firstTimeCountingAlpha, int volumeTypeOriginDecay_in, double kineticEnergyAlpha);
         // void HitByBetaParticle();
-        void FinalizeCellHit(std::string cellGeometry);
+        void FinalizeCellHit();
 
         //---------------------------
         double GetMassNucleus(){return massNucleus;};

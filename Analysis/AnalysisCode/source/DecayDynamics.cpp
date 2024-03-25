@@ -1,18 +1,43 @@
 #include "../include/DecayDynamics.hpp"
 
 //------------------–----------
-DecayDynamics::DecayDynamics(int activitySample_in, std::string cellLine_in)
+DecayDynamics::DecayDynamics(int activitySample_in, std::string cellLine_in, std::string cellGeometry_in)
 {
+    //--------------------
     activitySample = activitySample_in;
-    // U0PerCell = U0PerCell_in;
-    // U0InternalizedPerCell = U0InternalizedPerCell_in;
     cellLine = cellLine_in;
+    cellGeometry = cellGeometry_in;
 
+
+    //-----------------------
     double VolumeSample = 0.2*1000; // mm^3
     double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
     volumeRatio = volumeCellTube/VolumeSample;
 
     numberCells = 500000.*volumeRatio;
+
+    //--------------------------
+    double densityWater = 1000. ; // kg/m^3
+    double radiusCell = 9.0e-6; // m
+    double radiusCytoplasm = radiusCell - 4.0e-9; // m
+
+    double radiusNucleus;
+
+    if(cellGeometry=="D12RP"||cellGeometry=="D12CP")
+    {
+        radiusNucleus = 6.0e-6; // m
+    }
+
+    if(cellGeometry=="D5RP"||cellGeometry=="D5CP")
+    {
+        radiusNucleus = 2.5e-6; // m
+    }
+
+    massNucleus = (4./3.)*TMath::Pi()*std::pow(radiusNucleus,3.)*densityWater; // kg
+    massCytoplasm = (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater - massNucleus; // kg
+    massCell = (4./3.)*TMath::Pi()*std::pow(radiusCell,3.)*densityWater; // kg
+    massMembrane = massCell - (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater; // kg
+    std::cout << massNucleus << std::endl;
 }
 
 
