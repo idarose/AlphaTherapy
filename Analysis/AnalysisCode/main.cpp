@@ -154,10 +154,6 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                 // looping over all steps for one event/decay
                 for(int i=0; i<energyDepsSolutionSim.GetSize(); i++)
                 {
-                    if(volumeTypesSolutionSim[i]==3)
-                    {
-                        std::cout << energyDepsSolutionSim[i] << std::endl;
-                    }
 
                     // Only add if actual energy deposition
                     if(energyDepsSolutionSim[i]>0.)
@@ -312,10 +308,6 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                         // Only add if actual energy deposition
                         if(energyDepsMembraneSim[i]>0.)
                         {
-                            if(volumeTypesMembraneSim[i]==3)
-                            {
-                                std::cout << energyDepsMembraneSim[i] << std::endl;
-                            }
 
                             // Only add if interaction happened between hour 1 and hour 26
                             if(interactionTimeMembraneSim[i]/3600.0 >= 1. && interactionTimeMembraneSim[i]/3600.0 <= 26.)
@@ -460,10 +452,6 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
                         // Only add if actual energy deposition
                         if(energyDepsCytoplasmSim[i]>0.)
                         {
-                            if(volumeTypesCytoplasmSim[i]==3)
-                            {
-                                std::cout << energyDepsCytoplasmSim[i] << std::endl;
-                            }
 
                             // Only add if interaction happened within between hour 1 and hour 26
                             if(interactionTimeCytoplasmSim[i]/3600.0 >= 1. && interactionTimeCytoplasmSim[i]/3600.0 <= 26.)
@@ -674,14 +662,14 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
 int main(int argc, char *argv[])
 {
     //------------------–----------
-    if (argc != 4) {
+    if (argc != 5) {
         std::cerr << "Usage: " << argv[0] << " string_argument integer_argument" << std::endl;
         return 1;
     }
 
     //------------------–----------
     std::string cellLine = argv[1];
-    std::string cellGeometry = "D12CP";
+    std::string cellGeometry = argv[2];
     int activity;
     int numberIterations;
 
@@ -690,7 +678,7 @@ int main(int argc, char *argv[])
 
     //--------------------------
     try {
-        activity = std::stoi(argv[2]);
+        activity = std::stoi(argv[3]);
         bool activityIsValid = false;
         for(auto & entry : validActivities){
             if(entry == activity)
@@ -712,7 +700,7 @@ int main(int argc, char *argv[])
 
     //--------------------------
     try {
-        numberIterations = std::stoi(argv[3]);
+        numberIterations = std::stoi(argv[4]);
         if(numberIterations<=0){
             throw std::invalid_argument("Number of iterations cannot be smaller than one.");
         }
