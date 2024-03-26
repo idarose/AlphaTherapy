@@ -15,7 +15,7 @@ void SurvivalFit::LoadHistogramsFromAnalysis(CellSurvival cellSurvivalInstance, 
 
     //-----------------------------
     // General filepath to output
-    std::string generalFilePath = "../AnalysisCode/Analysis_" + cellSurvivalInstance.GetCellGeometryType() + "/Output_" + cellSurvivalInstance.GetCellLine() + "_";
+    std::string generalFilePath = "../AnalysisCode/Output_" + cellSurvivalInstance.GetCellGeometryType() + "/Output_" + cellSurvivalInstance.GetCellLine() + "_";
 
     // Specific filepath
     std::string filePath;

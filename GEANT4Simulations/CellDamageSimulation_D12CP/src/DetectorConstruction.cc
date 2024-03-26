@@ -418,7 +418,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                             fCheckOverlaps);
 
             //----------------------------
-            //Placeing cell cytoplasm
+            //Placing cell cytoplasm
             new G4PVPlacement(0,
                         newVec,
                         cellCytoplasmLV,
@@ -430,7 +430,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
 
             //------------------------
-            // Placing in center of cytoplasm
+            // Placing nucleus in center of cytoplasm
 
             G4ThreeVector nucleusPos = G4ThreeVector(0.,0.,0.);
 
