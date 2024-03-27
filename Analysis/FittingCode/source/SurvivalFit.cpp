@@ -363,12 +363,13 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
 
     if(modelName=="LQ")
     {
-        int nParameters = 2;
+        nParameters = 2;
     }
-    if(modelName=="LM")
+    else if(modelName=="LM")
     {
-        int nParameters = 1;
+        nParameters = 1;
     }
+
     double savedParameters[nParameters];
 
     //------------------------------------------------------------------------------------------------
@@ -456,18 +457,6 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
 
         parametersAndUncertainties_Vec.push_back(std::make_tuple(beta,dBeta));
     }
-
-    // std::string dir = "../Output_" + cellSurvivalInstance.GetCellGeometryType() + "/";
-    // std::string fitFile = cellSurvivalInstance.GetCellLine() + "_" + regionName + "_" + modelName + ".txt";
-    // fitFile = dir + fitFile;
-    // std::ofstream outFile(fitFile.c_str());
-
-    // outFile << " Cell Line " + cellSurvivalInstance.GetCellLine() << " Model : " << modelName << " Region : " << regionName
-    //     << "\nalpha = " << alpha << " +- " << dAlpha
-    //     << "\nbeta = " << beta << " +- " << dBeta
-    //     << "\nChi_red = " << chi_sq/deg_freedom;
-    // outFile.close();
-
 }
 
 
@@ -491,6 +480,8 @@ void SurvivalFit::WriteToFile()
 
     f_cellSurvivalVsDose->Write();
     gr_cellSurvivability_vs_activitykBqPerMl.Write();
+
+
 
     // outputFile->Write();
     // outputFile->Close();

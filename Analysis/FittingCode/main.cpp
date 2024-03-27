@@ -29,20 +29,20 @@ int main(int argc, char *argv[])
 
 
     std::vector<std::tuple<double,double,double>> data_cellSurvival_PC3_Flu;
-    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(10.0,    0.955,    std::sqrt(std::pow(0.0955,2.) + std::pow(0.1*0.955,2.))));
-    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(25.0,    0.724,    std::sqrt(std::pow(0.0724,2.) + std::pow(0.1*0.724,2.))));
-    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(50.0,    0.733,    std::sqrt(std::pow(0.0733,2.) + std::pow(0.1*0.733,2.))));
-    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(75.0,    0.798,    std::sqrt(std::pow(0.0798,2.) + std::pow(0.1*0.798,2.))));
-    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(100.0,    0.729,    std::sqrt(std::pow(0.0729,2.) + std::pow(0.1*0.729,2.))));
-    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(150.0,    0.690,    std::sqrt(std::pow(0.0690,2.) + std::pow(0.1*0.690,2.))));
+    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(10.0,    0.955,    std::sqrt(std::pow(0.1*0.955,2.))));
+    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(25.0,    0.724,    std::sqrt(std::pow(0.1*0.724,2.))));
+    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(50.0,    0.733,    std::sqrt(std::pow(0.1*0.733,2.))));
+    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(75.0,    0.798,    std::sqrt(std::pow(0.1*0.798,2.))));
+    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(100.0,    0.729,    std::sqrt(std::pow(0.1*0.729,2.))));
+    data_cellSurvival_PC3_Flu.push_back(std::make_tuple(150.0,    0.690,    std::sqrt(std::pow(0.1*0.690,2.))));
 
     std::vector<std::tuple<double,double,double>> data_cellSurvival_PC3_PIP;
-    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(10.0,    0.630,    std::sqrt(std::pow(0.063,2.) + std::pow(0.1*0.630,2.))));
-    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(25.0,    0.317,    std::sqrt(std::pow(0.05,2.) + std::pow(0.1*0.317,2.))));
-    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(50.0,    0.071,    std::sqrt(std::pow(0.05,2.) + std::pow(0.1*0.071,2.))));
-    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(75.0,    0.032,    std::sqrt(std::pow(0.05,2.) + std::pow(0.1*0.032,2.))));
-    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(100.0,    0.014,    std::sqrt(std::pow(0.05,2.) + std::pow(0.1*0.014,2.))));
-    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(150.0,    0.006,    std::sqrt(std::pow(0.05,2.) + std::pow(0.1*0.006,2.))));
+    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(10.0,    0.630,    std::sqrt(std::pow(0.1*0.630,2.))));
+    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(25.0,    0.317,    std::sqrt(std::pow(0.1*0.317,2.))));
+    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(50.0,    0.071,    std::sqrt(std::pow(0.1*0.071,2.))));
+    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(75.0,    0.032,    std::sqrt(std::pow(0.1*0.032,2.))));
+    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(100.0,    0.014,    std::sqrt(std::pow(0.1*0.014,2.))));
+    data_cellSurvival_PC3_PIP.push_back(std::make_tuple(150.0,    0.006,    std::sqrt(std::pow(0.1*0.006,2.))));
 
     //------------------–----------
     if (argc != 5) {
