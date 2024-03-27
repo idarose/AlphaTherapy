@@ -600,7 +600,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     //------------------–----------
     std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation_" + decayDynamicsInstance.GetCellGeometry() + "-build/";
 
-    std::cout << filepathSimulationOutput << std::endl;
+    // std::cout << filepathSimulationOutput << std::endl;
 
     std::vector<TFile*> inputFiles_solution;
     std::vector<TFile*> inputFiles_membrane;

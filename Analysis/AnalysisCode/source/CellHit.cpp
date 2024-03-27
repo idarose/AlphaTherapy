@@ -161,7 +161,7 @@ void CellHit::FinalizeCellHit()
         // If in nucleus
         if(interactionVolume==3)
         {
-            std::cout << "Nucleus : " << energyDepNucleus << std::endl;
+            // std::cout << "Nucleus : " << energyDepNucleus << std::endl;
             energyDepNucleus += energyDepInteraction;
             if(originVolume == 0){energyDepNucleus_FromSolution += energyDepInteraction;}
             if(originVolume == 1){energyDepNucleus_FromMembrane += energyDepInteraction;}

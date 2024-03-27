@@ -37,7 +37,7 @@ DecayDynamics::DecayDynamics(int activitySample_in, std::string cellLine_in, std
     massCytoplasm = (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater - massNucleus; // kg
     massCell = (4./3.)*TMath::Pi()*std::pow(radiusCell,3.)*densityWater; // kg
     massMembrane = massCell - (4./3.)*TMath::Pi()*std::pow(radiusCytoplasm,3.)*densityWater; // kg
-    std::cout << massNucleus << std::endl;
+    // std::cout << massNucleus << std::endl;
 }
 
 
