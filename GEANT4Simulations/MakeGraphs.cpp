@@ -21,7 +21,7 @@
 
 void MakeBraggPeakCurves()
 {
-    TFile *fileRun1 = TFile::Open("Output_Run1.root");
+    TFile *fileRun1 = TFile::Open("BraggPeakSimulation-build/Output_Run1.root");
     auto treeRun1= fileRun1->Get<TTree>("B4");
     TTreeReader myReaderRun1(treeRun1);
 
