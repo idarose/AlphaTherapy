@@ -1,6 +1,6 @@
 /run/initialize
 /run/printProgress 10000
-/Sim/setSeed 9415
+/Sim/setSeed 9450
 /Sim/setOutputFileName Output_Pb212_C4_2_Activity25kBq_Membrane_Thread_1.root
 /Sim/SetInitialRadionuclide_Z 82
 /Sim/SetInitialRadionuclide_A 212
@@ -10,4 +10,4 @@
 /Sim/SetSampleActivity 25
 /Sim/SetCellLineName C4_2
 /Sim/SetDecayCurveRadionuclide
-/run/beamOn 9375
+/run/beamOn 9410

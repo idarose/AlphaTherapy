@@ -66,7 +66,7 @@ class DecayDynamics
     //  Assumes the output file from Mathematica is structured in a specific way
 
     public:
-        DecayDynamics(int activitySample_in, double U0InternalizedTotalPerCell_in, double U0InternalizedCytoplasmPerCell_in, std::string cellLine_in);
+        DecayDynamics(int activitySample_in, std::string cellLine_in);
 
         void LoadDataFromMathematicaCalculations(std::string filepathToMathematicaOutput, double ratio);
 
@@ -85,18 +85,14 @@ class DecayDynamics
         double numberDecays212PbInMembraneTotalTime;
         double numberDecays212PbInCytoplasmTotalTime;
 
-        double U0InternalizedTotalPerCell;
-        double U0InternalizedCytoplasmPerCell;
         int activitySample;  // Given in kBq/1mL
         std::string cellLine;
 };
 
 
-DecayDynamics::DecayDynamics(int activitySample_in, double U0InternalizedTotalPerCell_in, double U0InternalizedCytoplasmPerCell_in, std::string cellLine_in)
+DecayDynamics::DecayDynamics(int activitySample_in, std::string cellLine_in)
 {
     activitySample = activitySample_in;
-    U0InternalizedTotalPerCell = U0InternalizedTotalPerCell_in;
-    U0InternalizedCytoplasmPerCell = U0InternalizedCytoplasmPerCell_in;
     cellLine = cellLine_in;
 
 }
@@ -117,7 +113,7 @@ void DecayDynamics::LoadDataFromMathematicaCalculations(std::string filepathToMa
 
     // If there are no radionuclides internalized there is no output file for "Cells"
     // So only read "Cells" files if there is uptake
-    if(U0InternalizedTotalPerCell>0.0)
+    if(cellLine=="C4_2"||cellLine=="PC3_PIP")
     {
         // Importing data for decays occuring in cells
         std::string filepathCellData = filepathToMathematicaOutput + "/" + cellLine + "/Cells/Activity_" + std::to_string(activitySample) + "kBq/NumberDecays.dat";
@@ -145,9 +141,9 @@ void numberEventsNeeded()
     double VolumeSample = 0.2*1000; // mm^3
     double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
     double volumeRatio = volumeCellTube/VolumeSample;
-    int numberCells = 1000000;
+    // int numberCells = 1000000;
 
-    int numberIterations = 1;
+    // int numberIterations = 1;
 
     std::cout << "Volume ratio of simulation : " << volumeRatio << std::endl;
 
@@ -161,45 +157,45 @@ void numberEventsNeeded()
 
     // C4-2 Cells
 
-    DecayDynamics decays_A1kBq_C4_2 = DecayDynamics(1,0.462,0.228,"C4_2");
-    DecayDynamics decays_A3kBq_C4_2 = DecayDynamics(3,1.386,0.684,"C4_2");
-    DecayDynamics decays_A5kBq_C4_2 = DecayDynamics(5,2.31,1.14,"C4_2");
-    DecayDynamics decays_A10kBq_C4_2 = DecayDynamics(10,3.96,1.97,"C4_2");
-    DecayDynamics decays_A25kBq_C4_2 = DecayDynamics(25,10.69,4.78,"C4_2");
-    DecayDynamics decays_A50kBq_C4_2 = DecayDynamics(50,20.2,8.94,"C4_2");
-    DecayDynamics decays_A75kBq_C4_2 = DecayDynamics(75,23.91,10.79,"C4_2");
-    DecayDynamics decays_A100kBq_C4_2 = DecayDynamics(100,35.89,13.16,"C4_2");
-    DecayDynamics decays_A150kBq_C4_2 = DecayDynamics(150,39.96,16.40,"C4_2");
+    DecayDynamics decays_A1kBq_C4_2 = DecayDynamics(1,"C4_2");
+    DecayDynamics decays_A3kBq_C4_2 = DecayDynamics(3,"C4_2");
+    DecayDynamics decays_A5kBq_C4_2 = DecayDynamics(5,"C4_2");
+    DecayDynamics decays_A10kBq_C4_2 = DecayDynamics(10,"C4_2");
+    DecayDynamics decays_A25kBq_C4_2 = DecayDynamics(25,"C4_2");
+    DecayDynamics decays_A50kBq_C4_2 = DecayDynamics(50,"C4_2");
+    DecayDynamics decays_A75kBq_C4_2 = DecayDynamics(75,"C4_2");
+    DecayDynamics decays_A100kBq_C4_2 = DecayDynamics(100,"C4_2");
+    DecayDynamics decays_A150kBq_C4_2 = DecayDynamics(150,"C4_2");
 
 
     // PC3 PIP Cells
 
-    DecayDynamics decays_A1kBq_PC3_PIP = DecayDynamics(1, 4.7, 0.2, "PC3_PIP");
-    DecayDynamics decays_A3kBq_PC3_PIP = DecayDynamics(3, 14.1, 0.6, "PC3_PIP");
-    DecayDynamics decays_A5kBq_PC3_PIP = DecayDynamics(5, 23.5, 1., "PC3_PIP");
-    DecayDynamics decays_A10kBq_PC3_PIP = DecayDynamics(10, 47., 2., "PC3_PIP");
-    DecayDynamics decays_A25kBq_PC3_PIP = DecayDynamics(25, 119., 6., "PC3_PIP");
-    DecayDynamics decays_A50kBq_PC3_PIP = DecayDynamics(50, 229., 11., "PC3_PIP");
-    DecayDynamics decays_A75kBq_PC3_PIP = DecayDynamics(75, 335., 17., "PC3_PIP");
-    DecayDynamics decays_A100kBq_PC3_PIP = DecayDynamics(100, 448., 22., "PC3_PIP");
-    DecayDynamics decays_A150kBq_PC3_PIP = DecayDynamics(150, 565., 28., "PC3_PIP");
+    DecayDynamics decays_A1kBq_PC3_PIP = DecayDynamics(1,"PC3_PIP");
+    DecayDynamics decays_A3kBq_PC3_PIP = DecayDynamics(3,"PC3_PIP");
+    DecayDynamics decays_A5kBq_PC3_PIP = DecayDynamics(5,"PC3_PIP");
+    DecayDynamics decays_A10kBq_PC3_PIP = DecayDynamics(10,"PC3_PIP");
+    DecayDynamics decays_A25kBq_PC3_PIP = DecayDynamics(25,"PC3_PIP");
+    DecayDynamics decays_A50kBq_PC3_PIP = DecayDynamics(50,"PC3_PIP");
+    DecayDynamics decays_A75kBq_PC3_PIP = DecayDynamics(75,"PC3_PIP");
+    DecayDynamics decays_A100kBq_PC3_PIP = DecayDynamics(100,"PC3_PIP");
+    DecayDynamics decays_A150kBq_PC3_PIP = DecayDynamics(150,"PC3_PIP");
 
 
     // PC3 Flu Cells
-    DecayDynamics decays_A1kBq_PC3_Flu = DecayDynamics(1, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A3kBq_PC3_Flu = DecayDynamics(3, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A5kBq_PC3_Flu = DecayDynamics(5, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A10kBq_PC3_Flu = DecayDynamics(10, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A25kBq_PC3_Flu = DecayDynamics(25, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A50kBq_PC3_Flu = DecayDynamics(50, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A75kBq_PC3_Flu = DecayDynamics(75, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A100kBq_PC3_Flu = DecayDynamics(100, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A150kBq_PC3_Flu = DecayDynamics(150, 0., 0., "PC3_Flu");
-    DecayDynamics decays_A1000kBq_PC3_Flu = DecayDynamics(1000,0.,0., "PC3_Flu");
-    DecayDynamics decays_A300kBq_PC3_Flu = DecayDynamics(300,0.,0., "PC3_Flu");
-    DecayDynamics decays_A500kBq_PC3_Flu = DecayDynamics(500,0.,0., "PC3_Flu");
-    DecayDynamics decays_A200kBq_PC3_Flu = DecayDynamics(200,0.,0., "PC3_Flu");
-    DecayDynamics decays_A250kBq_PC3_Flu = DecayDynamics(250,0.,0., "PC3_Flu");
+    DecayDynamics decays_A1kBq_PC3_Flu = DecayDynamics(1,"PC3_Flu");
+    DecayDynamics decays_A3kBq_PC3_Flu = DecayDynamics(3,"PC3_Flu");
+    DecayDynamics decays_A5kBq_PC3_Flu = DecayDynamics(5,"PC3_Flu");
+    DecayDynamics decays_A10kBq_PC3_Flu = DecayDynamics(10,"PC3_Flu");
+    DecayDynamics decays_A25kBq_PC3_Flu = DecayDynamics(25,"PC3_Flu");
+    DecayDynamics decays_A50kBq_PC3_Flu = DecayDynamics(50,"PC3_Flu");
+    DecayDynamics decays_A75kBq_PC3_Flu = DecayDynamics(75,"PC3_Flu");
+    DecayDynamics decays_A100kBq_PC3_Flu = DecayDynamics(100,"PC3_Flu");
+    DecayDynamics decays_A150kBq_PC3_Flu = DecayDynamics(150,"PC3_Flu");
+    // DecayDynamics decays_A1000kBq_PC3_Flu = DecayDynamics(1000,"PC3_Flu");
+    // DecayDynamics decays_A300kBq_PC3_Flu = DecayDynamics(300,"PC3_Flu");
+    // DecayDynamics decays_A500kBq_PC3_Flu = DecayDynamics(500,"PC3_Flu");
+    // DecayDynamics decays_A200kBq_PC3_Flu = DecayDynamics(200,"PC3_Flu");
+    // DecayDynamics decays_A250kBq_PC3_Flu = DecayDynamics(250,"PC3_Flu");
 
 
     //------------------–----------
