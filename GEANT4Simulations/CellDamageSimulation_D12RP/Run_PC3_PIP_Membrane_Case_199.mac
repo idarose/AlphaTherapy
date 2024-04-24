@@ -1,0 +1,13 @@
+/run/initialize
+/run/printProgress 10000
+/Sim/setSeed 179946
+/Sim/setOutputFileName Output_Pb212_PC3_PIP_Activity25kBq_Membrane_Thread_39.root
+/Sim/SetInitialRadionuclide_Z 82
+/Sim/SetInitialRadionuclide_A 212
+/Sim/SetInitialRadionuclide_excitationEnergy 0.0
+/Sim/DefineInitialRadionuclide
+/Sim/SetInitialRadionuclide_location 1
+/Sim/SetSampleActivity 25
+/Sim/SetCellLineName PC3_PIP
+/Sim/SetDecayCurveRadionuclide
+/run/beamOn 179906
