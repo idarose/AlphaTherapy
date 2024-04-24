@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     82164,       1734]
-NotebookOptionsPosition[     81719,       1719]
-NotebookOutlinePosition[     82113,       1735]
-CellTagsIndexPosition[     82070,       1732]
+NotebookDataLength[     81795,       1766]
+NotebookOptionsPosition[     81343,       1751]
+NotebookOutlinePosition[     81744,       1767]
+CellTagsIndexPosition[     81701,       1764]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -46,7 +46,7 @@ Cell[BoxData[{
        RowBox[{
        "this", " ", "is", " ", "the", " ", "activity", " ", "measured", " ", 
         "at", " ", "t"}], "=", 
-       RowBox[{"1", "h"}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"0", "h"}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{"inputActivityPerSample", " ", "=", " ", 
       RowBox[{
@@ -62,7 +62,8 @@ Cell[BoxData[{
       RowBox[{"decays", "/", "hour"}], "*)"}], "\[IndentingNewLine]", 
      RowBox[{"nCellsPerSample", " ", "=", " ", 
       RowBox[{"0.5", "*", 
-       RowBox[{"10.0", "^", "6"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"(", 
+        RowBox[{"10.0", "^", "6"}], ")"}]}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"U0PerCellMembrane", " ", "=", " ", 
       RowBox[{"inputU0PerCell", "-", "inputU0InternalisedPerCell"}]}], ";", 
      "\[IndentingNewLine]", 
@@ -88,20 +89,22 @@ Cell[BoxData[{
      "\[IndentingNewLine]", 
      RowBox[{"(*", 
       RowBox[{"Decay", " ", "Constants"}], "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"l212Pb", "=", "0.0649622"}], ";", " ", 
+     RowBox[{"l212Pb", "=", "0.065255"}], ";", " ", 
      RowBox[{"(*", 
       RowBox[{"1", "/", "hour"}], "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"l212Bi", "=", "0.687646"}], ";", 
+     RowBox[{"l212Bi", "=", "0.68685"}], ";", 
      RowBox[{"(*", 
       RowBox[{"1", "/", "hour"}], "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"l208Tl", "=", "13.6236"}], ";", 
+     RowBox[{"l208Tl", "=", "13.622"}], ";", 
      RowBox[{"(*", 
       RowBox[{"1", "/", "hour"}], "*)"}], "\[IndentingNewLine]", 
      RowBox[{"l212Po", "=", 
-      RowBox[{"8.4904", "*", "1000000000"}]}], ";", 
+      RowBox[{"8.3455", "*", 
+       RowBox[{"(", 
+        RowBox[{"10.0", "^", "9"}], ")"}]}]}], ";", 
      RowBox[{"(*", 
       RowBox[{"1", "/", "hour"}], "*)"}], "\[IndentingNewLine]", 
-     RowBox[{"l208Pb", "=", "0"}], ";", 
+     RowBox[{"l208Pb", "=", "0.0"}], ";", 
      RowBox[{"(*", 
       RowBox[{"1", "/", "hour"}], "*)"}], "\[IndentingNewLine]", 
      "\[IndentingNewLine]", 
@@ -168,7 +171,7 @@ Cell[BoxData[{
             RowBox[{"-", "l212Pb"}], "*", 
             RowBox[{"y", "[", "t", "]"}]}]}], ",", 
           RowBox[{
-           RowBox[{"y", "[", "1.", "]"}], "==", "N0"}]}], "}"}], ",", 
+           RowBox[{"y", "[", "0.", "]"}], "==", "N0"}]}], "}"}], ",", 
         RowBox[{"y", "[", "t", "]"}], ",", 
         RowBox[{"{", 
          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
@@ -201,7 +204,7 @@ Cell[BoxData[{
             RowBox[{
              RowBox[{"U", "'"}], "[", "t", "]"}]}]}], ",", 
           RowBox[{
-           RowBox[{"y", "[", "1.", "]"}], "==", "N0"}]}], "}"}], ",", 
+           RowBox[{"y", "[", "0.", "]"}], "==", "N0"}]}], "}"}], ",", 
         RowBox[{"y", "[", "t", "]"}], ",", 
         RowBox[{"{", 
          RowBox[{"t", ",", "tStart", ",", "tStop"}], "}"}], ",", 
@@ -256,37 +259,7 @@ Cell[BoxData[{
        RowBox[{"N212Pb", "[", "t", "]"}], "*", "l212Pb"}]}], ";", " ", 
      RowBox[{"(*", " ", 
       RowBox[{"decays", "/", "hour"}], " ", "*)"}], "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", 
-     RowBox[{"(*", "\[IndentingNewLine]", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-        RowBox[{
-        "Integral", " ", "of", " ", "number", " ", "of", " ", "decays", " ", 
-         "as", " ", "a", " ", "function", " ", "of", " ", "time"}], ",", " ", 
-        
-        RowBox[{"to", " ", "use", " ", "for", " ", "normalization"}]}], 
-       "*)"}], "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"int", "=", " ", 
-        RowBox[{"N", "[", 
-         RowBox[{"NIntegrate", "[", 
-          RowBox[{
-           RowBox[{"NDecays212Pb212Bi", "[", "t", "]"}], ",", 
-           RowBox[{"{", 
-            RowBox[{"t", ",", "0.", ",", "240."}], "}"}], ",", 
-           RowBox[{"MaxRecursion", "\[Rule]", "12"}]}], "]"}], "]"}]}], ";", 
-       "\[IndentingNewLine]", "\[IndentingNewLine]", 
-       RowBox[{"(*", " ", 
-        RowBox[{
-        "Calculating", " ", "pdf", " ", "for", " ", "a", " ", "decay", " ", 
-         "fo", " ", "212", "Pb", " ", "to", " ", "take", " ", "place", " ", 
-         "at", " ", "time", " ", "t"}], "*)"}], "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"decay212PbPDF", "[", "t_", "]"}], "=", " ", 
-        RowBox[{
-         RowBox[{"NDecays212Pb212Bi", "[", "t", "]"}], "/", "int"}]}], ";"}], 
-      "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
      RowBox[{"(*", 
       RowBox[{
       "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
@@ -608,8 +581,8 @@ Mathematica/Output\>\"", " ", ",", " ", "\"\</\>\"", ",", " ",
         ",", "\"\</\>\"", ",", " ", "\"\<Activity_\>\"", ",", " ", 
         RowBox[{"ToString", "[", "inputActivity", "]"}], " ", ",", " ", 
         "\"\<kBq\>\"", ",", " ", "\"\</\>\""}], "]"}]}], ";", 
-     "\[IndentingNewLine]", "\n", "\[IndentingNewLine]", 
-     "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     "\n", 
      RowBox[{"If", "[", 
       RowBox[{
        RowBox[{"saveFullOutput", "==", "\"\<true\>\""}], ",", " ", 
@@ -1139,260 +1112,312 @@ Mathematica/Output\>\"", " ", ",", " ", "\"\</\>\"", ",", " ",
                  "inputU0InternalisedPerCell", "/", "inputU0PerCell"}], 
                  ")"}]}]}], "}"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], 
          ";"}], "\[IndentingNewLine]", "}"}]}], "]"}], ";"}], "\n", ")"}]}], 
-  "\[IndentingNewLine]", 
-  RowBox[{"(*", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
    RowBox[{
+    StyleBox["1", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "0.50", ",", "0.24",
+     ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["1", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "0.462", ",", 
-      "0.228", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["1", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "0.50", ",", 
+     "0.24", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["3", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "1.46", ",", "0.73",
+     ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["1", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "0.462", ",", 
-      "0.228", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["3", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "1.46", ",", 
+     "0.73", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["5", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "2.31", ",", "1.14",
+     ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["3", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "1.386", ",", 
-      "0.684", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["5", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "2.31", ",", 
+     "1.14", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["10", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "3.95", ",", 
+    "1.97", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["3", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "1.386", ",", 
-      "0.684", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["10", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "3.95", ",", 
+     "1.97", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["25", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "10.69", ",", 
+    "4.78", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["5", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "2.31", ",", 
-      "1.14", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["25", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "10.69", ",", 
+     "4.78", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["50", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "20.2", ",", 
+    "8.94", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["5", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "2.31", ",", 
-      "1.14", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["50", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "20.2", ",", 
+     "8.94", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["75", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "23.91", ",", 
+    "10.79", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["10", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "3.95", ",", 
-      "1.97", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["75", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "23.91", ",", 
+     "10.79", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["100", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "35.89", ",", 
+    "13.16", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["10", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "3.95", ",", 
-      "1.97", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["100", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "35.89", ",", 
+     "13.16", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["150", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "39.96", ",", 
+    "16.40", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["25", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "10.69", ",", 
-      "4.78", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["150", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "39.96", ",", 
+     "16.40", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["1", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "4.68", ",", 
+    "0.19", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["25", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "10.69", ",", 
-      "4.78", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["1", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "4.68", ",", 
+     "0.19", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["3", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "14.05", ",", 
+    "0.56", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["50", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "20.2", ",", 
-      "8.94", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["3", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "14.05", ",", 
+     "0.56", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["5", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "23.43", ",", 
+    "0.95", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["50", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "20.2", ",", 
-      "8.94", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["5", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "23.43", ",", 
+     "0.95", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["10", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "47.", ",", 
+    "2.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["75", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "23.91", ",", 
-      "10.79", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["10", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "47.", ",", 
+     "2.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["25", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "119.", ",", 
+    "6.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["75", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "23.91", ",", 
-      "10.79", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["25", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "119.", ",", 
+     "6.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["50", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "229.", ",", 
+    "11.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["100", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "35.89", ",", 
-      "13.16", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["50", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "229.", ",", 
+     "11.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["75", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "335.", ",", 
+    "17.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["100", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "35.89", ",", 
-      "13.16", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     StyleBox["75", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "335.", ",", 
+     "17.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["100", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "448.", ",", 
+    "22.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["150", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "39.96", ",", 
-      "16.40", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
+     StyleBox["100", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "448.", ",", 
+     "22.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["CalculateDecays", "Code"], 
+   StyleBox["[", "Code"], 
+   RowBox[{
+    StyleBox["150", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "565.", ",", 
+    "28.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    StyleBox["CalculateDecays", "Code"], 
+    StyleBox["[", "Code"], 
     RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["150", "Code"], ",", " ", "\"\<C4_2\>\"", ",", "39.96", ",", 
-      "16.40", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["1", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "4.7", ",", 
-      "0.2", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["1", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "4.7", ",", 
-      "0.2", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["3", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "14.1", ",", 
-      "0.6", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["3", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "14.1", ",", 
-      "0.6", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["5", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "23.5", ",", 
-      "1.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["5", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "23.5", ",", 
-      "1.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["10", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "47.", ",", 
-      "2.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["10", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "47.", ",", 
-      "2.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["25", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "119.", ",", 
-      "6.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["25", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "119.", ",", 
-      "6.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["50", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "229.", ",", 
-      "11.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", "\n", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["50", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "229.", ",", 
-      "11.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["75", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "335.", ",", 
-      "17.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["75", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "335.", ",", 
-      "17.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["100", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "448.", ",", 
-      "22.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["100", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "448.", ",", 
-      "22.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["150", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "565.", ",", 
-      "28.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";", 
-    "\[IndentingNewLine]", 
-    RowBox[{
-     StyleBox["CalculateDecays", "Code"], 
-     StyleBox["[", "Code"], 
-     RowBox[{
-      StyleBox["150", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "565.", ",", 
-      "28.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
-   "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]", 
+     StyleBox["150", "Code"], ",", " ", "\"\<PC3_PIP\>\"", ",", "565.", ",", 
+     "28.", ",", "\"\<Cells\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1474,7 +1499,8 @@ Mathematica/Output\>\"", " ", ",", " ", "\"\</\>\"", ",", " ",
     RowBox[{
      StyleBox["150", "Code"], ",", " ", "\"\<PC3_Flu\>\"", ",", "0.", ",", 
      "0.", ",", "\"\<Solution\>\"", ",", "\"\<true\>\""}], "]"}], ";"}], 
-  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
  CellChangeTimes->{{3.8939150975180063`*^9, 3.893915543580122*^9}, {
    3.893915637790778*^9, 3.8939157251076727`*^9}, {3.894079339509713*^9, 
@@ -1708,17 +1734,23 @@ Mathematica/Output\>\"", " ", ",", " ", "\"\</\>\"", ",", " ",
    3.9133718757190533`*^9, 3.913371915639765*^9}, {3.9136901151617117`*^9, 
    3.913690119035276*^9}, {3.9182013391926203`*^9, 3.918201572015828*^9}, {
    3.918201691962101*^9, 3.918201701451434*^9}, {3.918201788960142*^9, 
-   3.918201798705353*^9}, {3.921480891501144*^9, 
-   3.921480893836875*^9}},ExpressionUUID->"7f0197de-3e03-4def-affb-\
-878124b39fe3"],
+   3.918201798705353*^9}, {3.921480891501144*^9, 3.921480893836875*^9}, {
+   3.922248462541891*^9, 3.922248576929903*^9}, {3.9222486072371397`*^9, 
+   3.922248611272296*^9}, {3.9222486487048597`*^9, 3.922248675391794*^9}, {
+   3.922248810211171*^9, 3.922248841392128*^9}, {3.922248892059267*^9, 
+   3.922248894499259*^9}, {3.9222489302820807`*^9, 3.922248977825561*^9}, {
+   3.922251825226017*^9, 3.9222518260369453`*^9}, {3.922371910891081*^9, 
+   3.922372083864812*^9}, {3.922695023815949*^9, 3.922695024124713*^9}, {
+   3.9229364381842813`*^9, 3.922936538837267*^9}},
+ CellLabel->"In[47]:=",ExpressionUUID->"7f0197de-3e03-4def-affb-878124b39fe3"],
 
 Cell["", "Item",
  CellChangeTimes->{
   3.897012398318894*^9},ExpressionUUID->"c0a42d31-c7e1-4085-ae8d-\
 1890766d0430"]
 },
-WindowSize->{736, 759},
-WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowSize->{1187, 827},
+WindowMargins->{{-1638, Automatic}, {103, Automatic}},
 FrontEndVersion->"13.2 for Mac OS X ARM (64-bit) (January 30, 2023)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"3d460149-3223-4e90-bbf0-a8be2a74b71c"
@@ -1734,8 +1766,8 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 81036, 1692, 8976, "Input",ExpressionUUID->"7f0197de-3e03-4def-affb-878124b39fe3"],
-Cell[81597, 1714, 118, 3, 32, "Item",ExpressionUUID->"c0a42d31-c7e1-4085-ae8d-1890766d0430"]
+Cell[558, 20, 80660, 1724, 7134, "Input",ExpressionUUID->"7f0197de-3e03-4def-affb-878124b39fe3"],
+Cell[81221, 1746, 118, 3, 32, "Item",ExpressionUUID->"c0a42d31-c7e1-4085-ae8d-1890766d0430"]
 }
 ]
 *)
