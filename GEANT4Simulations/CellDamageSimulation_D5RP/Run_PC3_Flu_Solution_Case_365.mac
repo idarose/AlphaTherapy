@@ -1,0 +1,13 @@
+/run/initialize
+/run/printProgress 10000
+/Sim/setSeed 65495
+/Sim/setOutputFileName Output_Pb212_PC3_Flu_Activity25kBq_Solution_Thread_45.root
+/Sim/SetInitialRadionuclide_Z 82
+/Sim/SetInitialRadionuclide_A 212
+/Sim/SetInitialRadionuclide_excitationEnergy 0.0
+/Sim/DefineInitialRadionuclide
+/Sim/SetInitialRadionuclide_location 0
+/Sim/SetSampleActivity 25
+/Sim/SetCellLineName PC3_Flu
+/Sim/SetDecayCurveRadionuclide
+/run/beamOn 65415
