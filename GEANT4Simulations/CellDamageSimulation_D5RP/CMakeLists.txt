@@ -57,9 +57,23 @@ set(EXAMPLEB4A_SCRIPTS
     jobScript_C4_2_Membrane.sh
     jobScript_C4_2_Cytoplasm.sh
     jobScript_PC3_PIP_Solution.sh
+    jobScript_PC3_PIP_Solution1.sh
+    jobScript_PC3_PIP_Solution2.sh
+    jobScript_PC3_PIP_Solution3.sh
+    jobScript_PC3_PIP_Solution4.sh
     jobScript_PC3_PIP_Membrane.sh
+    jobScript_PC3_PIP_Membrane1.sh
+    jobScript_PC3_PIP_Membrane2.sh
+    jobScript_PC3_PIP_Membrane3.sh
+    jobScript_PC3_PIP_Membrane4.sh
     jobScript_PC3_PIP_Cytoplasm.sh
+    jobScript_PC3_PIP_Cytoplasm1.sh
+    jobScript_PC3_PIP_Cytoplasm2.sh
+    jobScript_PC3_PIP_Cytoplasm3.sh
+    jobScript_PC3_PIP_Cytoplasm4.sh
     jobScript_PC3_Flu_Solution.sh
+    jobScript_PC3_Flu_Solution1.sh
+    jobScript_PC3_Flu_Solution2.sh
     gui.mac
     init_vis.mac
     vis.mac
@@ -2943,7 +2957,6 @@ set(EXAMPLEB4A_SCRIPTS
     Run_PC3_Flu_Solution_Case_717.mac
     Run_PC3_Flu_Solution_Case_718.mac
     Run_PC3_Flu_Solution_Case_719.mac
-
   )
 
 foreach(_script ${EXAMPLEB4A_SCRIPTS})
