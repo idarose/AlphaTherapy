@@ -60,7 +60,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
     G4int seed = 13732;
     CLHEP::HepRandom::setTheEngine(new CLHEP::MTwistEngine);
-    // CLHEP::HepRandom::setTheSeed(time(NULL));
     CLHEP::HepRandom::setTheSeed(seed);
 
 
@@ -98,6 +97,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                  false,            // no boolean operation
                  0,                // copy number
                  fCheckOverlaps);  // checking overlaps
+
+    auto worldVisAtt = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0));
+    worldLV->SetVisAttributes(worldVisAtt);
 
     //-------------------------------
     //Creating cell tube cylinder
@@ -139,6 +141,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 false,
                 -2,
                 fCheckOverlaps);
+
+    auto cellCellTubeVisAtt = new G4VisAttributes(G4Colour(0.5, 0.5, 0.5));
+    cellTubeLV->SetVisAttributes(cellCellTubeVisAtt);
 
     //-------------------------------
     //Making water solution filling the cell tube

@@ -47,7 +47,7 @@ class HitAnalysis
         void MakeGraph_ProbabilityDeath_PerNHits(int MaxNHits);
         void MakeGraph_ProbabilityDeath_UWA_ForNHits();
         void MakeHitAnalysis(int MaxNHits);
-        void WriteToFile();
+        void WriteToFile(TFile *file);
 
     private:
         std::string regionName;

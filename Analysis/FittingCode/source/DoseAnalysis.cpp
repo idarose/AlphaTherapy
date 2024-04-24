@@ -159,8 +159,9 @@ void DoseAnalysis::MakeDoseAnalysis()
     MakeMeanDose_PerNHits_Average_Graph();
 }
 
-void DoseAnalysis::WriteToFile()
+void DoseAnalysis::WriteToFile(TFile* file)
 {
+    file->cd();
     for(auto& entry : grMeanDose_PerNHits_Vec)
     {
         (std::get<1>(entry))->Write();

@@ -23,6 +23,7 @@
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4RegionStore.hh"
 
 
 
@@ -86,6 +87,14 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                  worldS,           // its solid
                  world_mat,  // its material
                  "World");         // its name
+
+    //Defining the G4Region for the cell cytoplasm
+    G4Region* region_World = new G4Region("region_world");
+
+    G4Region* defaultRegion = G4RegionStore::GetInstance()->GetRegion("DefaultRegionForTheWorld");
+    G4ProductionCuts* cuts = new G4ProductionCuts;
+    cuts->SetProductionCut(0.1*nm); //Your desired cut
+    defaultRegion->SetProductionCuts(cuts);
 
     //Making world physical
     G4PVPlacement* worldPV

@@ -125,9 +125,9 @@ int main(int argc, char *argv[])
     std::string outputName = outputDir + "Output_" + cellLine + "_" + volumeName + "_" + modelType + ".root";
     TFile *outputFile = new TFile(outputName.c_str(), "RECREATE");
 
-    survivalFit.WriteToFile();
-    hitAnalysis.WriteToFile();
-    doseAnalysis.WriteToFile();
+    survivalFit.WriteToFile(outputFile);
+    hitAnalysis.WriteToFile(outputFile);
+    doseAnalysis.WriteToFile(outputFile);
 
     outputFile->Write();
     outputFile->Close();

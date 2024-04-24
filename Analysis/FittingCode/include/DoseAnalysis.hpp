@@ -42,7 +42,7 @@ class DoseAnalysis
         void MakeDose_PerNHits_Average_Histograms();
         void MakeMeanDose_PerNHits_Average_Graph();
         void MakeDoseAnalysis();
-        void WriteToFile();
+        void WriteToFile(TFile *file);
 
     private:
         std::string regionName;

@@ -44,7 +44,7 @@ class SurvivalFit
         void FitCellSurvival(CellSurvival cellSurvivalInstance, std::string modelName_in, int region);
 
         void MakeHitMultiplicitySurvivalHistogram();
-        void WriteToFile();
+        void WriteToFile(TFile *file);
 
         std::vector<std::tuple<double, TH1D*, TH1D*>> Get_hDose_Activity_Vec(){return hDose_Activity_Vec;};
         std::vector<std::tuple<double, TH1D*>> Get_hHitMultiplicity_vec(){return hHitMultiplicity_vec;};
@@ -59,6 +59,8 @@ class SurvivalFit
         std::string cellLine;
 
         std::string modelName;
+
+        std::string cellGeometryType;
 
 
         //-------------------------
@@ -82,6 +84,8 @@ class SurvivalFit
         TGraphErrors gr_cellSurvivability_vs_activitykBqPerMl;
 
         TF1* f_cellSurvivalVsDose;
+
+        TGraphErrors* grFitPoints = new TGraphErrors();
 };
 
 

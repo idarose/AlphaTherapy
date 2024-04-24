@@ -47,12 +47,18 @@ void MakeBraggPeakCurves()
     histRun1->GetXaxis()->SetTitle("Energy Deposition [MeV");
     histRun1->GetYaxis()->SetTitle("Position z [um]");
 
+    TH1D* histMaxZ = new TH1D("hMaxZPosition", "Maximum z position", NBins, 0., 150.);
+    histMaxZ->GetXaxis()->SetTitle("Position z [um]");
+
+    TH1D* histEnergyDep = new TH1D("hEnergyDep", "Energy deposition for range", NBins, 0., 150.);
+    histMaxZ->GetXaxis()->SetTitle("Position z [um]");
+
     int scale = 0;
     // std::vector<std::tuple<double,double>> vec;
 
     while(myReaderRun1.Next())
     {
-        // double totalStep = 0.;
+        double maxZ = 0.;
 
         for(int i=0; i<energyDepRun1.GetSize(); i++)
         {
@@ -60,14 +66,21 @@ void MakeBraggPeakCurves()
             double positionZ = positionZRun1[i];
             double energyDep = energyDepRun1[i];
 
-            // totalStep += step;
+            if(positionZ>maxZ)
+            {
+                maxZ = positionZ;
+            }
 
             double S = energyDep/step;
 
-            histRun1->Fill(S,positionZ);
+            histEnergyDep->Fill(positionZ, S);
+
+            histRun1->Fill(energyDep,positionZ);
 
         }
         scale++;
+
+        histMaxZ->Fill(maxZ);
     }
     histRun1->Scale(((double)scale));
 
@@ -118,6 +131,8 @@ void MakeBraggPeakCurves()
     auto output = new TFile(outputName.c_str(), "RECREATE");
     histRun1->Write();
     // histRun2->Write();
+    histMaxZ->Write();
+    histEnergyDep->Write();
     grRun1->Write();
     output->Write();
     output->Close();

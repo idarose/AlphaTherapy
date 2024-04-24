@@ -1,7 +1,7 @@
 #include "../include/SurvivalFit.hpp"
 #include "../include/CellSurvival.hpp"
-
-    #include <fstream>
+#include <iostream>
+#include <fstream>
 
 SurvivalFit::SurvivalFit() {
 }
@@ -9,6 +9,7 @@ SurvivalFit::SurvivalFit() {
 //----------------------------
 void SurvivalFit::LoadHistogramsFromAnalysis(CellSurvival cellSurvivalInstance, std::string regionName)
 {
+
     //--------------------------
     // Get cell survival data
     std::vector<std::tuple<double,double,double>> cellSurvivalData = cellSurvivalInstance.GetCellSurvivalData();
@@ -170,6 +171,8 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
     modelName = modelName_in;
 
     cellLine = cellSurvivalInstance.GetCellLine();
+
+    cellGeometryType = cellSurvivalInstance.GetCellGeometryType();
 
     //------------------------
     // Defininng volume used for fit
@@ -429,6 +432,21 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
     std::cout << " Cell Line " + cellSurvivalInstance.GetCellLine() << " Model : " << modelName << " Region : " << regionName << std::endl;
     gr_clonogenicSurvival->Fit(f_cellSurvivalVsDose, "", "", 0.0, 150.0);
 
+
+    grFitPoints->SetName("grFitPoints");
+    grFitPoints->SetTitle("Cell Survival Fraction");
+    grFitPoints->GetXaxis()->SetTitle("Activity [kBq/mL]");
+    grFitPoints->GetYaxis()->SetTitle("Fraction of cells in sample surviving");
+
+    for(int i=0; i<hDose_Activity_Vec.size(); i++)
+    {
+        double activity = std::get<0>(hDose_Activity_Vec[i]);
+        double surv = f_cellSurvivalVsDose->Eval(activity);
+
+        grFitPoints->SetPoint(i, activity, surv);
+    }
+
+
     double chi_sq = f_cellSurvivalVsDose->GetChisquare();
 
     int deg_freedom = f_cellSurvivalVsDose->GetNDF();
@@ -444,6 +462,8 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
     double alpha = f_cellSurvivalVsDose->GetParameter(0);
     double dAlpha = f_cellSurvivalVsDose->GetParError(0);
 
+    // std::cout << alpha << std::endl;
+
 
     parametersAndUncertainties_Vec.push_back(std::make_tuple(alpha,dAlpha));
 
@@ -451,25 +471,30 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
     double dBeta = 0.;
 
     if(modelName=="LQ")
-    {
+{
+    if (f_cellSurvivalVsDose == nullptr) {
+        std::cerr << "f_cellSurvivalVsDose is null." << std::endl;
+    } else {
         beta = f_cellSurvivalVsDose->GetParameter(1);
         dBeta = f_cellSurvivalVsDose->GetParError(1);
-
         parametersAndUncertainties_Vec.push_back(std::make_tuple(beta,dBeta));
     }
 }
 
 
-//----------------------------
-void MakeHitMultiplicitySurvivalHistogram();
+    // The path to the CSV file you want to append to
+    std::string filePath = "Output_" + cellGeometryType + "/" + cellLine + "_" + modelName + ".csv";
+}
 
 
 
 //----------------------------
-void SurvivalFit::WriteToFile()
+void SurvivalFit::WriteToFile(TFile *file)
 {
     // std::string outputName = "Output_AnalyseCellSurvival_" + cellLine + "_" + regionName + "_" + modelName + ".root";
     // TFile *outputFile = new TFile(outputName.c_str(), "RECREATE");
+
+    file->cd();
 
     std::string titleGraph = "Cell Survival Using Energy Deposition in " + regionName;
     gr_clonogenicSurvival->SetTitle(titleGraph.c_str());
@@ -480,6 +505,8 @@ void SurvivalFit::WriteToFile()
 
     f_cellSurvivalVsDose->Write();
     gr_cellSurvivability_vs_activitykBqPerMl.Write();
+
+    grFitPoints->Write();
 
 
 

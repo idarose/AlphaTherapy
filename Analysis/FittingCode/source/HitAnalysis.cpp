@@ -433,8 +433,9 @@ void HitAnalysis::MakeHitAnalysis(int MaxNHits)
     MakeGraph_ProbabilityDeath_UWA_ForNHits();
 }
 
-void HitAnalysis::WriteToFile()
+void HitAnalysis::WriteToFile(TFile* file)
 {
+    file->cd();
     for(auto& entry : grHitMultiplicity_vec)
     {
         (std::get<1>(entry))->Write();
