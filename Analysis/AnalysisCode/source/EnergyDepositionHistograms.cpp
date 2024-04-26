@@ -363,40 +363,40 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
     hDoseTotalCell_mGyBinning = new TH1D(histogramNameTotalCell_mGyBinning.c_str(), "Dose Delivered in Cell", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
 
     hDoseNucleus_FromSolution = new TH1D(histogramNameNucleus_FromSolution.c_str(), "Dose Delivered in Cell Nucleus (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseNucleus_FractionFromSolution = new TH1D(hisogramNameNucleus_FractionFromSolution.c_str(), "Dose Delivered in Cell Nucleus (Fraction from Decays originating in Solution) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FractionFromSolution = new TH1D(hisogramNameNucleus_FractionFromSolution.c_str(), "Dose Delivered in Cell Nucleus (Fraction from Decays originating in Solution) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseNucleus_FromMembrane = new TH1D(histogramNameNucleus_FromMembrane.c_str(), "Dose Delivered in Cell Nucleus (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseNucleus_FractionFromMembrane = new TH1D(hisogramNameNucleus_FractionFromMembrane.c_str(), "Dose Delivered in Cell Nucleus (Fraction from Decays originating in Membrane) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FractionFromMembrane = new TH1D(hisogramNameNucleus_FractionFromMembrane.c_str(), "Dose Delivered in Cell Nucleus (Fraction from Decays originating in Membrane) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseNucleus_FromCytoplasm = new TH1D(histogramNameNucleus_FromCytoplasm.c_str(), "Dose Delivered in Cell Nucleus (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseNucleus_FractionFromCytoplasm = new TH1D(hisogramNameNucleus_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Nucleus (Fraction from Decays originating in Cytoplasm) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseNucleus_FractionFromCytoplasm = new TH1D(hisogramNameNucleus_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Nucleus (Fraction from Decays originating in Cytoplasm) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseMembrane_FromSolution = new TH1D(histogramNameMembrane_FromSolution.c_str(), "Dose Delivered in Cell Membrane (from Decays originating in Solution)", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseMembrane_FractionFromSolution = new TH1D(hisogramNameMembrane_FractionFromSolution.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Solution) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FractionFromSolution = new TH1D(hisogramNameMembrane_FractionFromSolution.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Solution) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseMembrane_FromMembrane = new TH1D(histogramNameMembrane_FromMembrane.c_str(), "Dose Delivered in Cell Membrane (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseMembrane_FractionFromMembrane = new TH1D(hisogramNameMembrane_FractionFromMembrane.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Membrane) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FractionFromMembrane = new TH1D(hisogramNameMembrane_FractionFromMembrane.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Membrane) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseMembrane_FractionFromCytoplasm = new TH1D(hisogramNameMembrane_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseMembrane_FractionFromCytoplasm = new TH1D(hisogramNameMembrane_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Cytoplasm) ", NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseCytoplasm_FractionFromSolution = new TH1D(hisogramNameCytoplasm_FractionFromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (Fraction from Decays originating in Solution) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FractionFromSolution = new TH1D(hisogramNameCytoplasm_FractionFromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (Fraction from Decays originating in Solution) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseCytoplasm_FromMembrane = new TH1D(histogramNameCytoplasm_FromMembrane.c_str(), "Dose Delivered in Cell Cytoplasm (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseCytoplasm_FractionFromMembrane = new TH1D(hisogramNameCytoplasm_FractionFromMembrane.c_str(), "Dose Delivered in Cell Cytoplasm (Fraction from Decays originating in Membrane) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FractionFromMembrane = new TH1D(hisogramNameCytoplasm_FractionFromMembrane.c_str(), "Dose Delivered in Cell Cytoplasm (Fraction from Decays originating in Membrane) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseCytoplasm_FromCytoplasm = new TH1D(histogramNameCytoplasm_FromCytoplasm.c_str(), "Dose Delivered in Cell Cytoplasm (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseCytoplasm_FractionFromCytoplasm = new TH1D(hisogramNameCytoplasm_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Cytoplasm (Fraction from Decays originating in Cytoplasm) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseCytoplasm_FractionFromCytoplasm = new TH1D(hisogramNameCytoplasm_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Cytoplasm (Fraction from Decays originating in Cytoplasm) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseTotalCell_FromSolution = new TH1D(histogramNameTotalCell_FromSolution.c_str(), "Dose Delivered in Cell (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseTotalCell_FractionFromSolution = new TH1D(hisogramNameTotalCell_FractionFromSolution.c_str(), "Dose Delivered in Cell (Fraction from Decays originating in Solution) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FractionFromSolution = new TH1D(hisogramNameTotalCell_FractionFromSolution.c_str(), "Dose Delivered in Cell (Fraction from Decays originating in Solution) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseTotalCell_FromMembrane = new TH1D(histogramNameTotalCell_FromMembrane.c_str(), "Dose Delivered in Cell (from Decays originating in Membrane) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseTotalCell_FractionFromMembrane = new TH1D(hisogramNameTotalCell_FractionFromMembrane.c_str(), "Dose Delivered in Cell (Fraction from Decays originating in Membrane) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FractionFromMembrane = new TH1D(hisogramNameTotalCell_FractionFromMembrane.c_str(), "Dose Delivered in Cell (Fraction from Decays originating in Membrane) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseTotalCell_FromCytoplasm = new TH1D(histogramNameTotalCell_FromCytoplasm.c_str(), "Dose Delivered in Cell (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseTotalCell_FractionFromCytoplasm = new TH1D(hisogramNameTotalCell_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell (Fraction from Decays originating in Cytoplasm) ",NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
+    hDoseTotalCell_FractionFromCytoplasm = new TH1D(hisogramNameTotalCell_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell (Fraction from Decays originating in Cytoplasm) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
 
     // naming axis
@@ -1008,14 +1008,17 @@ void EnergyDepositionHistograms::ScaleHistograms(double numberCells_in, double n
 
 void EnergyDepositionHistograms::ScaleHistogramKineticEnergyAlphas_PerIteration(std::vector<int> numberHitsAlphasForScaling_in)
 {
-    // Kinetic energy of alphas histogram
-    hKineticEnergyAlphaTotalCell_FromSolution->Scale(1./((double)numberHitsAlphasForScaling_in[0]));
-    hKineticEnergyAlphaTotalCell_FromMembrane->Scale(1./((double)numberHitsAlphasForScaling_in[1]));
-    hKineticEnergyAlphaTotalCell_FromCytoplasm->Scale(1./((double)numberHitsAlphasForScaling_in[2]));
+    int numberHitsAlphasTotalCell = numberHitsAlphasForScaling_in[0] + numberHitsAlphasForScaling_in[1] + numberHitsAlphasForScaling_in[2];
+    int numberHitsAlphasNucleus = numberHitsAlphasForScaling_in[3] + numberHitsAlphasForScaling_in[4] + numberHitsAlphasForScaling_in[5];
 
-    hKineticEnergyAlphaNucleus_FromSolution->Scale(1./((double)numberHitsAlphasForScaling_in[3]));
-    hKineticEnergyAlphaNucleus_FromMembrane->Scale(1./((double)numberHitsAlphasForScaling_in[4]));
-    hKineticEnergyAlphaNucleus_FromCytoplasm->Scale(1./((double)numberHitsAlphasForScaling_in[5]));
+    // Kinetic energy of alphas histogram
+    hKineticEnergyAlphaTotalCell_FromSolution->Scale(1./((double)numberHitsAlphasTotalCell));
+    hKineticEnergyAlphaTotalCell_FromMembrane->Scale(1./((double)numberHitsAlphasTotalCell));
+    hKineticEnergyAlphaTotalCell_FromCytoplasm->Scale(1./((double)numberHitsAlphasTotalCell));
+
+    hKineticEnergyAlphaNucleus_FromSolution->Scale(1./((double)numberHitsAlphasNucleus));
+    hKineticEnergyAlphaNucleus_FromMembrane->Scale(1./((double)numberHitsAlphasNucleus));
+    hKineticEnergyAlphaNucleus_FromCytoplasm->Scale(1./((double)numberHitsAlphasNucleus));
 }
 
 //------------------–----------
