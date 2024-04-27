@@ -8,6 +8,9 @@
 #include "TROOT.h"
 #include <iostream>
 
+// g++ `root-config --cflags` combineHistogramCases.cpp `root-config --libs` -o combine
+
+
 void CombineHistogramsPC3PIP(std::string cellGeometry, int activity)
 {
     // Open the ROOT file
