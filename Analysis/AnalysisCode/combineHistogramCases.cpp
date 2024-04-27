@@ -5,6 +5,8 @@
 #include <TClass.h>
 #include <TIterator.h>
 #include <vector>
+#include "TROOT.h"
+#include <iostream>
 
 void CombineHistogramsPC3PIP(std::string cellGeometry, int activity)
 {
@@ -239,16 +241,45 @@ void CombineHistogramsPC3PIP(std::string cellGeometry, int activity)
 
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+
+    //------------------–----------
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " string_argument integer_argument" << std::endl;
+        return 1;
+    }
+
+    //------------------–----------
+    std::string cellGeometry = argv[1];
+    int activity;
+
+
+    std::vector<int> validActivities = {1,3,5,10,25,50,75,100,150};
+
+    //--------------------------
+    try {
+        activity = std::stoi(argv[2]);
+        bool activityIsValid = false;
+        for(auto & entry : validActivities){
+            if(entry == activity)
+            {
+                activityIsValid = true;
+            }
+        }
+        if(!activityIsValid)
+        {
+            throw std::invalid_argument("Activity case not valid.");
+        }
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Error: second argument is not a valid integer! " << e.what() << std::endl;
+        return 2;
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Error: second argument is out of range for an integer! " << e.what() << std::endl;
+        return 3;
+    }
+
     // Call the function with the name of your ROOT file
-    CombineHistogramsPC3PIP("D12RP", 1);
-    CombineHistogramsPC3PIP("D12RP", 3);
-    CombineHistogramsPC3PIP("D12RP", 5);
-    CombineHistogramsPC3PIP("D12RP", 10);
-    CombineHistogramsPC3PIP("D12RP", 25);
-    CombineHistogramsPC3PIP("D12RP", 50);
-    CombineHistogramsPC3PIP("D12RP", 75);
-    CombineHistogramsPC3PIP("D12RP", 100);
-    CombineHistogramsPC3PIP("D12RP", 150);
+    CombineHistogramsPC3PIP(cellGeometry, activity);
+
     return 0;
 }
