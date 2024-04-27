@@ -226,7 +226,7 @@ void CombineHistogramsPC3PIP(std::string cellGeometry, int activity)
 
 
 
-    std::string outputName = "Output_" + cellGeometry + "/Output_PC3_PIP_" + std::to_string(activity) + "kBq_Test.root";
+    std::string outputName = "Output_" + cellGeometry + "/Output_PC3_PIP_" + std::to_string(activity) + "kBq.root";
     auto output = new TFile(outputName.c_str(), "RECREATE");
 
     for(auto & entry : vec1DHists_Case1)
