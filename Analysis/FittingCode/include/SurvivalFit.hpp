@@ -49,9 +49,12 @@ class SurvivalFit
         std::vector<std::tuple<double, TH1D*, TH1D*>> Get_hDose_Activity_Vec(){return hDose_Activity_Vec;};
         std::vector<std::tuple<double, TH1D*>> Get_hHitMultiplicity_vec(){return hHitMultiplicity_vec;};
         std::vector<std::tuple<double, TH2D*>> Get_hDose_HitsCellComponent_Vec(){return hDose_HitsCellComponent_Vec;};
+        std::vector<std::tuple<double,double,double>> Get_CellSurvivalData(){return cellSurvivalData;};
 
         std::vector<std::tuple<double,double>> Get_ParametersAndUncertainties_Vec(){return parametersAndUncertainties_Vec;};
         std::string Get_RegionName(){return regionName;};
+        std::string Get_CellLineName(){return cellLine;};
+        std::string Get_CellGeometryType(){return cellGeometryType;};
 
     private:
         std::string regionName;
@@ -61,6 +64,8 @@ class SurvivalFit
         std::string modelName;
 
         std::string cellGeometryType;
+
+        std::vector<std::tuple<double,double,double>> cellSurvivalData;
 
 
         //-------------------------

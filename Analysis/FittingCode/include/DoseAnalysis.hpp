@@ -32,6 +32,7 @@
 #define DOSEANALYSIS_HPP
 
 class SurvivalFit;
+class DecayDynamics;
 
 //----------------------------
 class DoseAnalysis
@@ -41,17 +42,23 @@ class DoseAnalysis
         void MakeMeanDose_PerNHits_Graphs();
         void MakeDose_PerNHits_Average_Histograms();
         void MakeMeanDose_PerNHits_Average_Graph();
+        void MakeSurvival_ForMeanDose_Graph();
+        void MakeSurvival_ForCumulativeDecays_Graph();
         void MakeDoseAnalysis();
         void WriteToFile(TFile *file);
 
     private:
         std::string regionName;
+        std::string cellLine;
+        std::string cellGeometry;
 
         //-----------------------------
         // Define number of bins and max number of hits
         int nBinsHits;
         int nBinsDose;
         double maxDose;
+
+        std::vector<std::tuple<double,double,double>> cellSurvivalData;
 
         double scalingFactorHistograms;
 
@@ -71,6 +78,12 @@ class DoseAnalysis
         std::vector<std::tuple<double, TGraphAsymmErrors*>> grMeanDose_PerNHits_Vec;
 
         TGraphAsymmErrors* grMeanDose_PerNHits_Average = new TGraphAsymmErrors();
+
+
+        TGraphAsymmErrors* grMeanDose_Survival = new TGraphAsymmErrors();
+
+        TGraphErrors* grCumulativeDecays_Survival = new TGraphErrors();
+
 };
 
 

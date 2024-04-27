@@ -1,5 +1,7 @@
 #include "../include/SurvivalFit.hpp"
 #include "../include/DoseAnalysis.hpp"
+#include "../include/DecayDynamics.hpp"
+
 
 
 DoseAnalysis::DoseAnalysis(SurvivalFit survivalFitInstance)
@@ -12,7 +14,13 @@ DoseAnalysis::DoseAnalysis(SurvivalFit survivalFitInstance)
 
     regionName = survivalFitInstance.Get_RegionName();
 
+    cellLine = survivalFitInstance.Get_CellLineName();
+
+    cellGeometry = survivalFitInstance.Get_CellGeometryType();
+
     parametersFit = survivalFitInstance.Get_ParametersAndUncertainties_Vec();
+
+    cellSurvivalData = survivalFitInstance.Get_CellSurvivalData();
 
     //-----------------------------
         // Define number of bins and max number of hits
@@ -151,12 +159,133 @@ void DoseAnalysis::MakeMeanDose_PerNHits_Average_Graph()
     }
 }
 
+void DoseAnalysis::MakeSurvival_ForMeanDose_Graph()
+{
+    auto Find_MeanDose = [&](double activity, TH1D* hDose_OneActivity)
+    {
+        DecayDynamics dec = DecayDynamics((int)activity,cellLine,cellGeometry);
+
+        if(hDose_OneActivity->Integral()>0.)
+        {
+            double mean = hDose_OneActivity->GetMean();
+
+            double totalEntries = hDose_OneActivity->GetEntries();
+            double lowerThreshold = totalEntries * 0.25;
+            double upperThreshold = totalEntries * 0.75;
+
+            int binMean = hDose_OneActivity->FindBin(mean);
+            int nBins = hDose_OneActivity->GetNbinsX();
+            double lowerSpreadBin = binMean;
+            double upperSpreadBin = binMean;
+            double integral;
+
+            // Find the bin corresponding to the lower threshold (25% below the mean)
+            integral = hDose_OneActivity->Integral(1, binMean);
+            for (int i = binMean; i > 0 && integral > lowerThreshold; --i) {
+                integral = hDose_OneActivity->Integral(1, i);
+                lowerSpreadBin = i;
+            }
+
+            // Find the bin corresponding to the upper threshold (25% above the mean)
+            integral = hDose_OneActivity->Integral(binMean, nBins);
+            for (int i = binMean; i <= nBins && integral > (totalEntries - upperThreshold); ++i) {
+                integral = hDose_OneActivity->Integral(i, nBins);
+                upperSpreadBin = i;
+            }
+
+            // Convert bin numbers to x values
+            double lowerSpreadValue = hDose_OneActivity->GetBinLowEdge(lowerSpreadBin);
+            double upperSpreadValue = hDose_OneActivity->GetBinLowEdge(upperSpreadBin) + hDose_OneActivity->GetBinWidth(upperSpreadBin);
+
+            // Interval around the mean
+            double meanLowerDiff = mean - lowerSpreadValue;
+            double meanUpperDiff = upperSpreadValue - mean;
+
+            return std::make_tuple(mean,meanLowerDiff,meanUpperDiff);
+        }
+    };
+
+    grMeanDose_Survival->SetName("grMeanDose_SurvivalPercentage");
+    grMeanDose_Survival->GetXaxis()->SetTitle("Mean Dose [Gy]");
+    grMeanDose_Survival->GetYaxis()->SetTitle("PercentSurvival");
+
+    int graphPoint=0;
+
+    for(int i=0; i<hDose_Activity_Vec.size(); i++)
+    {
+        double activity = std::get<0>(hDose_Activity_Vec[i]);
+        TH1D* doseHist = std::get<2>(hDose_Activity_Vec[i]);
+
+        double surv = std::get<1>(cellSurvivalData[i])*100.;
+        double dSurv = std::get<2>(cellSurvivalData[i])*100.;
+
+        std::tuple<double,double,double> tuple = Find_MeanDose(activity,doseHist);
+        double meanDose = std::get<0>(tuple);
+        double lowSpread_meanDose = std::get<1>(tuple);
+        double highSpread_meanDose = std::get<2>(tuple);
+
+        grMeanDose_Survival->SetPoint(graphPoint, meanDose, surv);
+        grMeanDose_Survival->SetPointEYlow(graphPoint, dSurv);
+        grMeanDose_Survival->SetPointEYhigh(graphPoint, dSurv);
+        grMeanDose_Survival->SetPointEXlow(graphPoint, lowSpread_meanDose);
+        grMeanDose_Survival->SetPointEXhigh(graphPoint, highSpread_meanDose);
+
+        graphPoint++;
+    }
+}
+
+void DoseAnalysis::MakeSurvival_ForCumulativeDecays_Graph()
+{
+    auto Find_CumulativeDecays = [&](double activity)
+    {
+        DecayDynamics dec = DecayDynamics((int)activity,cellLine,cellGeometry);
+        dec.LoadDataFromMathematicaCalculations("../../Mathematica/Output");
+
+        double decaysSolution = dec.GetNumberDecaysInSolutionFirstHour();
+        double decaysMembrane = dec.GetNumberDecaysInMembraneTotalTime();
+        double decaysCytoplasm = dec.GetNumberDecaysInCytoplasmTotalTime();
+
+        double numberCells = dec.GetNumberCells();
+
+        double decaysPerCell = (decaysSolution + decaysMembrane + decaysCytoplasm)/numberCells;
+
+        std::cout << decaysPerCell << std::endl;
+
+        return decaysPerCell;
+    };
+
+    grCumulativeDecays_Survival->SetName("grCumulativeDecays_SurvivalPercentage");
+    grCumulativeDecays_Survival->GetXaxis()->SetTitle("Cumulative Decays 212-Pb");
+    grCumulativeDecays_Survival->GetYaxis()->SetTitle("PercentSurvival");
+
+    int graphPoint=0;
+
+    for(int i=0; i<hDose_Activity_Vec.size(); i++)
+    {
+        double activity = std::get<0>(hDose_Activity_Vec[i]);
+
+        if(activity>0.)
+        {
+            double surv = std::get<1>(cellSurvivalData[i])*100.;
+            double dSurv = std::get<2>(cellSurvivalData[i])*100.;
+
+            double numberDecaysPerCell = Find_CumulativeDecays(activity);
+
+            grCumulativeDecays_Survival->SetPoint(graphPoint, numberDecaysPerCell, surv);
+            grCumulativeDecays_Survival->SetPointError(graphPoint, 0.0, dSurv);
+
+            graphPoint++;
+        }
+    }
+}
 
 void DoseAnalysis::MakeDoseAnalysis()
 {
     MakeMeanDose_PerNHits_Graphs();
     MakeDose_PerNHits_Average_Histograms();
     MakeMeanDose_PerNHits_Average_Graph();
+    MakeSurvival_ForMeanDose_Graph();
+    MakeSurvival_ForCumulativeDecays_Graph();
 }
 
 void DoseAnalysis::WriteToFile(TFile* file)
@@ -168,4 +297,6 @@ void DoseAnalysis::WriteToFile(TFile* file)
     }
 
     grMeanDose_PerNHits_Average->Write();
+    grMeanDose_Survival->Write();
+    grCumulativeDecays_Survival->Write();
 }

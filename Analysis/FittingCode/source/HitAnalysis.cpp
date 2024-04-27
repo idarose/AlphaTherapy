@@ -97,15 +97,6 @@ void HitAnalysis::MakeHitMultiplicity_SurvivalFraction_Histograms()
         // Loop over number of hits (y-axis)
         for(int n=0; n<hDose_hitsAlpha_CellComponent_OneActivity->GetNbinsY(); n++)
         {
-            // double fractionCellsNotHit;
-            // if(n<=0)
-            // {
-            //     fractionCellsNotHit = 1. - hDose_mGy_OneActivity->Integral();
-            // }
-            // else
-            // {
-            //     fractionCellsNotHit = 0.;
-            // }
 
             // Those not hit always survive
             double survivalFractionThisHitNumber = 0.;
@@ -236,16 +227,9 @@ void HitAnalysis::MakeHitMultiplicity_PercentKilled_Histograms()
 
         //----------------------------
         // auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double dFractionHitNHits, double fractionDeadNHits, double percentDeathNHits, double dFractionSurvivedNHits)
-        auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double dFractionSurvivedNHits)
+        auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double fractionHitNHits_survived, double dFractionSurvivedNHits)
         {
-            // double dFractionDeadNHits = std::sqrt( std::pow(dFractionSurvivedNHits,2.) + std::pow(dFractionHitNHits,2.));
-
-            // double a = std::pow((1./fractionDeadNHits)*dFractionDeadNHits,2.);
-            // double b = std::pow((1./fractionHitNHits)*dFractionHitNHits,2.);
-
-            // return percentDeathNHits*std::sqrt(a + b);
-
-            return (100./fractionHitNHits)*dFractionSurvivedNHits;
+            return (100./fractionHitNHits)*fractionHitNHits_survived*dFractionSurvivedNHits;
 
         };
 
@@ -266,8 +250,8 @@ void HitAnalysis::MakeHitMultiplicity_PercentKilled_Histograms()
                 double percentKilled = 100.*(fractionHitThisNHits-fractionSurvivedThisNHits)/fractionHitThisNHits;
 
 
-                double dPercentKilled = CalculateUncertainty_PercentKilled_NHits(fractionHitThisNHits,dFractionSurvivedThisNHits);
-                // double dPercentKilled = 0.1*percentKilled;
+                double dPercentKilled = CalculateUncertainty_PercentKilled_NHits(fractionHitThisNHits, fractionSurvivedThisNHits, dFractionSurvivedThisNHits);
+
 
                 hHitMultiplicity_PercentKilled->SetBinContent(i+1, percentKilled);
                 hHitMultiplicity_PercentKilled->SetBinError(i+1, dPercentKilled);

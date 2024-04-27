@@ -12,7 +12,7 @@ void SurvivalFit::LoadHistogramsFromAnalysis(CellSurvival cellSurvivalInstance, 
 
     //--------------------------
     // Get cell survival data
-    std::vector<std::tuple<double,double,double>> cellSurvivalData = cellSurvivalInstance.GetCellSurvivalData();
+    cellSurvivalData = cellSurvivalInstance.GetCellSurvivalData();
 
     //-----------------------------
     // General filepath to output
