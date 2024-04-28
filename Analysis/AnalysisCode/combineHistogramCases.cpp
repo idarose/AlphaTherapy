@@ -461,7 +461,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Call the function with the name of your ROOT file
-    CombineHistogramsPC3PIP(cellGeometry, activity);
+    // CombineHistogramsPC3PIP(cellGeometry, activity);
     CombineHistogramsPC3Flu(cellGeometry, activity);
     CombineHistogramsC42(cellGeometry, activity);
 
