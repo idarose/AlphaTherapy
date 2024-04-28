@@ -371,6 +371,7 @@ void CombineHistogramsC42(std::string cellGeometry, int activity)
     TFile *file1 = TFile::Open(filename1.c_str(), "READ");
 
     std::vector<TH1D*> vec1DHists_Case1;
+    std::vector<TH2D*> vec2DHists_Case1;
 
 
     if (file1 && !file1->IsZombie()) {
