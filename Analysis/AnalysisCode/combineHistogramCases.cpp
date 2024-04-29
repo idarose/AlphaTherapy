@@ -239,6 +239,11 @@ void CombineHistogramsPC3PIP(std::string cellGeometry, int activity)
         entry->Scale(1./4.);
         entry->Write();
     }
+    for(auto & entry : vec2DHists_Case1)
+    {
+        entry->Scale(1./4.);
+        entry->Write();
+    }
     output->Write();
     output->Close();
 
@@ -357,6 +362,11 @@ void CombineHistogramsPC3Flu(std::string cellGeometry, int activity)
         entry->Scale(1./2.);
         entry->Write();
     }
+    for(auto & entry : vec2DHists_Case1)
+    {
+        entry->Scale(1./2.);
+        entry->Write();
+    }
     output->Write();
     output->Close();
 
@@ -419,6 +429,11 @@ void CombineHistogramsC42(std::string cellGeometry, int activity)
         entry->Scale(1./1.);
         entry->Write();
     }
+    for(auto & entry : vec2DHists_Case1)
+    {
+        entry->Scale(1./1.);
+        entry->Write();
+    }
     output->Write();
     output->Close();
 }
@@ -461,7 +476,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Call the function with the name of your ROOT file
-    // CombineHistogramsPC3PIP(cellGeometry, activity);
+    CombineHistogramsPC3PIP(cellGeometry, activity);
     CombineHistogramsPC3Flu(cellGeometry, activity);
     CombineHistogramsC42(cellGeometry, activity);
 

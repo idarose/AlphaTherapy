@@ -94,11 +94,11 @@ int main(int argc, char *argv[])
     SurvivalFit survivalFit;
     survivalFit.FitCellSurvival(cellSurvival, modelType, volumeType);
 
-    HitAnalysis hitAnalysis(survivalFit);
-    hitAnalysis.MakeHitAnalysis(41);
+    // HitAnalysis hitAnalysis(survivalFit);
+    // hitAnalysis.MakeHitAnalysis(41);
 
-    DoseAnalysis doseAnalysis(survivalFit);
-    doseAnalysis.MakeDoseAnalysis();
+    // DoseAnalysis doseAnalysis(survivalFit);
+    // doseAnalysis.MakeDoseAnalysis();
 
 
     //-------------------
@@ -125,9 +125,9 @@ int main(int argc, char *argv[])
     std::string outputName = outputDir + "Output_" + cellLine + "_" + volumeName + "_" + modelType + ".root";
     TFile *outputFile = new TFile(outputName.c_str(), "RECREATE");
 
-    survivalFit.WriteToFile(outputFile);
-    hitAnalysis.WriteToFile(outputFile);
-    doseAnalysis.WriteToFile(outputFile);
+    // survivalFit.WriteToFile(outputFile);
+    // hitAnalysis.WriteToFile(outputFile);
+    // doseAnalysis.WriteToFile(outputFile);
 
     outputFile->Write();
     outputFile->Close();
