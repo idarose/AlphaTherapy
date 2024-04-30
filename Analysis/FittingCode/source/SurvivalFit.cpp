@@ -70,90 +70,90 @@ void SurvivalFit::LoadHistogramsFromAnalysis(CellSurvival cellSurvivalInstance, 
     hDose_hitsAlpha_CellComponent->Reset();
 
 
-    // //-------------------------------------
-    // // Extracting hit multiplicity histogram for cell component
-    // TH1D* hHitMultiplicity_CellComponent = nullptr;
-    // std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)firstActivity)) +"kBq_" + regionName;
-    // histogramNewName = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_" + regionName;
+    //-------------------------------------
+    // Extracting hit multiplicity histogram for cell component
+    TH1D* hHitMultiplicity_CellComponent = nullptr;
+    std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)firstActivity)) +"kBq_" + regionName;
+    histogramNewName = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(0) +"kBq_" + regionName;
 
 
-    // inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_CellComponent);
-    // hHitMultiplicity_CellComponent->SetDirectory(0);
-    // hHitMultiplicity_CellComponent->SetName(histogramNewName.c_str());
-    // hHitMultiplicity_CellComponent->Reset();
+    inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_CellComponent);
+    hHitMultiplicity_CellComponent->SetDirectory(0);
+    hHitMultiplicity_CellComponent->SetName(histogramNewName.c_str());
+    hHitMultiplicity_CellComponent->Reset();
 
 
-    // //-------------------------------------
-    // inputFile->Close();
+    //-------------------------------------
+    inputFile->Close();
 
 
-    // hDose_Activity_Vec.push_back(std::make_tuple(0.,hDose_CellComponent_uGy,hDose_CellComponent_mGy));
-    // hHitMultiplicity_vec.push_back(std::make_tuple(0,hHitMultiplicity_CellComponent));
-    // hDose_HitsCellComponent_Vec.push_back(std::make_tuple(0.,hDose_hitsAlpha_CellComponent));
+    hDose_Activity_Vec.push_back(std::make_tuple(0.,hDose_CellComponent_uGy,hDose_CellComponent_mGy));
+    hHitMultiplicity_vec.push_back(std::make_tuple(0,hHitMultiplicity_CellComponent));
+    hDose_HitsCellComponent_Vec.push_back(std::make_tuple(0.,hDose_hitsAlpha_CellComponent));
 
 
-    // //---------------------------------------
-    // std::vector<double> activities = {1.,3.,5.,10.,25.,50.,75.,100.,150.};
+    //---------------------------------------
+    std::vector<double> activities = {1.,3.,5.,10.,25.,50.,75.,100.,150.};
 
-    // for(int i=0; i<activities.size(); i++)
-    // {
-    //     // Extracting activity
-    //     double activity = activities[i];
+    for(int i=0; i<activities.size(); i++)
+    {
+        // Extracting activity
+        double activity = activities[i];
 
-    //     // Making specific filepath
-    //     filePath = generalFilePath + std::to_string(((int)activity)) + "kBq.root";
+        // Making specific filepath
+        filePath = generalFilePath + std::to_string(((int)activity)) + "kBq.root";
 
-    //     // Read file containing histogram
-    //     TFile* inputFile = new TFile(filePath.c_str(), "READ");
-
-
-    //     //-------------------------------------
-    //     // Extracting dose deposition histogram for nucleus with keV binning
-    //     TH1D* hDose_CellComponent_mGy = nullptr;
-    //     std::string histogramName_mGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_mGyBinning";
-
-    //     inputFile->GetObject(histogramName_mGy.c_str(), hDose_CellComponent_mGy);
-    //     hDose_CellComponent_mGy->SetDirectory(0);
+        // Read file containing histogram
+        TFile* inputFile = new TFile(filePath.c_str(), "READ");
 
 
-    //     //-------------------------------------
-    //     // Extracting dose deposition histogram for nucleus with eV binning
-    //     TH1D* hDose_CellComponent_uGy = nullptr;
-    //     std::string histogramName_uGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_uGyBinning";
+        //-------------------------------------
+        // Extracting dose deposition histogram for nucleus with keV binning
+        TH1D* hDose_CellComponent_mGy = nullptr;
+        std::string histogramName_mGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_mGyBinning";
 
-    //     inputFile->GetObject(histogramName_uGy.c_str(), hDose_CellComponent_uGy);
-    //     hDose_CellComponent_uGy->SetDirectory(0);
-
-    //     //-------------------------------------
-    //     // Extracting 2D histogram for dose in cell component per number of alpha-particle hits
-    //     TH2D* hDose_hitsAlpha_CellComponent = nullptr;
-    //     std::string histogramName_Dose_HitsAlpha_CellComponent = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_HitsAlpha_" + regionName;
-
-    //     inputFile->GetObject(histogramName_Dose_HitsAlpha_CellComponent.c_str(), hDose_hitsAlpha_CellComponent);
-    //     hDose_hitsAlpha_CellComponent->SetDirectory(0);
-
-    //     //-------------------------------------
-    //     // Extracting hit multiplicity histogram for cell component
-    //     TH1D* hHitMultiplicity_CellComponent = nullptr;
-    //     std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName;
-
-    //     inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_CellComponent);
-    //     hHitMultiplicity_CellComponent->SetDirectory(0);
+        inputFile->GetObject(histogramName_mGy.c_str(), hDose_CellComponent_mGy);
+        hDose_CellComponent_mGy->SetDirectory(0);
 
 
-    //     //-------------------------------------
-    //     inputFile->Close();
+        //-------------------------------------
+        // Extracting dose deposition histogram for nucleus with eV binning
+        TH1D* hDose_CellComponent_uGy = nullptr;
+        std::string histogramName_uGy = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName + "_uGyBinning";
+
+        inputFile->GetObject(histogramName_uGy.c_str(), hDose_CellComponent_uGy);
+        hDose_CellComponent_uGy->SetDirectory(0);
+
+        //-------------------------------------
+        // Extracting 2D histogram for dose in cell component per number of alpha-particle hits
+        TH2D* hDose_hitsAlpha_CellComponent = nullptr;
+        std::string histogramName_Dose_HitsAlpha_CellComponent = "i0_hDose_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_HitsAlpha_" + regionName;
+
+        inputFile->GetObject(histogramName_Dose_HitsAlpha_CellComponent.c_str(), hDose_hitsAlpha_CellComponent);
+        hDose_hitsAlpha_CellComponent->SetDirectory(0);
+
+        //-------------------------------------
+        // Extracting hit multiplicity histogram for cell component
+        TH1D* hHitMultiplicity_CellComponent = nullptr;
+        std::string histogramName_hitMultiplicity = "i0_hFractionHitsAlpha_212Pb_" + cellSurvivalInstance.GetCellLine() + "_" + std::to_string(((int)activity)) +"kBq_" + regionName;
+
+        inputFile->GetObject(histogramName_hitMultiplicity.c_str(), hHitMultiplicity_CellComponent);
+        hHitMultiplicity_CellComponent->SetDirectory(0);
 
 
-    //     hDose_Activity_Vec.push_back(std::make_tuple(activity,hDose_CellComponent_uGy,hDose_CellComponent_mGy));
-    //     hHitMultiplicity_vec.push_back(std::make_tuple(activity,hHitMultiplicity_CellComponent));
-    //     hDose_HitsCellComponent_Vec.push_back(std::make_tuple(activity,hDose_hitsAlpha_CellComponent));
-    // }
+        //-------------------------------------
+        inputFile->Close();
 
-    // for(auto & entry : hDose_Activity_Vec)
-    // {
-    //     std::cout << "Activity : " << std::get<2>(entry)->Integral() << std::endl;
-    // }
+
+        hDose_Activity_Vec.push_back(std::make_tuple(activity,hDose_CellComponent_uGy,hDose_CellComponent_mGy));
+        hHitMultiplicity_vec.push_back(std::make_tuple(activity,hHitMultiplicity_CellComponent));
+        hDose_HitsCellComponent_Vec.push_back(std::make_tuple(activity,hDose_hitsAlpha_CellComponent));
+    }
+
+    for(auto & entry : hDose_Activity_Vec)
+    {
+        std::cout << "Activity : " << std::get<2>(entry)->Integral() << std::endl;
+    }
 }
 
 
@@ -201,280 +201,280 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
     LoadHistogramsFromAnalysis(cellSurvivalInstance,regionName);
 
 
-    // //--------------------------
-    // // Getting and graphing cell survival data
-    // std::vector<std::tuple<double,double,double>> data_cellSurvival;
-    // data_cellSurvival = cellSurvivalInstance.GetCellSurvivalData();
+    //--------------------------
+    // Getting and graphing cell survival data
+    std::vector<std::tuple<double,double,double>> data_cellSurvival;
+    data_cellSurvival = cellSurvivalInstance.GetCellSurvivalData();
 
 
-    // //-----------------------------------
+    //-----------------------------------
 
-    // gr_clonogenicSurvival = new TGraphErrors();
-    // gr_clonogenicSurvival->SetName("gr_clonogenicSurvival");
+    gr_clonogenicSurvival = new TGraphErrors();
+    gr_clonogenicSurvival->SetName("gr_clonogenicSurvival");
 
-    // auto GraphData = [&](TGraphErrors* gr_clonogenicSurvival_CellLine, std::vector<std::tuple<double, double, double>> data_cellSurvival_CellLine)
-    // {
-    //     int graphPointN_data = 0;
-    //     for(auto & entry : data_cellSurvival_CellLine)
-    //     {
-    //         double activity = std::get<0>(entry);
-    //         double cellSurvival = std::get<1>(entry);
-    //         double cellSurvivalUncertainty = std::get<2>(entry);
+    auto GraphData = [&](TGraphErrors* gr_clonogenicSurvival_CellLine, std::vector<std::tuple<double, double, double>> data_cellSurvival_CellLine)
+    {
+        int graphPointN_data = 0;
+        for(auto & entry : data_cellSurvival_CellLine)
+        {
+            double activity = std::get<0>(entry);
+            double cellSurvival = std::get<1>(entry);
+            double cellSurvivalUncertainty = std::get<2>(entry);
 
-    //         gr_clonogenicSurvival_CellLine->SetPoint(graphPointN_data, activity, cellSurvival);
-    //         gr_clonogenicSurvival_CellLine->SetPointError(graphPointN_data, 0.0, cellSurvivalUncertainty);
+            gr_clonogenicSurvival_CellLine->SetPoint(graphPointN_data, activity, cellSurvival);
+            gr_clonogenicSurvival_CellLine->SetPointError(graphPointN_data, 0.0, cellSurvivalUncertainty);
 
-    //         graphPointN_data++;
-    //     }
-    // };
+            graphPointN_data++;
+        }
+    };
 
-    // GraphData(gr_clonogenicSurvival, data_cellSurvival);
+    GraphData(gr_clonogenicSurvival, data_cellSurvival);
 
 
-    // //-----------------------------
-    // // Extract factor histograms have been scaled by
-    // double scalingFactorHistogram = ((double)std::get<1>(hDose_Activity_Vec[1])->GetEntries())/((double)std::get<1>(hDose_Activity_Vec[1])->Integral());
+    //-----------------------------
+    // Extract factor histograms have been scaled by
+    double scalingFactorHistogram = ((double)std::get<1>(hDose_Activity_Vec[1])->GetEntries())/((double)std::get<1>(hDose_Activity_Vec[1])->Integral());
 
-    // //------------------------------
-    // // Linear quadratic model
-    // auto CalculateCellSurvivalFraction_LQModel = [&](TH1D *hDose_uGy, TH1D *hDose_mGy, double *par)
-    // {
-    //     double alpha = par[0];
-    //     double beta = par[1];
+    //------------------------------
+    // Linear quadratic model
+    auto CalculateCellSurvivalFraction_LQModel = [&](TH1D *hDose_uGy, TH1D *hDose_mGy, double *par)
+    {
+        double alpha = par[0];
+        double beta = par[1];
 
-
-    //     //------------------------------------------------
-    //     double fractionOfComponentsHit = hDose_mGy->Integral();
-    //     double fractionOfComponentsMissed = (1.0 - fractionOfComponentsHit);
-
-    //     //------------------------------------------------
-    //     //      The fraction of missed cells obviously all survive so that is immediately added.
-    //     double fractionOfTotalCellsHitSurviving = fractionOfComponentsMissed;
-
-    //     // Looping over uGy binned histogram
-    //     for(int i=0; i<hDose_uGy->GetNbinsX();i++)
-    //     {
-    //         double dose = hDose_uGy->GetBinCenter(i+1);
-    //         double fractionOfTotalCellsHit = hDose_uGy->GetBinContent(i+1);
+
+        //------------------------------------------------
+        double fractionOfComponentsHit = hDose_mGy->Integral();
+        double fractionOfComponentsMissed = (1.0 - fractionOfComponentsHit);
+
+        //------------------------------------------------
+        //      The fraction of missed cells obviously all survive so that is immediately added.
+        double fractionOfTotalCellsHitSurviving = fractionOfComponentsMissed;
+
+        // Looping over uGy binned histogram
+        for(int i=0; i<hDose_uGy->GetNbinsX();i++)
+        {
+            double dose = hDose_uGy->GetBinCenter(i+1);
+            double fractionOfTotalCellsHit = hDose_uGy->GetBinContent(i+1);
 
-    //         //----------------------------
-    //         double cellSurvivalfraction = TMath::Exp(-(alpha*dose + beta*TMath::Power(dose, 2.0)));
-    //         double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
+            //----------------------------
+            double cellSurvivalfraction = TMath::Exp(-(alpha*dose + beta*TMath::Power(dose, 2.0)));
+            double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
 
 
-    //         fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
-    //     }
+            fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
+        }
 
-    //     // Looping over mGy binned histogram
-    //     for(int i=1000; i<hDose_mGy->GetNbinsX(); i++)
-    //     {
-    //         double dose = hDose_mGy->GetBinCenter(i+1);
-    //         double fractionOfTotalCellsHit = hDose_mGy->GetBinContent(i+1);
-
-    //         //----------------------------
-    //         double cellSurvivalfraction = TMath::Exp(-(alpha*dose + beta*TMath::Power(dose, 2.0)));
-    //         double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
-
-    //         fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
-    //     }
+        // Looping over mGy binned histogram
+        for(int i=1000; i<hDose_mGy->GetNbinsX(); i++)
+        {
+            double dose = hDose_mGy->GetBinCenter(i+1);
+            double fractionOfTotalCellsHit = hDose_mGy->GetBinContent(i+1);
+
+            //----------------------------
+            double cellSurvivalfraction = TMath::Exp(-(alpha*dose + beta*TMath::Power(dose, 2.0)));
+            double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
+
+            fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
+        }
 
-    //     //------------------------------------------------
-    //     return fractionOfTotalCellsHitSurviving;
-    // };
+        //------------------------------------------------
+        return fractionOfTotalCellsHitSurviving;
+    };
 
-    // //------------------------------
-    // // Linear model
-    // auto CalculateCellSurvivalFraction_LModel = [&](TH1D *hDose_uGy, TH1D *hDose_mGy, double *par)
-    // {
-    //     double alpha = par[0];
-
-    //     //------------------------------------------------
-    //     double fractionOfComponentsHit = hDose_mGy->Integral();
-    //     double fractionOfComponentsMissed = (1.0 - fractionOfComponentsHit);
-
-    //     //------------------------------------------------
-    //     //      The fraction of missed cells obviously all survive so that is immediately added.
-    //     double fractionOfTotalCellsHitSurviving = fractionOfComponentsMissed;
-
-    //     // Looping over uGy binned histogram
-    //     for(int i=0; i<hDose_uGy->GetNbinsX();i++)
-    //     {
-    //         double dose = hDose_uGy->GetBinCenter(i+1);
-    //         double fractionOfTotalCellsHit = hDose_uGy->GetBinContent(i+1);
-
-    //         //----------------------------
-    //         double cellSurvivalfraction = TMath::Exp(-(alpha*dose));
-    //         double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
-
-
-    //         fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
-    //     }
+    //------------------------------
+    // Linear model
+    auto CalculateCellSurvivalFraction_LModel = [&](TH1D *hDose_uGy, TH1D *hDose_mGy, double *par)
+    {
+        double alpha = par[0];
+
+        //------------------------------------------------
+        double fractionOfComponentsHit = hDose_mGy->Integral();
+        double fractionOfComponentsMissed = (1.0 - fractionOfComponentsHit);
+
+        //------------------------------------------------
+        //      The fraction of missed cells obviously all survive so that is immediately added.
+        double fractionOfTotalCellsHitSurviving = fractionOfComponentsMissed;
+
+        // Looping over uGy binned histogram
+        for(int i=0; i<hDose_uGy->GetNbinsX();i++)
+        {
+            double dose = hDose_uGy->GetBinCenter(i+1);
+            double fractionOfTotalCellsHit = hDose_uGy->GetBinContent(i+1);
+
+            //----------------------------
+            double cellSurvivalfraction = TMath::Exp(-(alpha*dose));
+            double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
+
+
+            fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
+        }
 
-    //     // Looping over mGy binned histogram
-    //     for(int i=1000; i<hDose_mGy->GetNbinsX(); i++)
-    //     {
-    //         double dose = hDose_mGy->GetBinCenter(i+1);
-    //         double fractionOfTotalCellsHit = hDose_mGy->GetBinContent(i+1);
-
-    //         //----------------------------
-    //         double cellSurvivalfraction = TMath::Exp(-(alpha*dose));
-    //         double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
-
-    //         fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
-    //     }
-
-    //     //------------------------------------------------
-    //     return fractionOfTotalCellsHitSurviving;
-    // };
-
-    // //------------------------------------------------------------------------------------------------
-    // //      This generates a new graph corresponding to the predicted survivability.
-    // //      This graph is calculated everytime the parameters (par) are changed.
-    // auto GenerateGraph_CellSurvivalFraction = [&](std::vector<std::tuple<double,TH1D*,TH1D*>> vec, double *par)
-    // {
-    //     TGraphErrors gr;
+        // Looping over mGy binned histogram
+        for(int i=1000; i<hDose_mGy->GetNbinsX(); i++)
+        {
+            double dose = hDose_mGy->GetBinCenter(i+1);
+            double fractionOfTotalCellsHit = hDose_mGy->GetBinContent(i+1);
+
+            //----------------------------
+            double cellSurvivalfraction = TMath::Exp(-(alpha*dose));
+            double fractionOfTotalCellsHit_survivingFraction = cellSurvivalfraction*fractionOfTotalCellsHit;
+
+            fractionOfTotalCellsHitSurviving += fractionOfTotalCellsHit_survivingFraction;
+        }
+
+        //------------------------------------------------
+        return fractionOfTotalCellsHitSurviving;
+    };
+
+    //------------------------------------------------------------------------------------------------
+    //      This generates a new graph corresponding to the predicted survivability.
+    //      This graph is calculated everytime the parameters (par) are changed.
+    auto GenerateGraph_CellSurvivalFraction = [&](std::vector<std::tuple<double,TH1D*,TH1D*>> vec, double *par)
+    {
+        TGraphErrors gr;
 
-    //     int graphPointN = 0;
+        int graphPointN = 0;
 
-    //     for(auto & entry : vec)
-    //     {
-    //         double activity = std::get<0>(entry);
-    //         auto histDose_uGy = std::get<1>(entry);
-    //         auto histDose_mGy = std::get<2>(entry);
-    //         double cellSurvival;
-
-    //         if(modelName=="LQ")
-    //         {
-    //             cellSurvival = CalculateCellSurvivalFraction_LQModel(histDose_uGy, histDose_mGy, par);
-    //         }
+        for(auto & entry : vec)
+        {
+            double activity = std::get<0>(entry);
+            auto histDose_uGy = std::get<1>(entry);
+            auto histDose_mGy = std::get<2>(entry);
+            double cellSurvival;
+
+            if(modelName=="LQ")
+            {
+                cellSurvival = CalculateCellSurvivalFraction_LQModel(histDose_uGy, histDose_mGy, par);
+            }
 
-    //         if(modelName=="LM")
-    //         {
-    //             cellSurvival = CalculateCellSurvivalFraction_LModel(histDose_uGy, histDose_mGy, par);
-    //         }
+            if(modelName=="LM")
+            {
+                cellSurvival = CalculateCellSurvivalFraction_LModel(histDose_uGy, histDose_mGy, par);
+            }
 
-    //         gr.SetPoint(graphPointN, activity, cellSurvival);
+            gr.SetPoint(graphPointN, activity, cellSurvival);
 
-    //         graphPointN++;
-    //     }
+            graphPointN++;
+        }
 
-    //     return gr;
-    // };
+        return gr;
+    };
 
-    //  //------------------------------------------------------------------------------------------------
-    // int nParameters;
+     //------------------------------------------------------------------------------------------------
+    int nParameters;
 
-    // if(modelName=="LQ")
-    // {
-    //     nParameters = 2;
-    // }
-    // else if(modelName=="LM")
-    // {
-    //     nParameters = 1;
-    // }
+    if(modelName=="LQ")
+    {
+        nParameters = 2;
+    }
+    else if(modelName=="LM")
+    {
+        nParameters = 1;
+    }
 
-    // double savedParameters[nParameters];
+    double savedParameters[nParameters];
 
-    // //------------------------------------------------------------------------------------------------
-    // f_cellSurvivalVsDose = new TF1("f_cellSurvivalVsDose",
-    //     [&](double*x, double *p)
-    //     {
-    //         double activity_Bq = x[0];
+    //------------------------------------------------------------------------------------------------
+    f_cellSurvivalVsDose = new TF1("f_cellSurvivalVsDose",
+        [&](double*x, double *p)
+        {
+            double activity_Bq = x[0];
 
-    //         //------------------------------------------------
-    //         //      This block of code is to test whether the parameters have changed.
-    //         //      A new graph of survivability is generated only if the parameters are found to have changed.
-    //         //      This makes the code much faster, which is useful if your calculation for cell survivability becomes more computationally heavy
-    //         bool foundChangeInParameters = false;
+            //------------------------------------------------
+            //      This block of code is to test whether the parameters have changed.
+            //      A new graph of survivability is generated only if the parameters are found to have changed.
+            //      This makes the code much faster, which is useful if your calculation for cell survivability becomes more computationally heavy
+            bool foundChangeInParameters = false;
 
-    //         for(int i=0; i<nParameters; i++)
-    //         {
-    //             if(savedParameters[i]!=p[i])
-    //             {
-    //                 foundChangeInParameters = true;
-    //                 savedParameters[i] = p[i];
-    //             }
-    //         }
+            for(int i=0; i<nParameters; i++)
+            {
+                if(savedParameters[i]!=p[i])
+                {
+                    foundChangeInParameters = true;
+                    savedParameters[i] = p[i];
+                }
+            }
 
-    //         if(foundChangeInParameters)
-    //         {
-    //             gr_cellSurvivability_vs_activitykBqPerMl = GenerateGraph_CellSurvivalFraction(hDose_Activity_Vec, p);
-    //         }
+            if(foundChangeInParameters)
+            {
+                gr_cellSurvivability_vs_activitykBqPerMl = GenerateGraph_CellSurvivalFraction(hDose_Activity_Vec, p);
+            }
 
-    //         //------------------------------------------------
-    //         double cellSurvival = gr_cellSurvivability_vs_activitykBqPerMl.Eval(x[0], 0, "");
+            //------------------------------------------------
+            double cellSurvival = gr_cellSurvivability_vs_activitykBqPerMl.Eval(x[0], 0, "");
 
-    //         return cellSurvival;
+            return cellSurvival;
 
-    //     }, 0.0, 150.0, nParameters);
+        }, 0.0, 150.0, nParameters);
 
 
-    // //------------------------
-    // f_cellSurvivalVsDose->SetNpx(10000);
+    //------------------------
+    f_cellSurvivalVsDose->SetNpx(10000);
 
-    // if(modelName=="LM")
-    // {
-    //     f_cellSurvivalVsDose->SetParLimits(0, 0.0, 1.0e+05);
+    if(modelName=="LM")
+    {
+        f_cellSurvivalVsDose->SetParLimits(0, 0.0, 1.0e+05);
 
-    //     f_cellSurvivalVsDose->SetParameter(0, 1.0e+00);
-    // }
-    // if(modelName=="LQ")
-    // {
-    //     f_cellSurvivalVsDose->SetParLimits(0, 0.0, 1.0e+05);
-    //     f_cellSurvivalVsDose->SetParLimits(1, 0.0, 1.0e+05);
+        f_cellSurvivalVsDose->SetParameter(0, 1.0e+00);
+    }
+    if(modelName=="LQ")
+    {
+        f_cellSurvivalVsDose->SetParLimits(0, 0.0, 1.0e+05);
+        f_cellSurvivalVsDose->SetParLimits(1, 0.0, 1.0e+05);
 
-    //     f_cellSurvivalVsDose->SetParameter(0, 1.0e+00);
-    //     f_cellSurvivalVsDose->SetParameter(1, 1.0e+00);
-    // }
+        f_cellSurvivalVsDose->SetParameter(0, 1.0e+00);
+        f_cellSurvivalVsDose->SetParameter(1, 1.0e+00);
+    }
 
 
-    // //-----------------------------
-    // std::cout << " Cell Line " + cellSurvivalInstance.GetCellLine() << " Model : " << modelName << " Region : " << regionName << std::endl;
-    // gr_clonogenicSurvival->Fit(f_cellSurvivalVsDose, "", "", 0.0, 150.0);
+    //-----------------------------
+    std::cout << " Cell Line " + cellSurvivalInstance.GetCellLine() << " Model : " << modelName << " Region : " << regionName << std::endl;
+    gr_clonogenicSurvival->Fit(f_cellSurvivalVsDose, "", "", 0.0, 150.0);
 
 
-    // grFitPoints->SetName("grFitPoints");
-    // grFitPoints->SetTitle("Cell Survival Fraction");
-    // grFitPoints->GetXaxis()->SetTitle("Activity [kBq/mL]");
-    // grFitPoints->GetYaxis()->SetTitle("Fraction of cells in sample surviving");
+    grFitPoints->SetName("grFitPoints");
+    grFitPoints->SetTitle("Cell Survival Fraction");
+    grFitPoints->GetXaxis()->SetTitle("Activity [kBq/mL]");
+    grFitPoints->GetYaxis()->SetTitle("Fraction of cells in sample surviving");
 
-    // for(int i=0; i<hDose_Activity_Vec.size(); i++)
-    // {
-    //     double activity = std::get<0>(hDose_Activity_Vec[i]);
-    //     double surv = f_cellSurvivalVsDose->Eval(activity);
+    for(int i=0; i<hDose_Activity_Vec.size(); i++)
+    {
+        double activity = std::get<0>(hDose_Activity_Vec[i]);
+        double surv = f_cellSurvivalVsDose->Eval(activity);
 
-    //     grFitPoints->SetPoint(i, activity, surv);
-    // }
+        grFitPoints->SetPoint(i, activity, surv);
+    }
 
 
-    // double chi_sq = f_cellSurvivalVsDose->GetChisquare();
+    double chi_sq = f_cellSurvivalVsDose->GetChisquare();
 
-    // int deg_freedom = f_cellSurvivalVsDose->GetNDF();
+    int deg_freedom = f_cellSurvivalVsDose->GetNDF();
 
-    // std::cout << "Chi squared: " << chi_sq << std::endl;
-    // std::cout << "Deg Freedom: " << deg_freedom << std::endl;
-    // std::cout << "Reduced Chi squared: " << chi_sq/deg_freedom << std::endl;
+    std::cout << "Chi squared: " << chi_sq << std::endl;
+    std::cout << "Deg Freedom: " << deg_freedom << std::endl;
+    std::cout << "Reduced Chi squared: " << chi_sq/deg_freedom << std::endl;
 
 
-    // //-----------------------
-    // // Extracting fit parameters
+    //-----------------------
+    // Extracting fit parameters
 
-    // double alpha = f_cellSurvivalVsDose->GetParameter(0);
-    // double dAlpha = f_cellSurvivalVsDose->GetParError(0);
+    double alpha = f_cellSurvivalVsDose->GetParameter(0);
+    double dAlpha = f_cellSurvivalVsDose->GetParError(0);
 
-    // // std::cout << alpha << std::endl;
+    // std::cout << alpha << std::endl;
 
 
-    // parametersAndUncertainties_Vec.push_back(std::make_tuple(alpha,dAlpha));
+    parametersAndUncertainties_Vec.push_back(std::make_tuple(alpha,dAlpha));
 
-    // double beta = 0.;
-    // double dBeta = 0.;
+    double beta = 0.;
+    double dBeta = 0.;
 
-    // if(modelName=="LQ")
-    // {
-    //     beta = f_cellSurvivalVsDose->GetParameter(1);
-    //     dBeta = f_cellSurvivalVsDose->GetParError(1);
-    // }
+    if(modelName=="LQ")
+    {
+        beta = f_cellSurvivalVsDose->GetParameter(1);
+        dBeta = f_cellSurvivalVsDose->GetParError(1);
+    }
 }
 
 

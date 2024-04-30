@@ -284,8 +284,8 @@ void DoseAnalysis::MakeDoseAnalysis()
     MakeMeanDose_PerNHits_Graphs();
     MakeDose_PerNHits_Average_Histograms();
     MakeMeanDose_PerNHits_Average_Graph();
-    // MakeSurvival_ForMeanDose_Graph();
-    // MakeSurvival_ForCumulativeDecays_Graph();
+    MakeSurvival_ForMeanDose_Graph();
+    MakeSurvival_ForCumulativeDecays_Graph();
 }
 
 void DoseAnalysis::WriteToFile(TFile* file)
@@ -297,6 +297,6 @@ void DoseAnalysis::WriteToFile(TFile* file)
     }
 
     grMeanDose_PerNHits_Average->Write();
-    // grMeanDose_Survival->Write();
-    // grCumulativeDecays_Survival->Write();
+    grMeanDose_Survival->Write();
+    grCumulativeDecays_Survival->Write();
 }
