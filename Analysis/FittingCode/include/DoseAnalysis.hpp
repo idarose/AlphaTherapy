@@ -84,6 +84,9 @@ class DoseAnalysis
 
         TGraphErrors* grCumulativeDecays_Survival = new TGraphErrors();
 
+
+        TGraphErrors* grActivity_Survival = new TGraphErrors();
+
 };
 
 

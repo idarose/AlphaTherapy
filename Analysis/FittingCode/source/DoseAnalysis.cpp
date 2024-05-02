@@ -22,6 +22,21 @@ DoseAnalysis::DoseAnalysis(SurvivalFit survivalFitInstance)
 
     cellSurvivalData = survivalFitInstance.Get_CellSurvivalData();
 
+    grActivity_Survival->SetName("grActivity_SurvivalPercentage");
+
+    int graphPoint = 0;
+    for(auto & entry : cellSurvivalData)
+    {
+        double activity = std::get<0>(entry);
+        double survPerc = (std::get<1>(entry))*100.;
+        double d_survPerc = (std::get<2>(entry))*100.;
+
+        grActivity_Survival->SetPoint(graphPoint, activity, survPerc);
+        grActivity_Survival->SetPointError(graphPoint, 0.0, d_survPerc);
+
+        graphPoint ++;
+    }
+
     //-----------------------------
         // Define number of bins and max number of hits
     nBinsHits = std::get<1>(hDose_HitsCellComponent_Vec[1])->GetNbinsY();
@@ -210,27 +225,57 @@ void DoseAnalysis::MakeSurvival_ForMeanDose_Graph()
     grMeanDose_Survival->GetYaxis()->SetTitle("PercentSurvival");
 
     int graphPoint=0;
+    int j = 0;
 
     for(int i=0; i<hDose_Activity_Vec.size(); i++)
     {
         double activity = std::get<0>(hDose_Activity_Vec[i]);
         TH1D* doseHist = std::get<2>(hDose_Activity_Vec[i]);
 
-        double surv = std::get<1>(cellSurvivalData[i])*100.;
-        double dSurv = std::get<2>(cellSurvivalData[i])*100.;
+        if(cellLine=="C4_2")
+        {
+            if(activity>3.)
+            {
+                double surv = std::get<1>(cellSurvivalData[j])*100.;
+                double dSurv = std::get<2>(cellSurvivalData[j])*100.;
 
-        std::tuple<double,double,double> tuple = Find_MeanDose(activity,doseHist);
-        double meanDose = std::get<0>(tuple);
-        double lowSpread_meanDose = std::get<1>(tuple);
-        double highSpread_meanDose = std::get<2>(tuple);
+                std::tuple<double,double,double> tuple = Find_MeanDose(activity,doseHist);
+                double meanDose = std::get<0>(tuple);
+                double lowSpread_meanDose = std::get<1>(tuple);
+                double highSpread_meanDose = std::get<2>(tuple);
 
-        grMeanDose_Survival->SetPoint(graphPoint, meanDose, surv);
-        grMeanDose_Survival->SetPointEYlow(graphPoint, dSurv);
-        grMeanDose_Survival->SetPointEYhigh(graphPoint, dSurv);
-        grMeanDose_Survival->SetPointEXlow(graphPoint, lowSpread_meanDose);
-        grMeanDose_Survival->SetPointEXhigh(graphPoint, highSpread_meanDose);
+                grMeanDose_Survival->SetPoint(graphPoint, meanDose, surv);
+                grMeanDose_Survival->SetPointEYlow(graphPoint, dSurv);
+                grMeanDose_Survival->SetPointEYhigh(graphPoint, dSurv);
+                grMeanDose_Survival->SetPointEXlow(graphPoint, lowSpread_meanDose);
+                grMeanDose_Survival->SetPointEXhigh(graphPoint, highSpread_meanDose);
 
-        graphPoint++;
+                graphPoint++;
+                j++;
+            }
+        }
+        if(cellLine=="PC3_PIP"||cellLine=="PC3_Flu")
+        {
+            if(activity>5.)
+            {
+                double surv = std::get<1>(cellSurvivalData[j])*100.;
+                double dSurv = std::get<2>(cellSurvivalData[j])*100.;
+
+                std::tuple<double,double,double> tuple = Find_MeanDose(activity,doseHist);
+                double meanDose = std::get<0>(tuple);
+                double lowSpread_meanDose = std::get<1>(tuple);
+                double highSpread_meanDose = std::get<2>(tuple);
+
+                grMeanDose_Survival->SetPoint(graphPoint, meanDose, surv);
+                grMeanDose_Survival->SetPointEYlow(graphPoint, dSurv);
+                grMeanDose_Survival->SetPointEYhigh(graphPoint, dSurv);
+                grMeanDose_Survival->SetPointEXlow(graphPoint, lowSpread_meanDose);
+                grMeanDose_Survival->SetPointEXhigh(graphPoint, highSpread_meanDose);
+
+                graphPoint++;
+                j++;
+            }
+        }
     }
 }
 
@@ -245,11 +290,9 @@ void DoseAnalysis::MakeSurvival_ForCumulativeDecays_Graph()
         double decaysMembrane = dec.GetNumberDecaysInMembraneTotalTime();
         double decaysCytoplasm = dec.GetNumberDecaysInCytoplasmTotalTime();
 
-        double numberCells = dec.GetNumberCells();
+        double numberCells = 500000.;
 
         double decaysPerCell = (decaysSolution + decaysMembrane + decaysCytoplasm)/numberCells;
-
-        std::cout << decaysPerCell << std::endl;
 
         return decaysPerCell;
     };
@@ -259,22 +302,50 @@ void DoseAnalysis::MakeSurvival_ForCumulativeDecays_Graph()
     grCumulativeDecays_Survival->GetYaxis()->SetTitle("PercentSurvival");
 
     int graphPoint=0;
+    int j = 0;
 
     for(int i=0; i<hDose_Activity_Vec.size(); i++)
     {
         double activity = std::get<0>(hDose_Activity_Vec[i]);
 
-        if(activity>0.)
+
+        if(cellLine=="C4_2")
         {
-            double surv = std::get<1>(cellSurvivalData[i])*100.;
-            double dSurv = std::get<2>(cellSurvivalData[i])*100.;
+            if(activity>3.)
+            {
+                double surv = std::get<1>(cellSurvivalData[j])*100.;
+                double dSurv = std::get<2>(cellSurvivalData[j])*100.;
 
-            double numberDecaysPerCell = Find_CumulativeDecays(activity);
 
-            grCumulativeDecays_Survival->SetPoint(graphPoint, numberDecaysPerCell, surv);
-            grCumulativeDecays_Survival->SetPointError(graphPoint, 0.0, dSurv);
+                double numberDecaysPerCell = Find_CumulativeDecays(activity);
 
-            graphPoint++;
+                std::cout << activity << " : " << numberDecaysPerCell << std::endl;
+
+                grCumulativeDecays_Survival->SetPoint(graphPoint, numberDecaysPerCell, surv);
+                grCumulativeDecays_Survival->SetPointError(graphPoint, 0.0, dSurv);
+
+                graphPoint++;
+                j++;
+            }
+        }
+        if(cellLine=="PC3_Flu"||cellLine=="PC3_PIP")
+        {
+            if(activity>5.)
+            {
+                double surv = std::get<1>(cellSurvivalData[j])*100.;
+                double dSurv = std::get<2>(cellSurvivalData[j])*100.;
+
+
+                double numberDecaysPerCell = Find_CumulativeDecays(activity);
+
+                std::cout << activity << " : " << numberDecaysPerCell << std::endl;
+
+                grCumulativeDecays_Survival->SetPoint(graphPoint, numberDecaysPerCell, surv);
+                grCumulativeDecays_Survival->SetPointError(graphPoint, 0.0, dSurv);
+
+                graphPoint++;
+                j++;
+            }
         }
     }
 }
@@ -299,4 +370,5 @@ void DoseAnalysis::WriteToFile(TFile* file)
     grMeanDose_PerNHits_Average->Write();
     grMeanDose_Survival->Write();
     grCumulativeDecays_Survival->Write();
+    grActivity_Survival->Write();
 }

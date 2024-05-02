@@ -116,8 +116,8 @@ void makeRunFiles()
 
     int numInterations = 40;
 
-    //-------------------------
-    // Making files for C4-2
+    // //-------------------------
+    // // Making files for C4-2
 
     int caseNum = 0;
     for(int i = 0; i < std::get<0>(data_C4_2).size(); i++)
@@ -135,7 +135,7 @@ void makeRunFiles()
     }
 
 
-    numInterations = 40;
+    numInterations = 10;
     caseNum = 0;
     for(int i = 0; i < std::get<0>(data_PC3_PIP).size(); i++)
     {
