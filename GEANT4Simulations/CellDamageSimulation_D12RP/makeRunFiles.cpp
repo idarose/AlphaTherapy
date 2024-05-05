@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <cmath>
 
+// root -l -b -q makeRunFiles.cpp | tee outRunFile.txt
+
 //------------------–----------
 std::tuple<std::vector<int>,std::vector<double>, std::vector<double>, std::vector<double>> ImportData(std::string filename)
 {
