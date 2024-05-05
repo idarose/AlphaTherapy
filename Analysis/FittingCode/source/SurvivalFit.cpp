@@ -24,20 +24,9 @@ void SurvivalFit::LoadHistogramsFromAnalysis(CellSurvival cellSurvivalInstance, 
     //---------------------------
     // Making zero activity case by cloning the first histogram and resetting it
     double firstActivity = std::get<0>(cellSurvivalData[0]);
+    filePath = generalFilePath + std::to_string(((int)firstActivity)) + "kBq.root";
 
-    if(cellLine=="C4_2"||cellLine=="PC3_Flu")
-    {
-        //-------------------------
-        // Making specific filepath
-        filePath = generalFilePath + std::to_string(((int)firstActivity)) + "kBq_case_1.root";
-    }
-    else
-    {
-        //-------------------------
-        // Making specific filepath
-        filePath = generalFilePath + std::to_string(((int)firstActivity)) + "kBq_case_3.root";
-    }
-    // //-------------------------
+    //-------------------------
     // // Making specific filepath
     // double firstActivity = std::get<0>(cellSurvivalData[0]);
     // filePath = generalFilePath + std::to_string(((int)firstActivity)) + "kBq_case_3.root";
@@ -114,16 +103,16 @@ void SurvivalFit::LoadHistogramsFromAnalysis(CellSurvival cellSurvivalInstance, 
         double activity = activities[i];
 
         // Making specific filepath
-        // filePath = generalFilePath + std::to_string(((int)activity)) + "kBq_case_3.root";
+        filePath = generalFilePath + std::to_string(((int)activity)) + "kBq.root";
 
-        if(cellLine=="C4_2"||cellLine=="PC3_Flu")
-        {
-            filePath = generalFilePath + std::to_string(((int)activity)) + "kBq_case_1.root";
-        }
-        else
-        {
-            filePath = generalFilePath + std::to_string(((int)activity)) + "kBq_case_3.root";
-        }
+        // if(cellLine=="C4_2"||cellLine=="PC3_Flu")
+        // {
+        //     filePath = generalFilePath + std::to_string(((int)activity)) + "kBq_case_1.root";
+        // }
+        // else
+        // {
+        //     filePath = generalFilePath + std::to_string(((int)activity)) + "kBq_case_3.root";
+        // }
 
         // Read file containing histogram
         TFile* inputFile = new TFile(filePath.c_str(), "READ");

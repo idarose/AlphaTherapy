@@ -229,7 +229,8 @@ void HitAnalysis::MakeHitMultiplicity_PercentKilled_Histograms()
         // auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double dFractionHitNHits, double fractionDeadNHits, double percentDeathNHits, double dFractionSurvivedNHits)
         auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double fractionHitNHits_survived, double dFractionSurvivedNHits)
         {
-            return (100./fractionHitNHits)*fractionHitNHits_survived*dFractionSurvivedNHits;
+            // return (100./fractionHitNHits)*fractionHitNHits_survived*dFractionSurvivedNHits;
+            return 0.01*(100.*(fractionHitNHits-fractionHitNHits_survived)/fractionHitNHits);
 
         };
 

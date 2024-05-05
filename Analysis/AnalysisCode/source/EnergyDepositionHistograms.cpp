@@ -378,7 +378,7 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
     hDoseMembrane_FractionFromMembrane = new TH1D(hisogramNameMembrane_FractionFromMembrane.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Membrane) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseMembrane_FromCytoplasm = new TH1D(histogramNameMembrane_FromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (from Decays originating in Cytoplasm) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
-    hDoseMembrane_FractionFromCytoplasm = new TH1D(hisogramNameMembrane_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Cytoplasm) ", NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
+    hDoseMembrane_FractionFromCytoplasm = new TH1D(hisogramNameMembrane_FractionFromCytoplasm.c_str(), "Dose Delivered in Cell Membrane (Fraction from Decays originating in Cytoplasm) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
 
     hDoseCytoplasm_FromSolution = new TH1D(histogramNameCytoplasm_FromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (from Decays originating in Solution) ", NBins_mGyBinning, MinDose_mGyBinning, MaxDose_mGyBinning);
     hDoseCytoplasm_FractionFromSolution = new TH1D(hisogramNameCytoplasm_FractionFromSolution.c_str(), "Dose Delivered in Cell Cytoplasm (Fraction from Decays originating in Solution) ",NBins_uGyBinning, MinDose_uGyBinning, MaxDose_uGyBinning);
