@@ -70,6 +70,16 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         nucleiDist = "Centrally";
     }
 
+    std::string cellComponentForTitle;
+    if(cellComponent=="TotalCell")
+    {
+        cellComponentForTitle = "Total Cell";
+    }
+    else
+    {
+        cellComponentForTitle = cellComponent;
+    }
+
     if(cellLine=="PC3_Flu")
     {
 
@@ -100,16 +110,19 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         //-----------------------------
         TH1D* histogram_KineticEnergy_FromSolution = 0;
 
-        if(cellComponent=="TotalCell")
-        {
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
             histogram_KineticEnergy_FromSolution->SetDirectory(0);
-        }
-        else
-        {
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
-            histogram_KineticEnergy_FromSolution->SetDirectory(0);
-        }
+
+        // if(cellComponent=="TotalCell")
+        // {
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
+        // }
+        // else
+        // {
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
+        // }
 
 
 
@@ -118,6 +131,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
 
 
         double scaleSolution = intSolution_activity/intSolution_150kBq;
+        // std::cout << scaleSolution << std::endl;
 
 
         histogram_KineticEnergy_FromSolution->Scale(scaleSolution);
@@ -128,7 +142,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         //------------------------------
         // Create the canvas
         std::string canvasName = "c1_" + cellLine + "_" + std::to_string(activity) + "kBq";
-        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600,400);
+        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600,500);
 
 
         histogram_KineticEnergy_FromSolution->SetLineColor(colours[2]);
@@ -140,13 +154,14 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         histogram_KineticEnergy_FromSolution->Rebin(reBin);
 
 
-        std::string yAxisName = "Fraction of impinging alpha particles / 40 keV bin";
+        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
 
-        double maxY = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.1*histogram_KineticEnergy_FromSolution->GetMaximum();
+        double maxY = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.3*histogram_KineticEnergy_FromSolution->GetMaximum();
 
 
-        std::string xAxisName = "Kinetic energy of alpha particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, Activity = " + Form("%d", activity)   + "kBq / 1mL";
+        std::string generalTitle = "Kinetic Energy of Impingning #alpha-Particles, " + cellComponentForTitle;
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
+        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetRangeUser(0.,9.);
@@ -154,23 +169,37 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(0.,maxY);
 
 
-        histogram_KineticEnergy_FromSolution->SetTitle(title.c_str());
+        double titleSize = 0.045; // Choose the desired size
+
+        histogram_KineticEnergy_FromSolution->SetTitle(generalTitle.c_str());
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetYaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetTitle(xAxisName.c_str());
         histogram_KineticEnergy_FromSolution->GetYaxis()->SetTitle(yAxisName.c_str());
 
-
+        histogram_KineticEnergy_FromSolution->GetXaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetTitleSize(titleSize);
 
         histogram_KineticEnergy_FromSolution->Draw("HIST");
 
 
-        auto legend = new TLegend(0.1,0.75,0.4,0.9);
+        auto legend = new TLegend(0.15,0.7,0.5,0.85);
         legend->SetHeader("Location of ^{212}Pb Decay","C"); // option "C" allows to center the header
         TLegendEntry *header = (TLegendEntry*)legend->GetListOfPrimitives()->First();
         header->SetTextAlign(22);
         header->SetTextSize(.04);
+
+        c1->SetTopMargin(0.15);    // Set the top margin (5% of the canvas height)
+        c1->SetBottomMargin(0.15); // Set the bottom margin (15% of the canvas height)
+        c1->SetLeftMargin(0.15);   // Set the left margin (15% of the canvas width)
+        c1->SetRightMargin(0.05);  // Set the right margin (5% of the canvas width)
+
+        TLatex *latex1 = new TLatex();
+        latex1->SetNDC();
+        latex1->SetTextSize(0.04); // Adjust to appropriate subtitle size
+        latex1->DrawLatex(0.15, 0.89,title.c_str()); // Position the subtitle. Adjust x, y to fit well.
+
 
         legend->AddEntry(histogram_KineticEnergy_FromSolution,"Solution")->SetTextSize(0.04);
         legend->Draw();
@@ -224,28 +253,36 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         TH1D* histogram_KineticEnergy_FromMembrane = 0;
         TH1D* histogram_KineticEnergy_FromCytoplasm = 0;
 
-        if(cellComponent=="TotalCell")
-        {
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
-            histogram_KineticEnergy_FromSolution->SetDirectory(0);
+        // if(cellComponent=="TotalCell")
+        // {
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
 
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromMembrane_activity.c_str(), histogram_KineticEnergy_FromMembrane);
-            histogram_KineticEnergy_FromMembrane->SetDirectory(0);
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromMembrane_activity.c_str(), histogram_KineticEnergy_FromMembrane);
+        //     histogram_KineticEnergy_FromMembrane->SetDirectory(0);
 
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromCytoplasm_activity.c_str(), histogram_KineticEnergy_FromCytoplasm);
-            histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
-        }
-        else
-        {
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
-            histogram_KineticEnergy_FromSolution->SetDirectory(0);
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromCytoplasm_activity.c_str(), histogram_KineticEnergy_FromCytoplasm);
+        //     histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
+        // }
+        // else
+        // {
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
 
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromMembrane.c_str(), histogram_KineticEnergy_FromMembrane);
-            histogram_KineticEnergy_FromMembrane->SetDirectory(0);
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromMembrane.c_str(), histogram_KineticEnergy_FromMembrane);
+        //     histogram_KineticEnergy_FromMembrane->SetDirectory(0);
 
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromCytoplasm.c_str(), histogram_KineticEnergy_FromCytoplasm);
-            histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
-        }
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromCytoplasm.c_str(), histogram_KineticEnergy_FromCytoplasm);
+        //     histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
+        // }
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
+        histogram_KineticEnergy_FromSolution->SetDirectory(0);
+
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromMembrane.c_str(), histogram_KineticEnergy_FromMembrane);
+        histogram_KineticEnergy_FromMembrane->SetDirectory(0);
+
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromCytoplasm.c_str(), histogram_KineticEnergy_FromCytoplasm);
+        histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
 
         //-----------------------------
         double intSolution_150kBq = histogram_KineticEnergy_FromSolution->Integral();
@@ -267,7 +304,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         //------------------------------
         // Create the canvas
         std::string canvasName = "c1_" + cellLine + "_" + std::to_string(activity) + "kBq";
-        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600,400);
+        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600,500);
 
 
         histogram_KineticEnergy_FromSolution->SetLineColor(colours[2]);
@@ -282,13 +319,16 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         // histogram_KineticEnergy_FromCytoplasm->SetLineWidth(2);
         histogram_KineticEnergy_FromCytoplasm->SetFillColorAlpha(colours[4], 0.5);
 
-        int reBin = 2000;
+        int reBin = 4000;
 
         histogram_KineticEnergy_FromSolution->Rebin(reBin);
         histogram_KineticEnergy_FromMembrane->Rebin(reBin);
         histogram_KineticEnergy_FromCytoplasm->Rebin(reBin);
 
-        std::string yAxisName = "Fraction of impinging alpha particles / 20 keV bin";
+        std::string generalTitle = "Kinetic Energy of #alpha-Particles Impingning on " + cellComponentForTitle;
+        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
+        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
         double maxY_Mem = histogram_KineticEnergy_FromMembrane->GetMaximum() + 0.1*histogram_KineticEnergy_FromMembrane->GetMaximum();
         double maxY_Sol = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.1*histogram_KineticEnergy_FromSolution->GetMaximum();
@@ -305,10 +345,6 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
             }
         }
 
-        std::string xAxisName = "Kinetic energy of alpha particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, Activity = " + Form("%d", activity)   + "kBq / 1mL";
-
-
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetRangeUser(0.,9.);
         histogram_KineticEnergy_FromMembrane->GetXaxis()->SetRangeUser(0.,9.);
         histogram_KineticEnergy_FromCytoplasm->GetXaxis()->SetRangeUser(0.,9.);
@@ -318,9 +354,9 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetRangeUser(0.,maxY);
 
 
-        histogram_KineticEnergy_FromSolution->SetTitle(title.c_str());
-        histogram_KineticEnergy_FromMembrane->SetTitle(title.c_str());
-        histogram_KineticEnergy_FromCytoplasm->SetTitle(title.c_str());
+        histogram_KineticEnergy_FromSolution->SetTitle(generalTitle.c_str());
+        histogram_KineticEnergy_FromMembrane->SetTitle(generalTitle.c_str());
+        histogram_KineticEnergy_FromCytoplasm->SetTitle(generalTitle.c_str());
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetYaxis()->CenterTitle(true);
@@ -337,16 +373,39 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         histogram_KineticEnergy_FromCytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
         histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
 
+        double titleSize=0.045;
+
+        histogram_KineticEnergy_FromSolution->GetXaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromMembrane->GetXaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromCytoplasm->GetXaxis()->SetTitleSize(titleSize);
+
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromMembrane->GetYaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetTitleSize(titleSize);
+
+
         histogram_KineticEnergy_FromSolution->Draw("HIST");
         histogram_KineticEnergy_FromMembrane->Draw("HIST SAME");
         histogram_KineticEnergy_FromCytoplasm->Draw("HIST SAME");
 
 
-        auto legend = new TLegend(0.1,0.7,0.4,0.9);
+        auto legend = new TLegend(0.15,0.6,0.5,0.85);
         legend->SetHeader("Location of ^{212}Pb Decay","C"); // option "C" allows to center the header
         TLegendEntry *header = (TLegendEntry*)legend->GetListOfPrimitives()->First();
         header->SetTextAlign(22);
         header->SetTextSize(.04);
+
+        c1->SetTopMargin(0.15);    // Set the top margin (5% of the canvas height)
+        c1->SetBottomMargin(0.15); // Set the bottom margin (15% of the canvas height)
+        c1->SetLeftMargin(0.15);   // Set the left margin (15% of the canvas width)
+        c1->SetRightMargin(0.05);  // Set the right margin (5% of the canvas width)
+
+        TLatex *latex1 = new TLatex();
+        latex1->SetNDC();
+        latex1->SetTextSize(0.04); // Adjust to appropriate subtitle size
+        latex1->DrawLatex(0.15, 0.89,title.c_str()); // Position the subtitle. Adjust x, y to fit well.
+
+
 
         legend->AddEntry(histogram_KineticEnergy_FromSolution,"Solution")->SetTextSize(0.04);
         legend->AddEntry(histogram_KineticEnergy_FromMembrane,"Membrane")->SetTextSize(0.04);
@@ -430,8 +489,19 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         nucleiDist = "Centrally";
     }
 
+    std::string cellComponentForTitle;
+    if(cellComponent=="TotalCell")
+    {
+        cellComponentForTitle = "Total Cell";
+    }
+    else
+    {
+        cellComponentForTitle = cellComponent;
+    }
+
     if(cellLine=="PC3_Flu")
     {
+
         //-------------------------------
         // Loading activity histograms for scaling
         std::string fileName_activity = "../Output_" + cellGeometry + "/Output_"+ cellLine + "_" + std::to_string(activity) + "kBq.root";
@@ -458,17 +528,19 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
 
         //-----------------------------
         TH1D* histogram_KineticEnergy_FromSolution = 0;
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
+        histogram_KineticEnergy_FromSolution->SetDirectory(0);
 
-        if(cellComponent=="TotalCell")
-        {
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
-            histogram_KineticEnergy_FromSolution->SetDirectory(0);
-        }
-        else
-        {
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
-            histogram_KineticEnergy_FromSolution->SetDirectory(0);
-        }
+        // if(cellComponent=="TotalCell")
+        // {
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
+        // }
+        // else
+        // {
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
+        // }
 
 
 
@@ -487,57 +559,75 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         //------------------------------
         // Create the canvas
         std::string canvasName = "c1_" + cellLine + "_" + std::to_string(activity) + "kBq";
-        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600,400);
+        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600,500);
 
 
         histogram_KineticEnergy_FromSolution->SetLineColor(colours[2]);
         // histogram_KineticEnergy_FromSolution->SetLineWidth(2);
-        histogram_KineticEnergy_FromSolution->SetFillColorAlpha(colours[2], 0.5);
+        histogram_KineticEnergy_FromSolution->SetFillColorAlpha(colours[2], 0.5);;
 
         int reBin = 4000;
 
         histogram_KineticEnergy_FromSolution->Rebin(reBin);
 
 
-        std::string yAxisName = "Fraction of impinging alpha particles / 40 keV bin";
+        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
 
-        double maxY = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.1*histogram_KineticEnergy_FromSolution->GetMaximum();
+        double maxY = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.3*histogram_KineticEnergy_FromSolution->GetMaximum();
 
 
-        std::string xAxisName = "Kinetic energy of alpha particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, Activity = " + Form("%d", activity)   + "kBq / 1mL";
+        std::string generalTitle = "Kinetic Energy of Impingning #alpha-Particles, " + cellComponentForTitle;
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
+        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetRangeUser(0.,9.);
 
-        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-7,1.);
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-5,1.0);
 
 
-        histogram_KineticEnergy_FromSolution->SetTitle(title.c_str());
+        double titleSize = 0.045; // Choose the desired size
+
+        histogram_KineticEnergy_FromSolution->SetTitle(generalTitle.c_str());
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetYaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetTitle(xAxisName.c_str());
         histogram_KineticEnergy_FromSolution->GetYaxis()->SetTitle(yAxisName.c_str());
 
-
+        histogram_KineticEnergy_FromSolution->GetXaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetTitleSize(titleSize);
 
         histogram_KineticEnergy_FromSolution->Draw("HIST");
 
 
-        auto legend = new TLegend(0.1,0.75,0.4,0.9);
+        auto legend = new TLegend(0.15,0.7,0.5,0.85);
         legend->SetHeader("Location of ^{212}Pb Decay","C"); // option "C" allows to center the header
         TLegendEntry *header = (TLegendEntry*)legend->GetListOfPrimitives()->First();
         header->SetTextAlign(22);
         header->SetTextSize(.04);
 
+        c1->SetTopMargin(0.15);    // Set the top margin (5% of the canvas height)
+        c1->SetBottomMargin(0.15); // Set the bottom margin (15% of the canvas height)
+        c1->SetLeftMargin(0.15);   // Set the left margin (15% of the canvas width)
+        c1->SetRightMargin(0.05);  // Set the right margin (5% of the canvas width)
+
+        TLatex *latex1 = new TLatex();
+        latex1->SetNDC();
+        latex1->SetTextSize(0.04); // Adjust to appropriate subtitle size
+        latex1->DrawLatex(0.15, 0.89,title.c_str()); // Position the subtitle. Adjust x, y to fit well.
+
+
         legend->AddEntry(histogram_KineticEnergy_FromSolution,"Solution")->SetTextSize(0.04);
         legend->Draw();
 
-        c1->SetLogy();
         c1->Update();
 
         std::string output = "/Users/idarosenqvist/Desktop/Academics/MasterThesis/Thesis/figures/Results/" + cellGeometry + "/" + cellLine + "/KineticEnergyAlphas_" + cellLine + "_" + cellComponent + "_" + std::to_string(activity) + "kBq_logy.pdf";
+
+        c1->Update();
+        c1->SetLogy();
+        c1->Update();
         c1->SaveAs(output.c_str());
     }
     else
@@ -584,29 +674,38 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         TH1D* histogram_KineticEnergy_FromMembrane = 0;
         TH1D* histogram_KineticEnergy_FromCytoplasm = 0;
 
-        if(cellComponent=="TotalCell")
-        {
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
-            histogram_KineticEnergy_FromSolution->SetDirectory(0);
 
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromMembrane_activity.c_str(), histogram_KineticEnergy_FromMembrane);
-            histogram_KineticEnergy_FromMembrane->SetDirectory(0);
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
+        histogram_KineticEnergy_FromSolution->SetDirectory(0);
 
-            inputFile_activity->GetObject(histogramName_KineticEnergy_FromCytoplasm_activity.c_str(), histogram_KineticEnergy_FromCytoplasm);
-            histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
-        }
-        else
-        {
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
-            histogram_KineticEnergy_FromSolution->SetDirectory(0);
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromMembrane.c_str(), histogram_KineticEnergy_FromMembrane);
+        histogram_KineticEnergy_FromMembrane->SetDirectory(0);
 
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromMembrane.c_str(), histogram_KineticEnergy_FromMembrane);
-            histogram_KineticEnergy_FromMembrane->SetDirectory(0);
+        inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromCytoplasm.c_str(), histogram_KineticEnergy_FromCytoplasm);
+        histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
 
-            inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromCytoplasm.c_str(), histogram_KineticEnergy_FromCytoplasm);
-            histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
-        }
+        // if(cellComponent=="TotalCell")
+        // {
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromSolution_activity.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
 
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromMembrane_activity.c_str(), histogram_KineticEnergy_FromMembrane);
+        //     histogram_KineticEnergy_FromMembrane->SetDirectory(0);
+
+        //     inputFile_activity->GetObject(histogramName_KineticEnergy_FromCytoplasm_activity.c_str(), histogram_KineticEnergy_FromCytoplasm);
+        //     histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
+        // }
+        // else
+        // {
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromSolution.c_str(), histogram_KineticEnergy_FromSolution);
+        //     histogram_KineticEnergy_FromSolution->SetDirectory(0);
+
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromMembrane.c_str(), histogram_KineticEnergy_FromMembrane);
+        //     histogram_KineticEnergy_FromMembrane->SetDirectory(0);
+
+        //     inputFile_150kBq->GetObject(histogramName_KineticEnergy_FromCytoplasm.c_str(), histogram_KineticEnergy_FromCytoplasm);
+        //     histogram_KineticEnergy_FromCytoplasm->SetDirectory(0);
+        // }
 
         //-----------------------------
         double intSolution_150kBq = histogram_KineticEnergy_FromSolution->Integral();
@@ -628,7 +727,7 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         //------------------------------
         // Create the canvas
         std::string canvasName = "c1_" + cellLine + "_" + std::to_string(activity) + "kBq";
-        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600, 400);
+        auto c1 = new TCanvas(canvasName.c_str(), "Kinetic Energy of Impingning Alpha Particle Location of 212-Pb Decay", 600,500);
 
 
         histogram_KineticEnergy_FromSolution->SetLineColor(colours[2]);
@@ -643,13 +742,16 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         // histogram_KineticEnergy_FromCytoplasm->SetLineWidth(2);
         histogram_KineticEnergy_FromCytoplasm->SetFillColorAlpha(colours[4], 0.5);
 
-        int reBin = 2000;
+        int reBin = 4000;
 
         histogram_KineticEnergy_FromSolution->Rebin(reBin);
         histogram_KineticEnergy_FromMembrane->Rebin(reBin);
         histogram_KineticEnergy_FromCytoplasm->Rebin(reBin);
 
-        std::string yAxisName = "Fraction of impinging alpha particles / 20 keV bin";
+        std::string generalTitle = "Kinetic Energy of #alpha-Particles Impingning on " + cellComponentForTitle;
+        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
+        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
         double maxY_Mem = histogram_KineticEnergy_FromMembrane->GetMaximum() + 0.1*histogram_KineticEnergy_FromMembrane->GetMaximum();
         double maxY_Sol = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.1*histogram_KineticEnergy_FromSolution->GetMaximum();
@@ -666,22 +768,18 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
             }
         }
 
-        std::string xAxisName = "Kinetic energy of alpha particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, Activity = " + Form("%d", activity)   + "kBq / 1mL";
-
-
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetRangeUser(0.,9.);
         histogram_KineticEnergy_FromMembrane->GetXaxis()->SetRangeUser(0.,9.);
         histogram_KineticEnergy_FromCytoplasm->GetXaxis()->SetRangeUser(0.,9.);
 
-        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-7,1.);
-        histogram_KineticEnergy_FromMembrane->GetYaxis()->SetRangeUser(1.e-7,1.);
-        histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetRangeUser(1.e-7,1.);
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-5,1.0);
+        histogram_KineticEnergy_FromMembrane->GetYaxis()->SetRangeUser(1.e-5,1.0);
+        histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetRangeUser(1.e-5,1.0);
 
 
-        histogram_KineticEnergy_FromSolution->SetTitle(title.c_str());
-        histogram_KineticEnergy_FromMembrane->SetTitle(title.c_str());
-        histogram_KineticEnergy_FromCytoplasm->SetTitle(title.c_str());
+        histogram_KineticEnergy_FromSolution->SetTitle(generalTitle.c_str());
+        histogram_KineticEnergy_FromMembrane->SetTitle(generalTitle.c_str());
+        histogram_KineticEnergy_FromCytoplasm->SetTitle(generalTitle.c_str());
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetYaxis()->CenterTitle(true);
@@ -698,16 +796,39 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         histogram_KineticEnergy_FromCytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
         histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
 
+        double titleSize=0.045;
+
+        histogram_KineticEnergy_FromSolution->GetXaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromMembrane->GetXaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromCytoplasm->GetXaxis()->SetTitleSize(titleSize);
+
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromMembrane->GetYaxis()->SetTitleSize(titleSize);
+        histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetTitleSize(titleSize);
+
+
         histogram_KineticEnergy_FromSolution->Draw("HIST");
         histogram_KineticEnergy_FromMembrane->Draw("HIST SAME");
         histogram_KineticEnergy_FromCytoplasm->Draw("HIST SAME");
 
 
-        auto legend = new TLegend(0.1,0.7,0.4,0.9);
+        auto legend = new TLegend(0.15,0.6,0.5,0.85);
         legend->SetHeader("Location of ^{212}Pb Decay","C"); // option "C" allows to center the header
         TLegendEntry *header = (TLegendEntry*)legend->GetListOfPrimitives()->First();
         header->SetTextAlign(22);
         header->SetTextSize(.04);
+
+        c1->SetTopMargin(0.15);    // Set the top margin (5% of the canvas height)
+        c1->SetBottomMargin(0.15); // Set the bottom margin (15% of the canvas height)
+        c1->SetLeftMargin(0.15);   // Set the left margin (15% of the canvas width)
+        c1->SetRightMargin(0.05);  // Set the right margin (5% of the canvas width)
+
+        TLatex *latex1 = new TLatex();
+        latex1->SetNDC();
+        latex1->SetTextSize(0.04); // Adjust to appropriate subtitle size
+        latex1->DrawLatex(0.15, 0.89,title.c_str()); // Position the subtitle. Adjust x, y to fit well.
+
+
 
         legend->AddEntry(histogram_KineticEnergy_FromSolution,"Solution")->SetTextSize(0.04);
         legend->AddEntry(histogram_KineticEnergy_FromMembrane,"Membrane")->SetTextSize(0.04);
@@ -716,6 +837,7 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
 
         std::string output = "/Users/idarosenqvist/Desktop/Academics/MasterThesis/Thesis/figures/Results/" + cellGeometry + "/" + cellLine + "/KineticEnergyAlphas_" + cellLine + "_" + cellComponent + "_" + std::to_string(activity) + "kBq_logy.pdf";
 
+        c1->Update();
         c1->SetLogy();
         c1->Update();
         c1->SaveAs(output.c_str());
@@ -726,11 +848,11 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
 void PlotKineticEnergyAlphas()
 {
     // std::string cellLine = "C4_2";
-    std::string cellLine = "PC3_PIP";
-    // std::string cellLine = "PC3_Flu";
+    // std::string cellLine = "PC3_PIP";
+    std::string cellLine = "PC3_Flu";
 
     // MakePlots(cellLine, "D12RP", "Nucleus", 25);
-    MakePlots(cellLine, "D12CP", "Nucleus", 25);
+    // MakePlots(cellLine, "D12CP", "Nucleus", 25);
     // MakePlots(cellLine, "D5CP", "Nucleus", 25);
     // MakePlots(cellLine, "D5RP", "Nucleus", 25);
 
@@ -744,7 +866,7 @@ void PlotKineticEnergyAlphas()
     // MakePlots(cellLine, "D5CP", "TotalCell", 25);
     // MakePlots(cellLine, "D5RP", "TotalCell", 25);
 
-    // MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
