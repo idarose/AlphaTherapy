@@ -80,12 +80,19 @@ void HitAnalysis::MakeHitMultiplicity_SurvivalFraction_Histograms()
         // Function to calculate the error in the survival fraction of one bin at a certain dose
         auto CalculateUncertainty_HitMultiplicity_SurvivalFraction_OneBin = [&](double doseInBin, double fractionHitDoseBin, double fractionSurvivedDoseBin)
         {
+
+            // double a = std::pow((1./fractionHitDoseBin)*dFractionHitDoseBin,2.);
+            // double b = std::pow(doseInBin*dAlpha,2.);
+
+            // return fractionSurvivedDoseBin*std::sqrt(a);
+            // return doseInBin*dAlpha;
+
             double dFractionHitDoseBin = (1./scalingFactorHistograms)*std::sqrt(scalingFactorHistograms*fractionHitDoseBin);
 
             double a = std::pow((1./fractionHitDoseBin)*dFractionHitDoseBin,2.);
             double b = std::pow(doseInBin*dAlpha,2.);
 
-            return fractionSurvivedDoseBin*std::sqrt(a);
+            return fractionSurvivedDoseBin*std::sqrt(a+b);
         };
 
         //---------------------------
@@ -229,8 +236,9 @@ void HitAnalysis::MakeHitMultiplicity_PercentKilled_Histograms()
         // auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double dFractionHitNHits, double fractionDeadNHits, double percentDeathNHits, double dFractionSurvivedNHits)
         auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double fractionHitNHits_survived, double dFractionSurvivedNHits)
         {
+            return (100./fractionHitNHits)*dFractionSurvivedNHits;
             // return (100./fractionHitNHits)*fractionHitNHits_survived*dFractionSurvivedNHits;
-            return 0.01*(100.*(fractionHitNHits-fractionHitNHits_survived)/fractionHitNHits);
+            // return 0.01*(100.*(fractionHitNHits-fractionHitNHits_survived)/fractionHitNHits);
 
         };
 

@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     survivalFit.FitCellSurvival(cellSurvival, modelType, volumeType);
 
     HitAnalysis hitAnalysis(survivalFit);
-    hitAnalysis.MakeHitAnalysis(100);
+    hitAnalysis.MakeHitAnalysis(40);
 
     DoseAnalysis doseAnalysis(survivalFit);
     doseAnalysis.MakeDoseAnalysis();
