@@ -85,7 +85,7 @@ void HitAnalysis::MakeHitMultiplicity_SurvivalFraction_Histograms()
             double a = std::pow((1./fractionHitDoseBin)*dFractionHitDoseBin,2.);
             double b = std::pow(doseInBin*dAlpha,2.);
 
-            return fractionSurvivedDoseBin*std::sqrt(a+b);
+            return fractionSurvivedDoseBin*std::sqrt(a);
         };
 
         //---------------------------
