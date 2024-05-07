@@ -319,14 +319,14 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         // histogram_KineticEnergy_FromCytoplasm->SetLineWidth(2);
         histogram_KineticEnergy_FromCytoplasm->SetFillColorAlpha(colours[4], 0.5);
 
-        int reBin = 4000;
+        int reBin = 2000;
 
         histogram_KineticEnergy_FromSolution->Rebin(reBin);
         histogram_KineticEnergy_FromMembrane->Rebin(reBin);
         histogram_KineticEnergy_FromCytoplasm->Rebin(reBin);
 
         std::string generalTitle = "Kinetic Energy of #alpha-Particles Impingning on " + cellComponentForTitle;
-        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
+        std::string yAxisName = "Fraction of #alpha-particles / 20 keV bin";
         std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
         std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
@@ -583,7 +583,7 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetRangeUser(0.,9.);
 
-        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-5,1.0);
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-6,1.0);
 
 
         double titleSize = 0.045; // Choose the desired size
@@ -772,9 +772,9 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         histogram_KineticEnergy_FromMembrane->GetXaxis()->SetRangeUser(0.,9.);
         histogram_KineticEnergy_FromCytoplasm->GetXaxis()->SetRangeUser(0.,9.);
 
-        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-5,1.0);
-        histogram_KineticEnergy_FromMembrane->GetYaxis()->SetRangeUser(1.e-5,1.0);
-        histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetRangeUser(1.e-5,1.0);
+        histogram_KineticEnergy_FromSolution->GetYaxis()->SetRangeUser(1.e-6,1.0);
+        histogram_KineticEnergy_FromMembrane->GetYaxis()->SetRangeUser(1.e-6,1.0);
+        histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetRangeUser(1.e-6,1.0);
 
 
         histogram_KineticEnergy_FromSolution->SetTitle(generalTitle.c_str());
@@ -866,8 +866,8 @@ void PlotKineticEnergyAlphas()
     // MakePlots(cellLine, "D5CP", "TotalCell", 25);
     // MakePlots(cellLine, "D5RP", "TotalCell", 25);
 
-    MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
-    // MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
+    // MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
 }

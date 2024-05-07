@@ -43,7 +43,7 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
     if(cellLine=="PC3_Flu")
     {
         //------------------------------
-        std::string histogramName_Dose = "i0_hDose_212Pb_"+ cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_mGyBinning";
+        std::string histogramName_Dose = "i0_hDose_212Pb_"+ cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_uGyBinning";
         std::string histogramName_Dose_FractionSolution = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_FractionFromSolution";
 
         //-----------------------------
@@ -117,22 +117,42 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
             std::cerr << "The histogram is empty!" << std::endl;
         }
 
-        double maxY = histogramDose->GetMaximum() + 0.05*histogramDose->GetMaximum();
-        double minY = 1.e-7;
 
+        int reBin;
         if(cellComponent=="Nucleus")
         {
             if(diameter==5)
             {
                 doseMax = doseMax*1./3.;
+                reBin = 1000;
+            }
+            if(diameter==12)
+            {
+                doseMax = doseMax*1./3.;
+                reBin = 100;
+            }
+        }
+        if(cellComponent=="TotalCell")
+        {
+            if(diameter==5)
+            {
+                doseMax = doseMax*1./3.;
+                reBin = 1000;
+            }
+            if(diameter==12)
+            {
+                doseMax = doseMax*1./3.;
+                reBin = 100;
             }
         }
 
         // //------------------------------
-        int reBin = 1;
 
-        // histogramDose_FractionFromSolution->Rebin(reBin);
-        // histogramDose->Rebin(reBin);
+        histogramDose_FractionFromSolution->Rebin(reBin);
+        histogramDose->Rebin(reBin);
+
+        double maxY = histogramDose->GetMaximum() + 0.05*histogramDose->GetMaximum();
+        double minY = 1.e-7;
 
         histogramDose_FractionFromSolution->GetXaxis()->SetRangeUser(doseMin,doseMax);
         histogramDose->GetXaxis()->SetRangeUser(doseMin,doseMax);
@@ -192,7 +212,7 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
     if(cellLine=="C4_2"||cellLine=="PC3_PIP")
     {
         //------------------------------
-        std::string histogramName_Dose = "i0_hDose_212Pb_"+ cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_mGyBinning";
+        std::string histogramName_Dose = "i0_hDose_212Pb_"+ cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_uGyBinning";
         std::string histogramName_Dose_FractionSolution = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_FractionFromSolution";
         std::string histogramName_Dose_FractionMembrane = "i0_hDose_212Pb_"+ cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_FractionFromMembrane";
         std::string histogramName_Dose_FractionCytoplasm = "i0_hDose_212Pb_"+ cellLine + "_" + std::to_string(activity) + "kBq_" + cellComponent + "_FractionFromCytoplasm";
@@ -251,32 +271,25 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
         histogramDose_FractionFromCytoplasm->SetDirectory(0);
 
 
-
         //-----------------------------
         TH1D* sumHist_SolutionPlusMembrane = 0;
-        inputFile->GetObject(histogramName_Dose.c_str(), sumHist_SolutionPlusMembrane);
+        inputFile->GetObject(histogramName_Dose_FractionSolution.c_str(), sumHist_SolutionPlusMembrane);
+        sumHist_SolutionPlusMembrane->SetDirectory(0);
         sumHist_SolutionPlusMembrane->Reset();
-        sumHist_SolutionPlusMembrane->SetName(histogramName_Dose_SolutionPlusMembrane.c_str());
 
-
-        sumHist_SolutionPlusMembrane->Add(histogramDose_FractionFromSolution);
         sumHist_SolutionPlusMembrane->Add(histogramDose_FractionFromMembrane);
+        sumHist_SolutionPlusMembrane->Add(histogramDose_FractionFromSolution);
 
-
-        //--------------------------------
+        // //--------------------------------
         TH1D* sumHist_SolutionPlusMembranePlusCytoplasm = 0;
-        inputFile->GetObject(histogramName_Dose.c_str(), sumHist_SolutionPlusMembranePlusCytoplasm);
+        inputFile->GetObject(histogramName_Dose_FractionSolution.c_str(), sumHist_SolutionPlusMembranePlusCytoplasm);
+        sumHist_SolutionPlusMembranePlusCytoplasm->SetDirectory(0);
         sumHist_SolutionPlusMembranePlusCytoplasm->Reset();
-        sumHist_SolutionPlusMembranePlusCytoplasm->SetName(histogramName_Dose_SolutionPlusMembranePlusCytoplasm.c_str());
+
 
         sumHist_SolutionPlusMembranePlusCytoplasm->Add(histogramDose_FractionFromSolution);
         sumHist_SolutionPlusMembranePlusCytoplasm->Add(histogramDose_FractionFromMembrane);
         sumHist_SolutionPlusMembranePlusCytoplasm->Add(histogramDose_FractionFromCytoplasm);
-
-
-
-        sumHist_SolutionPlusMembrane->SetDirectory(0);
-        sumHist_SolutionPlusMembranePlusCytoplasm->SetDirectory(0);
 
 
         gStyle->SetOptStat(0);
@@ -311,19 +324,47 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
             std::cerr << "The histogram is empty!" << std::endl;
         }
 
+        int reBin;
         if(cellLine=="C4_2")
         {
             if(diameter==5 && cellComponent=="Nucleus")
             {
                 doseMax = doseMax*1./6.;
+                reBin = 500;
+            }
+            if(diameter==12 && cellComponent=="Nucleus")
+            {
+                doseMax = doseMax*1./6.;
+                reBin = 500;
+            }
+            if(diameter==12 && cellComponent=="TotalCell")
+            {
+                reBin = 1000;
+            }
+            if(diameter==5 && cellComponent=="TotalCell")
+            {
+                reBin = 1000;
+            }
+        }
+        if(cellLine=="PC3_PIP")
+        {
+            if(cellComponent=="Nucleus")
+            {
+                reBin = 4000;
+            }
+            if(cellComponent=="TotalCell")
+            {
+                reBin = 4000;
             }
         }
 
-        // double maxY = histogramDose->GetMaximum() + 0.05*histogramDose->GetMaximum();
+        histogramDose_FractionFromSolution->Rebin(reBin);
+        sumHist_SolutionPlusMembrane->Rebin(reBin);
+        sumHist_SolutionPlusMembranePlusCytoplasm->Rebin(reBin);
+        histogramDose->Rebin(reBin);
+
         double maxY = histogramDose->GetMaximum() + 0.05*histogramDose->GetMaximum();
         double minY = 1.e-7;
-
-        int reBin = 1;
 
 
         histogramDose_FractionFromSolution->GetXaxis()->SetRangeUser(doseMin,doseMax);
@@ -339,7 +380,8 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
 
 
         std::string xAxisName = "Dose delivered in " + region + " [Gy]";
-        std::string yAxisName = "Fraction of cells in sample / " + std::to_string(reBin) + " mGy bin";
+        double unitBinGray = ((double)reBin)*1.e-4;
+        std::string yAxisName = "Fraction of cells in sample / " + std::string(Form("%.1f", unitBinGray)) + " mGy bin";
         std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, Activity = " + Form("%d", activity)   + "kBq / 1mL";
 
         histogramDose_FractionFromSolution->GetXaxis()->CenterTitle(true);
@@ -371,6 +413,8 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
         sumHist_SolutionPlusMembrane->Draw("HIST SAME");
         histogramDose_FractionFromSolution->Draw("HIST SAME");
         histogramDose->Draw("HIST SAME");
+
+        // sumHist_SolutionPlusMembrane->Draw("HIST");
 
         auto legend = new TLegend(0.67,0.7,0.9,0.9);
 
@@ -760,10 +804,11 @@ void PlotHistogramsLocationDecayLog(std::string cellLine, std::string cellGeomet
 
 void PlotHistogramsByLocationDecay()
 {
-    std::string cell_component = "Nucleus";
+    // std::string cell_component = "Nucleus";
+    std::string cell_component = "TotalCell";
 
     // PlotHistogramsLocationDecay("C4_2", "D12RP", cell_component, 25);
-    PlotHistogramsLocationDecay("C4_2", "D12CP", cell_component, 25);
+    // PlotHistogramsLocationDecay("C4_2", "D12CP", cell_component, 25);
     // PlotHistogramsLocationDecay("C4_2", "D5RP", cell_component, 25);
     // PlotHistogramsLocationDecay("C4_2", "D5CP", cell_component, 25);
 
@@ -772,7 +817,7 @@ void PlotHistogramsByLocationDecay()
     // PlotHistogramsLocationDecay("PC3_PIP", "D5RP", cell_component, 25);
     // PlotHistogramsLocationDecay("PC3_PIP", "D5CP", cell_component, 25);
 
-    // PlotHistogramsLocationDecay("PC3_Flu", "D12RP", cell_component, 25);
+    PlotHistogramsLocationDecay("PC3_Flu", "D12RP", cell_component, 25);
     // PlotHistogramsLocationDecay("PC3_Flu", "D12CP", cell_component, 25);
     // PlotHistogramsLocationDecay("PC3_Flu", "D5RP", cell_component, 25);
     // PlotHistogramsLocationDecay("PC3_Flu", "D5CP", cell_component, 25);

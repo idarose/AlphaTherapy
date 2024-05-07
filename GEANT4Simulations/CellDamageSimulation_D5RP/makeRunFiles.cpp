@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <cmath>
 
+// root -l -b -q makeRunFiles.cpp | tee outRunFiles.txt
+
 //------------------–----------
 std::tuple<std::vector<int>,std::vector<double>, std::vector<double>, std::vector<double>> ImportData(std::string filename)
 {
@@ -116,8 +118,8 @@ void makeRunFiles()
 
     int numInterations = 40;
 
-    //-------------------------
-    // Making files for C4-2
+    // //-------------------------
+    // // Making files for C4-2
 
     int caseNum = 0;
     for(int i = 0; i < std::get<0>(data_C4_2).size(); i++)
@@ -135,7 +137,7 @@ void makeRunFiles()
     }
 
 
-    numInterations = 40;
+    numInterations = 10;
     caseNum = 0;
     for(int i = 0; i < std::get<0>(data_PC3_PIP).size(); i++)
     {
@@ -154,7 +156,7 @@ void makeRunFiles()
     }
 
 
-    numInterations =80;
+    numInterations = 40;
     caseNum = 0;
     for(int i = 0; i < std::get<0>(data_PC3_Flu).size(); i++)
     {
@@ -169,8 +171,6 @@ void makeRunFiles()
         caseNum += numInterations;
     }
 }
-
-
 /*
 run0.mac
   run1.mac
