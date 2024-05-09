@@ -44,24 +44,45 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
 
     if(doseOrEnergy==0)
     {
-        histogramName_TotalCell = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_keVBinning";
-        histogramName_Nucleus = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_keVBinning";
-        histogramName_Membrane = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_keVBinning";
-        histogramName_Cytoplasm = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_keVBinning";
+        if(cellLine=="PC3_Flu")
+        {
+            histogramName_TotalCell = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_eVBinning";
+            histogramName_Nucleus = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_eVBinning";
+            histogramName_Membrane = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_eVBinning";
+            histogramName_Cytoplasm = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_eVBinning";
+        }
+        else
+        {
+            histogramName_TotalCell = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_keVBinning";
+            histogramName_Nucleus = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_keVBinning";
+            histogramName_Membrane = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_keVBinning";
+            histogramName_Cytoplasm = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_keVBinning";
+        }
 
     }
     if(doseOrEnergy==1)
     {
-        histogramName_TotalCell = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_mGyBinning";
-        histogramName_Nucleus = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_mGyBinning";
-        histogramName_Membrane = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_mGyBinning";
-        histogramName_Cytoplasm = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_mGyBinning";
+        if(cellLine=="PC3_Flu")
+        {
+            histogramName_TotalCell = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_uGyBinning";
+            histogramName_Nucleus = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_uGyBinning";
+            histogramName_Membrane = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_uGyBinning";
+            histogramName_Cytoplasm = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_uGyBinning";
+        }
+        else
+        {
+            histogramName_TotalCell = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_mGyBinning";
+            histogramName_Nucleus = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_mGyBinning";
+            histogramName_Membrane = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_mGyBinning";
+            histogramName_Cytoplasm = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_mGyBinning";
+        }
     }
 
     //------------------------------------------------
     std::string fileName = "../Output_" + cellGeometry + "/Output_"+ cellLine + "_" + std::to_string(activity) + "kBq.root";
     auto inputFile = std::unique_ptr<TFile>(TFile::Open(fileName.c_str()));
 
+    double titleSize = 0.045;
 
     //-----------------------------
     TH1D* histogram_TotalCell = 0;
@@ -111,62 +132,75 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
 
     std::string xAxisName;
     std::string yAxisName;
+    std::string generalTitle;
     if(doseOrEnergy==0)
     {
         xAxisName = "Energy Deposited [MeV]";
+        generalTitle = "Energy Deposited in the Different Cell Components";
         if(cellLine=="PC3_Flu")
         {
-            yAxisName = "Fraction of cells in sample / 10 keV bin";
+            yAxisName = "Fraction of cells in sample / 2 keV bin";
         }
         else
         {
-            yAxisName = "Fraction of cells in sample / 20 keV bin";
+            yAxisName = "Fraction of cells in sample / 40 keV bin";
         }
     }
     if(doseOrEnergy==1)
     {
         xAxisName = "Dose Delivered [Gy]";
-
+        generalTitle = "Dose Delivered in the Different Cell Components";
         if(cellLine=="PC3_Flu")
         {
             yAxisName = "Fraction of cells in sample / 1 mGy bin";
         }
         else
         {
-            yAxisName = "Fraction of cells in sample / 2 mGy bin";
+            yAxisName = "Fraction of cells in sample / 4 mGy bin";
         }
     }
 
-    std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, Activity = " + Form("%d", activity)   + "kBq / 1mL";
+    std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
     //------------------------
     histogram_TotalCell->GetXaxis()->CenterTitle(true);
     histogram_TotalCell->GetYaxis()->CenterTitle(true);
     histogram_TotalCell->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_TotalCell->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_TotalCell->SetTitle(title.c_str());
+    histogram_TotalCell->SetTitle(generalTitle.c_str());
 
     histogram_Nucleus->GetXaxis()->CenterTitle(true);
     histogram_Nucleus->GetYaxis()->CenterTitle(true);
     histogram_Nucleus->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Nucleus->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Nucleus->SetTitle(title.c_str());
+    histogram_Nucleus->SetTitle(generalTitle.c_str());
 
     histogram_Membrane->GetXaxis()->CenterTitle(true);
     histogram_Membrane->GetYaxis()->CenterTitle(true);
     histogram_Membrane->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Membrane->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Membrane->SetTitle(title.c_str());
+    histogram_Membrane->SetTitle(generalTitle.c_str());
 
     histogram_Cytoplasm->GetXaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetYaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Cytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Cytoplasm->SetTitle(title.c_str());
+    histogram_Cytoplasm->SetTitle(generalTitle.c_str());
+
+
+    histogram_TotalCell->GetXaxis()->SetTitleSize(titleSize);
+    histogram_Nucleus->GetXaxis()->SetTitleSize(titleSize);
+    histogram_Membrane->GetXaxis()->SetTitleSize(titleSize);
+    histogram_Cytoplasm->GetXaxis()->SetTitleSize(titleSize);
+
+    histogram_TotalCell->GetYaxis()->SetTitleSize(titleSize);
+    histogram_Nucleus->GetYaxis()->SetTitleSize(titleSize);
+    histogram_Membrane->GetYaxis()->SetTitleSize(titleSize);
+    histogram_Cytoplasm->GetYaxis()->SetTitleSize(titleSize);
 
     //------------------------------
     // Create the canvas
-    auto c1 = new TCanvas("c1", title.c_str(), 600,400);
+    auto c1 = new TCanvas("c1", title.c_str(), 600,500);
 
     gStyle->SetOptStat(0);
 
@@ -174,11 +208,11 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
     int reBin;
     if(cellLine=="PC3_Flu")
     {
-        reBin = 1;
+        reBin = 2000;
     }
     else
     {
-        reBin = 2;
+        reBin = 4;
     }
 
     histogram_TotalCell->Rebin(reBin);
@@ -271,7 +305,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
     histogram_Cytoplasm->Draw("HIST SAME");
     histogram_Nucleus->Draw("HIST SAME");
 
-    auto legend = new TLegend(0.67,0.60,0.9,0.9);
+    auto legend = new TLegend(0.67,0.55,0.95,0.85);
     legend->SetHeader("Cell Component",title.c_str());
     TLegendEntry *header = (TLegendEntry*)legend->GetListOfPrimitives()->First();
     header->SetTextAlign(22);
@@ -282,6 +316,17 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
     legend->AddEntry(histogram_Cytoplasm,"Cytoplasm")->SetTextSize(0.05);
     legend->AddEntry(histogram_Nucleus,"Nucleus")->SetTextSize(0.05);
     legend->Draw();
+
+    c1->SetTopMargin(0.15);    // Set the top margin (5% of the canvas height)
+    c1->SetBottomMargin(0.15); // Set the bottom margin (15% of the canvas height)
+    c1->SetLeftMargin(0.15);   // Set the left margin (15% of the canvas width)
+    c1->SetRightMargin(0.05);  // Set the right margin (5% of the canvas width)
+
+    TLatex *latex1 = new TLatex();
+    latex1->SetNDC();
+    latex1->SetTextSize(0.04); // Adjust to appropriate subtitle size
+    latex1->DrawLatex(0.15, 0.89,title.c_str()); // Position the subtitle. Adjust x, y to fit well.
+
 
     std::string figureName;
     if(doseOrEnergy==0)
@@ -295,14 +340,12 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
 
     c1->Update();
     c1->SaveAs(figureName.c_str());
-
-
 }
 
 void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, int doseOrEnergy)
 {
     std::vector<int> colours;
-    colours.push_back(kCyan+1);
+    colours.push_back(kCyan+2);
     colours.push_back(kGreen-2);
     colours.push_back(kOrange-3);
     colours.push_back(kViolet+1);
@@ -322,24 +365,45 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
 
     if(doseOrEnergy==0)
     {
-        histogramName_TotalCell = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_keVBinning";
-        histogramName_Nucleus = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_keVBinning";
-        histogramName_Membrane = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_keVBinning";
-        histogramName_Cytoplasm = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_keVBinning";
+        if(cellLine=="PC3_Flu")
+        {
+            histogramName_TotalCell = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_eVBinning";
+            histogramName_Nucleus = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_eVBinning";
+            histogramName_Membrane = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_eVBinning";
+            histogramName_Cytoplasm = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_eVBinning";
+        }
+        else
+        {
+            histogramName_TotalCell = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_keVBinning";
+            histogramName_Nucleus = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_keVBinning";
+            histogramName_Membrane = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_keVBinning";
+            histogramName_Cytoplasm = "i0_hEnergyDeps_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_keVBinning";
+        }
 
     }
     if(doseOrEnergy==1)
     {
-        histogramName_TotalCell = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_mGyBinning";
-        histogramName_Nucleus = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_mGyBinning";
-        histogramName_Membrane = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_mGyBinning";
-        histogramName_Cytoplasm = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_mGyBinning";
+        if(cellLine=="PC3_Flu")
+        {
+            histogramName_TotalCell = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_uGyBinning";
+            histogramName_Nucleus = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_uGyBinning";
+            histogramName_Membrane = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_uGyBinning";
+            histogramName_Cytoplasm = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_uGyBinning";
+        }
+        else
+        {
+            histogramName_TotalCell = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_TotalCell_mGyBinning";
+            histogramName_Nucleus = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Nucleus_mGyBinning";
+            histogramName_Membrane = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Membrane_mGyBinning";
+            histogramName_Cytoplasm = "i0_hDose_212Pb_" + cellLine + "_" + std::to_string(activity) + "kBq_Cytoplasm_mGyBinning";
+        }
     }
 
     //------------------------------------------------
     std::string fileName = "../Output_" + cellGeometry + "/Output_"+ cellLine + "_" + std::to_string(activity) + "kBq.root";
     auto inputFile = std::unique_ptr<TFile>(TFile::Open(fileName.c_str()));
 
+    double titleSize = 0.045;
 
     //-----------------------------
     TH1D* histogram_TotalCell = 0;
@@ -389,67 +453,101 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
 
     std::string xAxisName;
     std::string yAxisName;
+    std::string generalTitle;
     if(doseOrEnergy==0)
     {
         xAxisName = "Energy Deposited [MeV]";
-        yAxisName = "Fraction of cells in sample / 20 keV bin";
+        generalTitle = "Energy Deposited in the Different Cell Components";
+        if(cellLine=="PC3_Flu")
+        {
+            yAxisName = "Fraction of cells in sample / 2 keV bin";
+        }
+        else
+        {
+            yAxisName = "Fraction of cells in sample / 40 keV bin";
+        }
     }
     if(doseOrEnergy==1)
     {
         xAxisName = "Dose Delivered [Gy]";
-        yAxisName = "Fraction of cells in sample / 2 mGy bin";
+        generalTitle = "Dose Delivered in the Different Cell Components";
+        if(cellLine=="PC3_Flu")
+        {
+            yAxisName = "Fraction of cells in sample / 1 mGy bin";
+        }
+        else
+        {
+            yAxisName = "Fraction of cells in sample / 4 mGy bin";
+        }
     }
 
-    std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, Activity = " + Form("%d", activity)   + "kBq / 1mL";
-
-    // TGaxis::SetMaxDigits(6);
+    std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
     //------------------------
     histogram_TotalCell->GetXaxis()->CenterTitle(true);
     histogram_TotalCell->GetYaxis()->CenterTitle(true);
     histogram_TotalCell->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_TotalCell->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_TotalCell->SetTitle(title.c_str());
+    histogram_TotalCell->SetTitle(generalTitle.c_str());
 
     histogram_Nucleus->GetXaxis()->CenterTitle(true);
     histogram_Nucleus->GetYaxis()->CenterTitle(true);
     histogram_Nucleus->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Nucleus->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Nucleus->SetTitle(title.c_str());
+    histogram_Nucleus->SetTitle(generalTitle.c_str());
 
     histogram_Membrane->GetXaxis()->CenterTitle(true);
     histogram_Membrane->GetYaxis()->CenterTitle(true);
     histogram_Membrane->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Membrane->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Membrane->SetTitle(title.c_str());
+    histogram_Membrane->SetTitle(generalTitle.c_str());
 
     histogram_Cytoplasm->GetXaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetYaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Cytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Cytoplasm->SetTitle(title.c_str());
+    histogram_Cytoplasm->SetTitle(generalTitle.c_str());
 
+
+    histogram_TotalCell->GetXaxis()->SetTitleSize(titleSize);
+    histogram_Nucleus->GetXaxis()->SetTitleSize(titleSize);
+    histogram_Membrane->GetXaxis()->SetTitleSize(titleSize);
+    histogram_Cytoplasm->GetXaxis()->SetTitleSize(titleSize);
+
+    histogram_TotalCell->GetYaxis()->SetTitleSize(titleSize);
+    histogram_Nucleus->GetYaxis()->SetTitleSize(titleSize);
+    histogram_Membrane->GetYaxis()->SetTitleSize(titleSize);
+    histogram_Cytoplasm->GetYaxis()->SetTitleSize(titleSize);
 
     //------------------------------
     // Create the canvas
-    auto c1 = new TCanvas("c1", "Energy Depositions in Different Components of the Cell", 600,400);
+    auto c1 = new TCanvas("c1", title.c_str(), 600,500);
 
     gStyle->SetOptStat(0);
 
     //------------------------------
-    int reBin = 2;
+    int reBin;
+    if(cellLine=="PC3_Flu")
+    {
+        reBin = 1000;
+    }
+    else
+    {
+        reBin = 4;
+    }
 
     histogram_TotalCell->Rebin(reBin);
     histogram_Cytoplasm->Rebin(reBin);
     histogram_Nucleus->Rebin(reBin);
     histogram_Membrane->Rebin(reBin);
 
+    std::cout << histogram_Nucleus->GetBinWidth(0) << std::endl;
+
 
     //-------------------------
     double xMax = 0.;
     double xMin = 0.;
     double maxY;
-    // double minY;
 
     for(auto & entry : hists)
     {
@@ -479,40 +577,59 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
         }
     }
 
+    if(cellLine=="C4_2")
+    {
+        // maxY = 1./2.*maxY;
+        if(diameter==12)
+        {
+            maxY = 1./2.*maxY;
+        }
+        else
+        {
+            maxY = 1./4.*maxY;
+        }
+    }
+
+    if(cellLine=="PC3_Flu")
+    {
+        xMax = 1./4.*xMax;
+    }
+
+
 
     histogram_TotalCell->GetXaxis()->SetRangeUser(0.,xMax);
-    histogram_TotalCell->GetYaxis()->SetRangeUser(1.e-6,1.);
+    histogram_TotalCell->GetYaxis()->SetRangeUser(1.e-6,10.);
 
     histogram_Cytoplasm->GetXaxis()->SetRangeUser(0.,xMax);
-    histogram_Cytoplasm->GetYaxis()->SetRangeUser(1.e-6,1.);
+    histogram_Cytoplasm->GetYaxis()->SetRangeUser(1.e-6,10.);
 
     histogram_Nucleus->GetXaxis()->SetRangeUser(0.,xMax);
-    histogram_Nucleus->GetYaxis()->SetRangeUser(1.e-6,1.);
+    histogram_Nucleus->GetYaxis()->SetRangeUser(1.e-6,10.);
 
     histogram_Membrane->GetXaxis()->SetRangeUser(0.,xMax);
-    histogram_Membrane->GetYaxis()->SetRangeUser(1.e-6,1.);
+    histogram_Membrane->GetYaxis()->SetRangeUser(1.e-6,10.);
 
 
     histogram_TotalCell->SetLineColor(colours[0]);
-    histogram_TotalCell->SetFillColorAlpha(colours[0], 0.3);
+    histogram_TotalCell->SetFillColorAlpha(colours[0], 0.5);
 
     histogram_Membrane->SetLineColor(colours[1]);
-    histogram_Membrane->SetFillColorAlpha(colours[1], 0.3);
+    histogram_Membrane->SetFillColorAlpha(colours[1], 0.5);
 
     histogram_Cytoplasm->SetLineColor(colours[2]);
-    histogram_Cytoplasm->SetFillColorAlpha(colours[2], 0.3);
+    histogram_Cytoplasm->SetFillColorAlpha(colours[2], 0.5);
 
     histogram_Nucleus->SetLineColor(colours[3]);
-    histogram_Nucleus->SetFillColorAlpha(colours[3], 0.3);
+    histogram_Nucleus->SetFillColorAlpha(colours[3], 0.5);
 
 
     histogram_TotalCell->Draw("HIST");
+    histogram_Membrane->Draw("HIST SAME");
     histogram_Cytoplasm->Draw("HIST SAME");
     histogram_Nucleus->Draw("HIST SAME");
-    histogram_Membrane->Draw("HIST SAME");
 
-    auto legend = new TLegend(0.67,0.60,0.9,0.9);
-    legend->SetHeader("Cell Component","C");
+    auto legend = new TLegend(0.67,0.55,0.95,0.85);
+    legend->SetHeader("Cell Component",title.c_str());
     TLegendEntry *header = (TLegendEntry*)legend->GetListOfPrimitives()->First();
     header->SetTextAlign(22);
     header->SetTextSize(.05);
@@ -522,6 +639,16 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
     legend->AddEntry(histogram_Cytoplasm,"Cytoplasm")->SetTextSize(0.05);
     legend->AddEntry(histogram_Nucleus,"Nucleus")->SetTextSize(0.05);
     legend->Draw();
+
+    c1->SetTopMargin(0.15);    // Set the top margin (5% of the canvas height)
+    c1->SetBottomMargin(0.15); // Set the bottom margin (15% of the canvas height)
+    c1->SetLeftMargin(0.15);   // Set the left margin (15% of the canvas width)
+    c1->SetRightMargin(0.05);  // Set the right margin (5% of the canvas width)
+
+    TLatex *latex1 = new TLatex();
+    latex1->SetNDC();
+    latex1->SetTextSize(0.04); // Adjust to appropriate subtitle size
+    latex1->DrawLatex(0.15, 0.89,title.c_str()); // Position the subtitle. Adjust x, y to fit well.
 
 
     std::string figureName;
@@ -534,32 +661,30 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
         figureName = "/Users/idarosenqvist/Desktop/Academics/MasterThesis/Thesis/figures/Results/" + cellGeometry + "/" + cellLine + "/DoseDelivered_" + cellLine + "_" + std::to_string(activity) + "kBq_logy.pdf";
     }
 
-
+    c1->Update();
     c1->SetLogy();
-
-    c1->SetLogy();
+    c1->Update();
     c1->SaveAs(figureName.c_str());
-
 
 }
 
 void PlotDoseByCellComponent()
 {
     // std::string cellLine = "C4_2";
-    std::string cellLine = "PC3_PIP";
-    // std::string cellLine = "PC3_Flu";
+    // std::string cellLine = "PC3_PIP";
+    std::string cellLine = "PC3_Flu";
 
     // MakePlots(cellLine, "D12RP", 25, 1);
     // MakePlotsLog(cellLine, "D12RP", 25, 1);
 
     // MakePlots(cellLine, "D12RP", 25, 0);
-    // MakePlotsLog(cellLine, "D12RP", 25, 0);
+    MakePlotsLog(cellLine, "D12RP", 25, 0);
 
 
     // MakePlots(cellLine, "D12CP", 25, 1);
     // MakePlotsLog(cellLine, "D12CP", 25, 1);
 
-    MakePlots(cellLine, "D12CP", 25, 0);
+    // MakePlots(cellLine, "D12CP", 25, 0);
     // MakePlotsLog(cellLine, "D12CP", 25, 0);
 
     // MakePlots(cellLine, "D5RP", 25, 1);

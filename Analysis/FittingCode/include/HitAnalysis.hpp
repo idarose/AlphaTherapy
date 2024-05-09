@@ -44,6 +44,7 @@ class HitAnalysis
         void MakeHitMultiplicity_SurvivalFraction_Graphs();
         void MakeHitMultiplicity_PercentKilled_Histograms();
         void MakeHitMultiplicity_PercentKilled_Graphs();
+        void MakeGraph_FractionHit_PerNHits(int MaxHits);
         void MakeGraph_ProbabilityDeath_PerNHits(int MaxNHits);
         void MakeGraph_ProbabilityDeath_UWA_ForNHits();
         void MakeHitAnalysis(int MaxNHits);
@@ -81,8 +82,12 @@ class HitAnalysis
 
         std::vector<std::tuple<double, TGraphErrors*>> grHitMultiplicity_PercentKilled_Vec;
 
+        // std::vector<std::tuple<double, TGraphErrors*>> grHitMultiplicity_PercentKilled_Vec;
+
         //-----------------------------
         std::vector<std::tuple<int, TGraphErrors*>> grPercentKilled_PerOneHit_Vec;
+
+        std::vector<std::tuple<int, TGraphErrors*>> grFractionHit_PerOneHit_Vec;
 
         TGraphErrors* grProbabilityDeath_ForNHits = new TGraphErrors();
 };

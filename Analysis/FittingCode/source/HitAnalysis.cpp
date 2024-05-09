@@ -321,6 +321,55 @@ void HitAnalysis::MakeHitMultiplicity_PercentKilled_Graphs()
     }
 }
 
+void HitAnalysis::MakeGraph_FractionHit_PerNHits(int MaxNHits)
+{
+    auto Fill_grFractionHit_PerNHits = [&](int NHits)
+    {
+        std::string grFractionHit_PerOneHit_Name = "grFractionHit_" + std::to_string(NHits) + "_NumberHitsToCellComponent";
+        TGraphErrors* grFractionHit_PerOneHit = new TGraphErrors();
+        grFractionHit_PerOneHit->SetName(grFractionHit_PerOneHit_Name.c_str());
+        grFractionHit_PerOneHit->GetXaxis()->SetTitle("Activity [kBq/mL");
+        grFractionHit_PerOneHit->GetXaxis()->SetTitle("Fraction of cells in sample hit");
+
+        std::vector<std::tuple<double,double>> fractionHit_Activity_ThisNHit_Vec;
+
+        for(int i=0; i<hHitMultiplicity_vec.size(); i++)
+        {
+            double activity = std::get<0>(hHitMultiplicity_vec[i]);
+            TH1D* hHitMultiplicity_OneActivity = std::get<1>(hHitMultiplicity_vec[i]);
+
+            if(hHitMultiplicity_OneActivity->GetNbinsX()>0)
+            {
+                double fractionHit = hHitMultiplicity_OneActivity->GetBinContent(NHits+1);
+
+                if(fractionHit>0.)
+                {
+                    fractionHit_Activity_ThisNHit_Vec.push_back(std::make_tuple(activity,fractionHit));
+                }
+            }
+        }
+        for(int i=0; i<fractionHit_Activity_ThisNHit_Vec.size(); i++)
+        {
+            double activity = std::get<0>(fractionHit_Activity_ThisNHit_Vec[i]);
+            double fractionHit_NHits = std::get<1>(fractionHit_Activity_ThisNHit_Vec[i]);
+
+            grFractionHit_PerOneHit->SetPoint(i, activity, fractionHit_NHits);
+        }
+
+        return grFractionHit_PerOneHit;
+    };
+
+    for(int i=0; i<MaxNHits; i++)
+    {
+        TGraphErrors* gr = Fill_grFractionHit_PerNHits(i);
+        if(gr->GetN()>0)
+        {
+            std::tuple<int,TGraphErrors*> tuple = std::make_tuple(i,gr);
+            grFractionHit_PerOneHit_Vec.push_back(tuple);
+        }
+    }
+}
+
 
 void HitAnalysis::MakeGraph_ProbabilityDeath_PerNHits(int MaxNHits)
 {
@@ -422,6 +471,7 @@ void HitAnalysis::MakeHitAnalysis(int MaxNHits)
     MakeHitMultiplicity_SurvivalFraction_Graphs();
     MakeHitMultiplicity_PercentKilled_Histograms();
     MakeHitMultiplicity_PercentKilled_Graphs();
+    MakeGraph_FractionHit_PerNHits(MaxNHits);
     MakeGraph_ProbabilityDeath_PerNHits(MaxNHits);
     MakeGraph_ProbabilityDeath_UWA_ForNHits();
 }
@@ -445,6 +495,11 @@ void HitAnalysis::WriteToFile(TFile* file)
     }
 
     for(auto& entry : grPercentKilled_PerOneHit_Vec)
+    {
+        (std::get<1>(entry))->Write();
+    }
+
+    for(auto & entry : grFractionHit_PerOneHit_Vec)
     {
         (std::get<1>(entry))->Write();
     }
