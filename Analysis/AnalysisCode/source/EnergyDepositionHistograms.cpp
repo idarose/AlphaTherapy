@@ -25,11 +25,11 @@ void EnergyDepositionHistograms::GenerateEmptyHistograms(DecayDynamics decayDyna
     double MaxHits = 700.;
     double MinHits = 0.;
 
-    int NBins_mGyBinning = 8.*std::pow(10.,4.); // 1 m Gy binning
+    int NBins_mGyBinning = 8.*std::pow(10.,4.); // 10 m Gy binning
     double MaxDose_mGyBinning = 800.; //Gy
     double MinDose_mGyBinning = 0.; //Gy
 
-    int NBins_uGyBinning = std::pow(10.,6.); // 1 mu Gy binning
+    int NBins_uGyBinning = std::pow(10.,6.); // 10 mu Gy binning
     double MaxDose_uGyBinning = 10.; //Gy
     double MinDose_uGyBinning = 0.; //Gy
 

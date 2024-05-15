@@ -136,7 +136,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
     if(doseOrEnergy==0)
     {
         xAxisName = "Energy Deposited [MeV]";
-        generalTitle = "Energy Deposited in the Different Cell Components";
+        generalTitle = "Energy Deposition";
         if(cellLine=="PC3_Flu")
         {
             yAxisName = "Fraction of cells in sample / 2 keV bin";
@@ -149,7 +149,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
     if(doseOrEnergy==1)
     {
         xAxisName = "Dose Delivered [Gy]";
-        generalTitle = "Dose Delivered in the Different Cell Components";
+        generalTitle = "Absorbed Dose";
         if(cellLine=="PC3_Flu")
         {
             yAxisName = "Fraction of cells in sample / 1 mGy bin";
@@ -167,25 +167,25 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
     histogram_TotalCell->GetYaxis()->CenterTitle(true);
     histogram_TotalCell->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_TotalCell->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_TotalCell->SetTitle(generalTitle.c_str());
+    histogram_TotalCell->SetTitle("");
 
     histogram_Nucleus->GetXaxis()->CenterTitle(true);
     histogram_Nucleus->GetYaxis()->CenterTitle(true);
     histogram_Nucleus->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Nucleus->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Nucleus->SetTitle(generalTitle.c_str());
+    histogram_Nucleus->SetTitle("");
 
     histogram_Membrane->GetXaxis()->CenterTitle(true);
     histogram_Membrane->GetYaxis()->CenterTitle(true);
     histogram_Membrane->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Membrane->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Membrane->SetTitle(generalTitle.c_str());
+    histogram_Membrane->SetTitle("");
 
     histogram_Cytoplasm->GetXaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetYaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Cytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Cytoplasm->SetTitle(generalTitle.c_str());
+    histogram_Cytoplasm->SetTitle("");
 
 
     histogram_TotalCell->GetXaxis()->SetTitleSize(titleSize);
@@ -212,7 +212,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, int activity, int
     }
     else
     {
-        reBin = 4;
+        reBin = 10;
     }
 
     histogram_TotalCell->Rebin(reBin);
@@ -454,23 +454,79 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
     std::string xAxisName;
     std::string yAxisName;
     std::string generalTitle;
+
+
+    //------------------------------
+    int reBin;
+    if(cellLine=="PC3_Flu")
+    {
+        if(diameter==12)
+        {
+            reBin = 1000;
+        }
+        if(diameter==5)
+        {
+            reBin = 1000;
+        }
+    }
+    if(cellLine=="C4_2")
+    {
+        if(diameter==12)
+        {
+            reBin = 4;
+        }
+        if(diameter==5)
+        {
+            reBin = 8;
+        }
+    }
+    if(cellLine=="PC3_PIP")
+    {
+        if(diameter==12)
+        {
+            reBin = 20;
+        }
+        if(diameter==5)
+        {
+            reBin = 20;
+        }
+    }
+
     if(doseOrEnergy==0)
     {
         xAxisName = "Energy Deposited [MeV]";
-        generalTitle = "Energy Deposited in the Different Cell Components";
+        generalTitle = "Energy Deposition";
         if(cellLine=="PC3_Flu")
         {
-            yAxisName = "Fraction of cells in sample / 2 keV bin";
+            yAxisName = "Fraction of cells in sample / 1 keV bin";
         }
-        else
+        if(cellLine=="C4_2")
         {
-            yAxisName = "Fraction of cells in sample / 40 keV bin";
+            if(diameter==12)
+            {
+                yAxisName = "Fraction of cells in sample / 40 keV bin";
+            }
+            if(diameter==5)
+            {
+                yAxisName = "Fraction of cells in sample / 80 keV bin";
+            }
+        }
+        if(cellLine=="PC3_PIP")
+        {
+            if(diameter==12)
+            {
+                yAxisName = "Fraction of cells in sample / 200 keV bin";
+            }
+            if(diameter==5)
+            {
+                yAxisName = "Fraction of cells in sample / 200 keV bin";
+            }
         }
     }
     if(doseOrEnergy==1)
     {
         xAxisName = "Dose Delivered [Gy]";
-        generalTitle = "Dose Delivered in the Different Cell Components";
+        generalTitle = "Absorbed Dose";
         if(cellLine=="PC3_Flu")
         {
             yAxisName = "Fraction of cells in sample / 1 mGy bin";
@@ -488,25 +544,25 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
     histogram_TotalCell->GetYaxis()->CenterTitle(true);
     histogram_TotalCell->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_TotalCell->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_TotalCell->SetTitle(generalTitle.c_str());
+    histogram_TotalCell->SetTitle("");
 
     histogram_Nucleus->GetXaxis()->CenterTitle(true);
     histogram_Nucleus->GetYaxis()->CenterTitle(true);
     histogram_Nucleus->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Nucleus->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Nucleus->SetTitle(generalTitle.c_str());
+    histogram_Nucleus->SetTitle("");
 
     histogram_Membrane->GetXaxis()->CenterTitle(true);
     histogram_Membrane->GetYaxis()->CenterTitle(true);
     histogram_Membrane->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Membrane->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Membrane->SetTitle(generalTitle.c_str());
+    histogram_Membrane->SetTitle("");
 
     histogram_Cytoplasm->GetXaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetYaxis()->CenterTitle(true);
     histogram_Cytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
     histogram_Cytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
-    histogram_Cytoplasm->SetTitle(generalTitle.c_str());
+    histogram_Cytoplasm->SetTitle("");
 
 
     histogram_TotalCell->GetXaxis()->SetTitleSize(titleSize);
@@ -524,17 +580,6 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
     auto c1 = new TCanvas("c1", title.c_str(), 600,500);
 
     gStyle->SetOptStat(0);
-
-    //------------------------------
-    int reBin;
-    if(cellLine=="PC3_Flu")
-    {
-        reBin = 1000;
-    }
-    else
-    {
-        reBin = 4;
-    }
 
     histogram_TotalCell->Rebin(reBin);
     histogram_Cytoplasm->Rebin(reBin);
@@ -592,7 +637,7 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
 
     if(cellLine=="PC3_Flu")
     {
-        xMax = 1./4.*xMax;
+        xMax = 1./6.*xMax;
     }
 
 
@@ -632,12 +677,12 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
     legend->SetHeader("Cell Component",title.c_str());
     TLegendEntry *header = (TLegendEntry*)legend->GetListOfPrimitives()->First();
     header->SetTextAlign(22);
-    header->SetTextSize(.05);
+    header->SetTextSize(.04);
 
-    legend->AddEntry(histogram_TotalCell,"Total Cell")->SetTextSize(0.05);
-    legend->AddEntry(histogram_Membrane,"Membrane")->SetTextSize(0.05);
-    legend->AddEntry(histogram_Cytoplasm,"Cytoplasm")->SetTextSize(0.05);
-    legend->AddEntry(histogram_Nucleus,"Nucleus")->SetTextSize(0.05);
+    legend->AddEntry(histogram_TotalCell,"Total Cell")->SetTextSize(0.04);
+    legend->AddEntry(histogram_Membrane,"Membrane")->SetTextSize(0.04);
+    legend->AddEntry(histogram_Cytoplasm,"Cytoplasm")->SetTextSize(0.04);
+    legend->AddEntry(histogram_Nucleus,"Nucleus")->SetTextSize(0.04);
     legend->Draw();
 
     c1->SetTopMargin(0.15);    // Set the top margin (5% of the canvas height)
@@ -678,7 +723,7 @@ void PlotDoseByCellComponent()
     // MakePlotsLog(cellLine, "D12RP", 25, 1);
 
     // MakePlots(cellLine, "D12RP", 25, 0);
-    MakePlotsLog(cellLine, "D12RP", 25, 0);
+    // MakePlotsLog(cellLine, "D12RP", 25, 0);
 
 
     // MakePlots(cellLine, "D12CP", 25, 1);
@@ -697,6 +742,6 @@ void PlotDoseByCellComponent()
     // MakePlotsLog(cellLine, "D5CP", 25, 1);
 
     // MakePlots(cellLine, "D5CP", 25, 0);
-    // MakePlotsLog(cellLine, "D5CP", 25, 0);
+    MakePlotsLog(cellLine, "D5CP", 25, 0);
 
 }

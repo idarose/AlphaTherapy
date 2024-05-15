@@ -545,7 +545,6 @@ void SurvivalFit::FitCellSurvival(CellSurvival cellSurvivalInstance, std::string
             d_fractionOfTotalCellsHitSurviving += std::pow(entry,2.);
 
         }
-        std::cout << d_fractionOfTotalCellsHitSurviving << std::endl;
         d_fractionOfTotalCellsHitSurviving = std::pow(d_fractionOfTotalCellsHitSurviving,1./2.);
 
         //------------------------------------------------

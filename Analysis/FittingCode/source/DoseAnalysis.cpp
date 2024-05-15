@@ -319,8 +319,6 @@ void DoseAnalysis::MakeSurvival_ForCumulativeDecays_Graph()
 
                 double numberDecaysPerCell = Find_CumulativeDecays(activity);
 
-                std::cout << activity << " : " << numberDecaysPerCell << std::endl;
-
                 grCumulativeDecays_Survival->SetPoint(graphPoint, numberDecaysPerCell, surv);
                 grCumulativeDecays_Survival->SetPointError(graphPoint, 0.0, dSurv);
 
@@ -337,8 +335,6 @@ void DoseAnalysis::MakeSurvival_ForCumulativeDecays_Graph()
 
 
                 double numberDecaysPerCell = Find_CumulativeDecays(activity);
-
-                std::cout << activity << " : " << numberDecaysPerCell << std::endl;
 
                 grCumulativeDecays_Survival->SetPoint(graphPoint, numberDecaysPerCell, surv);
                 grCumulativeDecays_Survival->SetPointError(graphPoint, 0.0, dSurv);

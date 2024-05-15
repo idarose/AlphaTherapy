@@ -567,11 +567,17 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         histogram_KineticEnergy_FromSolution->SetFillColorAlpha(colours[2], 0.5);;
 
         int reBin = 4000;
+        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
+
+        if(diameter==5)
+        {
+            reBin = 10000;
+            yAxisName = "Fraction of #alpha-particles / 100 keV bin";
+        }
 
         histogram_KineticEnergy_FromSolution->Rebin(reBin);
 
 
-        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
 
         double maxY = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.3*histogram_KineticEnergy_FromSolution->GetMaximum();
 
@@ -742,14 +748,24 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         // histogram_KineticEnergy_FromCytoplasm->SetLineWidth(2);
         histogram_KineticEnergy_FromCytoplasm->SetFillColorAlpha(colours[4], 0.5);
 
+        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
         int reBin = 4000;
+        if(cellLine=="C4_2" && diameter==5)
+        {
+            reBin = 4800;
+            yAxisName = "Fraction of #alpha-particles / 48 keV bin";
+        }
+        if(cellLine=="PC3_PIP" && diameter==5)
+        {
+            reBin = 5000;
+            yAxisName = "Fraction of #alpha-particles / 50 keV bin";
+        }
 
         histogram_KineticEnergy_FromSolution->Rebin(reBin);
         histogram_KineticEnergy_FromMembrane->Rebin(reBin);
         histogram_KineticEnergy_FromCytoplasm->Rebin(reBin);
 
         std::string generalTitle = "Kinetic Energy of #alpha-Particles Impingning on " + cellComponentForTitle;
-        std::string yAxisName = "Fraction of #alpha-particles / 40 keV bin";
         std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
         std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
@@ -777,9 +793,9 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetRangeUser(1.e-6,1.0);
 
 
-        histogram_KineticEnergy_FromSolution->SetTitle(generalTitle.c_str());
-        histogram_KineticEnergy_FromMembrane->SetTitle(generalTitle.c_str());
-        histogram_KineticEnergy_FromCytoplasm->SetTitle(generalTitle.c_str());
+        histogram_KineticEnergy_FromSolution->SetTitle("");
+        histogram_KineticEnergy_FromMembrane->SetTitle("");
+        histogram_KineticEnergy_FromCytoplasm->SetTitle("");
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetYaxis()->CenterTitle(true);
@@ -851,23 +867,23 @@ void PlotKineticEnergyAlphas()
     // std::string cellLine = "PC3_PIP";
     std::string cellLine = "PC3_Flu";
 
-    // MakePlots(cellLine, "D12RP", "Nucleus", 25);
-    // MakePlots(cellLine, "D12CP", "Nucleus", 25);
-    // MakePlots(cellLine, "D5CP", "Nucleus", 25);
-    // MakePlots(cellLine, "D5RP", "Nucleus", 25);
+    MakePlots(cellLine, "D12RP", "Nucleus", 25);
+    MakePlots(cellLine, "D12CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5RP", "Nucleus", 25);
 
-    // MakePlotsLog(cellLine, "D12RP", "Nucleus", 25);
-    // MakePlotsLog(cellLine, "D12CP", "Nucleus", 25);
-    // MakePlotsLog(cellLine, "D5CP", "Nucleus", 25);
-    // MakePlotsLog(cellLine, "D5RP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D12RP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D12CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5RP", "Nucleus", 25);
 
-    // MakePlots(cellLine, "D12RP", "TotalCell", 25);
-    // MakePlots(cellLine, "D12CP", "TotalCell", 25);
-    // MakePlots(cellLine, "D5CP", "TotalCell", 25);
-    // MakePlots(cellLine, "D5RP", "TotalCell", 25);
+    MakePlots(cellLine, "D12RP", "TotalCell", 25);
+    MakePlots(cellLine, "D12CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5RP", "TotalCell", 25);
 
-    // MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
     MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
-    // MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
-    // MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
 }

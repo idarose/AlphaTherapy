@@ -353,6 +353,8 @@ void HitAnalysis::MakeGraph_FractionHit_PerNHits(int MaxNHits)
             double activity = std::get<0>(fractionHit_Activity_ThisNHit_Vec[i]);
             double fractionHit_NHits = std::get<1>(fractionHit_Activity_ThisNHit_Vec[i]);
 
+            // std::cout << "N : " << NHits << " A : " << activity << " : " << fractionHit_NHits << std::endl;
+
             grFractionHit_PerOneHit->SetPoint(i, activity, fractionHit_NHits);
         }
 
@@ -447,15 +449,30 @@ void HitAnalysis::MakeGraph_ProbabilityDeath_UWA_ForNHits()
             double probabilityDeath = grProbDeath->GetPointY(n);
             double dProbabilityDeath = grProbDeath->GetErrorY(n);
 
-            double w_i = 1./std::pow(dProbabilityDeath,2.);
-            double mu_i_w = w_i*probabilityDeath;
+            if(dProbabilityDeath>1.e-14)
+            {
+                double w_i = 1./std::pow(dProbabilityDeath,2.);
+                double mu_i_w = w_i*probabilityDeath;
 
-            sum_w_i += w_i;
-            sum_mu_i_w += mu_i_w;
+                sum_w_i += w_i;
+                sum_mu_i_w += mu_i_w;
+            }
+            else
+            {
+                // dProbabilityDeath = 0.01*probabilityDeath;
+                // double w_i = 1./std::pow(dProbabilityDeath,2.);
+                // double mu_i_w = w_i*probabilityDeath;
+
+                // sum_w_i += w_i;
+                // sum_mu_i_w += mu_i_w;
+
+                grProbDeath->RemovePoint(n);
+            }
         }
 
         double UWA_percentDeath_perN = sum_mu_i_w/sum_w_i;
         double dUWA_percentDeath_perN = 1./std::sqrt(sum_w_i);
+
 
         grProbabilityDeath_ForNHits->SetPoint(NPoints, ((double)NHits), UWA_percentDeath_perN);
         grProbabilityDeath_ForNHits->SetPointError(NPoints, 0., dUWA_percentDeath_perN);
