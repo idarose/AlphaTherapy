@@ -156,7 +156,7 @@ void makeRunFiles()
     }
 
 
-    numInterations = 40;
+    numInterations = 80;
     caseNum = 0;
     for(int i = 0; i < std::get<0>(data_PC3_Flu).size(); i++)
     {
