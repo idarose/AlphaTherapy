@@ -8,7 +8,7 @@
 
 //------------------–----------
 // EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDynamicsInstance, int numberIterations, int caseNum)
-EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDynamicsInstance, int numberIterations)
+EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDynamicsInstance, int numberIterations, int caseNum)
 {
     std::cout << "---------------------------------" << std::endl;
     std::cout << "Analyzing Histograms for : " << decayDynamicsInstance.GetCellLine() << ", Activity: " << decayDynamicsInstance.GetActivity() << std::endl;
@@ -607,52 +607,52 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     std::vector<TFile*> inputFiles_membrane;
     std::vector<TFile*> inputFiles_cytoplasm;
 
-    // int startIt;
-    // int stopIt;
+    int startIt;
+    int stopIt;
 
-    // if(decayDynamicsInstance.GetCellLine()=="C4_2")
-    // {
-    //     startIt = 0;
-    //     stopIt = 40;
-    // }
-    // if(decayDynamicsInstance.GetCellLine()=="PC3_PIP")
-    // {
-    //     if(caseNum==1)
-    //     {
-    //         startIt = 0;
-    //         stopIt = 10;
-    //     }
-    //     if(caseNum==2)
-    //     {
-    //         startIt = 10;
-    //         stopIt = 20;
-    //     }
-    //     if(caseNum==3)
-    //     {
-    //         startIt = 20;
-    //         stopIt = 30;
-    //     }
-    //     if(caseNum==4)
-    //     {
-    //         startIt = 30;
-    //         stopIt = 40;
-    //     }
-    // }
-    // if(decayDynamicsInstance.GetCellLine()=="PC3_Flu")
-    // {
-    //     if(caseNum==1)
-    //     {
-    //         startIt = 0;
-    //         stopIt = 40;
-    //     }
-    //     if(caseNum==2)
-    //     {
-    //         startIt = 40;
-    //         stopIt = 80;
-    //     }
-    // }
+    if(decayDynamicsInstance.GetCellLine()=="C4_2")
+    {
+        startIt = 0;
+        stopIt = 40;
+    }
+    if(decayDynamicsInstance.GetCellLine()=="PC3_PIP")
+    {
+        if(caseNum==1)
+        {
+            startIt = 0;
+            stopIt = 10;
+        }
+        if(caseNum==2)
+        {
+            startIt = 10;
+            stopIt = 20;
+        }
+        if(caseNum==3)
+        {
+            startIt = 20;
+            stopIt = 30;
+        }
+        if(caseNum==4)
+        {
+            startIt = 30;
+            stopIt = 40;
+        }
+    }
+    if(decayDynamicsInstance.GetCellLine()=="PC3_Flu")
+    {
+        if(caseNum==1)
+        {
+            startIt = 0;
+            stopIt = 40;
+        }
+        if(caseNum==2)
+        {
+            startIt = 40;
+            stopIt = 80;
+        }
+    }
 
-    for(int i=0; i<numberIterations; i++)
+    for(int i=startIt; i<stopIt; i++)
     {
         std::string filepathSolutionIteration_i = filepathSimulationOutput + "Output_Pb212_" + decayDynamicsInstance.GetCellLine() + "_Activity" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_Solution_Thread_" + std::to_string(i) + ".root";
         std::string filepathMembraneIteration_i = filepathSimulationOutput + "Output_Pb212_" + decayDynamicsInstance.GetCellLine() + "_Activity" + std::to_string(decayDynamicsInstance.GetActivity()) + "kBq_Membrane_Thread_" + std::to_string(i) + ".root";
@@ -708,7 +708,7 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
 int main(int argc, char *argv[])
 {
     //------------------–----------
-    if (argc != 5) {
+    if (argc != 6) {
         std::cerr << "Usage: " << argv[0] << " string_argument integer_argument" << std::endl;
         return 1;
     }
@@ -759,19 +759,19 @@ int main(int argc, char *argv[])
         return 5;
     }
 
-    // //--------------------------
-    // try {
-    //     caseNum = std::stoi(argv[5]);
-    //     if(caseNum<=0){
-    //         throw std::invalid_argument("Number of cases cannot be smaller than one.");
-    //     }
-    // } catch (const std::invalid_argument& e) {
-    //     std::cerr << "Error: third argument is not a valid integer! " << e.what() << std::endl;
-    //     return 6;
-    // } catch (const std::out_of_range& e) {
-    //     std::cerr << "Error: third argument is out of range for an integer! " << e.what() << std::endl;
-    //     return 7;
-    // }
+    //--------------------------
+    try {
+        caseNum = std::stoi(argv[5]);
+        if(caseNum<=0){
+            throw std::invalid_argument("Number of cases cannot be smaller than one.");
+        }
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Error: third argument is not a valid integer! " << e.what() << std::endl;
+        return 6;
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Error: third argument is out of range for an integer! " << e.what() << std::endl;
+        return 7;
+    }
 
     std::cout << "Cell line: " << cellLine << ", Activity: " << activity <<  ", Number Iterations: " << numberIterations << std::endl;
 
@@ -792,7 +792,7 @@ int main(int argc, char *argv[])
     decays.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
 
     EnergyDepositionHistograms hists = AnalyzeHistogramsFromSimulation(decays, numberIterations);
-    std::string outputName = "Output_" + cellGeometry + "/Output_" + cellLine + "_" + std::to_string(activity) + "kBq.root";
+    std::string outputName = "Output_" + cellGeometry + "/Output_" + cellLine + "_" + std::to_string(activity) + "kBq_case_" + caseNum + ".root";
     auto output = new TFile(outputName.c_str(), "RECREATE");
     hists.WriteHistogramsToFile();
     output->Write();
