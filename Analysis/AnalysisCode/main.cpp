@@ -718,7 +718,7 @@ int main(int argc, char *argv[])
     std::string cellGeometry = argv[2];
     int activity;
     int numberIterations;
-    // int caseNum;
+    int caseNum;
 
     //------------------–----------
     std::vector<int> validActivities = {1,3,5,10,25,50,75,100,150};
@@ -791,8 +791,8 @@ int main(int argc, char *argv[])
     std::string mathematicaOutput = "../../Mathematica/Output";
     decays.LoadDataFromMathematicaCalculations(mathematicaOutput.c_str());
 
-    EnergyDepositionHistograms hists = AnalyzeHistogramsFromSimulation(decays, numberIterations);
-    std::string outputName = "Output_" + cellGeometry + "/Output_" + cellLine + "_" + std::to_string(activity) + "kBq_case_" + caseNum + ".root";
+    EnergyDepositionHistograms hists = AnalyzeHistogramsFromSimulation(decays, numberIterations, caseNum);
+    std::string outputName = "Output_" + cellGeometry + "/Output_" + cellLine + "_" + std::to_string(activity) + "kBq_case_" + std::to_string(caseNum) + ".root";
     auto output = new TFile(outputName.c_str(), "RECREATE");
     hists.WriteHistogramsToFile();
     output->Write();
