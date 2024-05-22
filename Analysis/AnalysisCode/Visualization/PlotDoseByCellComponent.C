@@ -723,7 +723,7 @@ void PlotDoseByCellComponent()
     // MakePlotsLog(cellLine, "D12RP", 25, 1);
 
     // MakePlots(cellLine, "D12RP", 25, 0);
-    // MakePlotsLog(cellLine, "D12RP", 25, 0);
+    MakePlotsLog(cellLine, "D12RP", 25, 0);
 
 
     // MakePlots(cellLine, "D12CP", 25, 1);
@@ -742,6 +742,6 @@ void PlotDoseByCellComponent()
     // MakePlotsLog(cellLine, "D5CP", 25, 1);
 
     // MakePlots(cellLine, "D5CP", 25, 0);
-    MakePlotsLog(cellLine, "D5CP", 25, 0);
+    // MakePlotsLog(cellLine, "D5CP", 25, 0);
 
 }
