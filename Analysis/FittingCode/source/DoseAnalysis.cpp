@@ -71,21 +71,62 @@ void DoseAnalysis::MakeMeanDose_PerNHits_Graphs()
 
             if(intDose_ThisN>0)
             {
-                int n = 3;
-                double x_q[3];
-                double y_q[3] = {0.16, 0.50, 0.84};
+                double mean = projectedDose_ForNHits->GetMean();
 
-                projectedDose_ForNHits->GetQuantiles(n, x_q, y_q);
+                double totalEntries = projectedDose_ForNHits->GetEntries();
+                double lowerThreshold = totalEntries * 0.25;
+                double upperThreshold = totalEntries * 0.75;
 
-                double medianDose = x_q[1];
-                double doseAtQuantileMinus = x_q[0];
-                double doseAtQuantilePlus = x_q[2];
+                int binMean = projectedDose_ForNHits->FindBin(mean);
+                int nBins = projectedDose_ForNHits->GetNbinsX();
+                double lowerSpreadBin = binMean;
+                double upperSpreadBin = binMean;
+                double integral;
 
-                grMeanDose_PerNHits_OneActivity->SetPoint(graphPoint, ((double)i),medianDose);
-                grMeanDose_PerNHits_OneActivity->SetPointEYhigh(graphPoint,doseAtQuantilePlus-medianDose);
-                grMeanDose_PerNHits_OneActivity->SetPointEYlow(graphPoint,medianDose-doseAtQuantileMinus);
+                // Find the bin corresponding to the lower threshold (25% below the mean)
+                integral = projectedDose_ForNHits->Integral(1, binMean);
+                for (int i = binMean; i > 0 && integral > lowerThreshold; --i) {
+                    integral = projectedDose_ForNHits->Integral(1, i);
+                    lowerSpreadBin = i;
+                }
+
+                // Find the bin corresponding to the upper threshold (25% above the mean)
+                integral = projectedDose_ForNHits->Integral(binMean, nBins);
+                for (int i = binMean; i <= nBins && integral > (totalEntries - upperThreshold); ++i) {
+                    integral = projectedDose_ForNHits->Integral(i, nBins);
+                    upperSpreadBin = i;
+                }
+
+                // Convert bin numbers to x values
+                double lowerSpreadValue = projectedDose_ForNHits->GetBinLowEdge(lowerSpreadBin);
+                double upperSpreadValue = projectedDose_ForNHits->GetBinLowEdge(upperSpreadBin) + projectedDose_ForNHits->GetBinWidth(upperSpreadBin);
+
+                // Interval around the mean
+                double meanLowerDiff = mean - lowerSpreadValue;
+                double meanUpperDiff = upperSpreadValue - mean;
+
+
+                grMeanDose_PerNHits_OneActivity->SetPoint(graphPoint, ((double)i),mean);
+                grMeanDose_PerNHits_OneActivity->SetPointEYhigh(graphPoint,meanUpperDiff);
+                grMeanDose_PerNHits_OneActivity->SetPointEYlow(graphPoint,meanLowerDiff);
 
                 graphPoint++;
+
+                // int n = 3;
+                // double x_q[3];
+                // double y_q[3] = {0.16, 0.50, 0.84};
+
+                // projectedDose_ForNHits->GetQuantiles(n, x_q, y_q);
+
+                // double medianDose = x_q[1];
+                // double doseAtQuantileMinus = x_q[0];
+                // double doseAtQuantilePlus = x_q[2];
+
+                // grMeanDose_PerNHits_OneActivity->SetPoint(graphPoint, ((double)i),medianDose);
+                // grMeanDose_PerNHits_OneActivity->SetPointEYhigh(graphPoint,doseAtQuantilePlus-medianDose);
+                // grMeanDose_PerNHits_OneActivity->SetPointEYlow(graphPoint,medianDose-doseAtQuantileMinus);
+
+                // graphPoint++;
             }
             projectedDose_ForNHits->SetDirectory(0);
         }
@@ -103,7 +144,7 @@ void DoseAnalysis::MakeMeanDose_PerNHits_Graphs()
     }
 }
 
-// hDose_HitsCellComponent_Average_Vec
+
 
 void DoseAnalysis::MakeDose_PerNHits_Average_Histograms()
 {
@@ -155,21 +196,61 @@ void DoseAnalysis::MakeMeanDose_PerNHits_Average_Graph()
 
         if(hDose_ThisNHits->Integral()>0.)
         {
-            int n = 3;
-            double x_q[3];
-            double y_q[3] = {0.16, 0.50, 0.84};
+            double mean = hDose_ThisNHits->GetMean();
 
-            hDose_ThisNHits->GetQuantiles(n, x_q, y_q);
+            double totalEntries = hDose_ThisNHits->GetEntries();
+            double lowerThreshold = totalEntries * 0.25;
+            double upperThreshold = totalEntries * 0.75;
 
-            double medianDose = x_q[1];
-            double doseAtQuantileMinus = x_q[0];
-            double doseAtQuantilePlus = x_q[2];
+            int binMean = hDose_ThisNHits->FindBin(mean);
+            int nBins = hDose_ThisNHits->GetNbinsX();
+            double lowerSpreadBin = binMean;
+            double upperSpreadBin = binMean;
+            double integral;
 
-            grMeanDose_PerNHits_Average->SetPoint(graphPoint, ((double)NHits), medianDose);
-            grMeanDose_PerNHits_Average->SetPointEYhigh(graphPoint, doseAtQuantilePlus-medianDose);
-            grMeanDose_PerNHits_Average->SetPointEYlow(graphPoint, medianDose-doseAtQuantileMinus);
+            // Find the bin corresponding to the lower threshold (25% below the mean)
+            integral = hDose_ThisNHits->Integral(1, binMean);
+            for (int i = binMean; i > 0 && integral > lowerThreshold; --i) {
+                integral = hDose_ThisNHits->Integral(1, i);
+                lowerSpreadBin = i;
+            }
+
+            // Find the bin corresponding to the upper threshold (25% above the mean)
+            integral = hDose_ThisNHits->Integral(binMean, nBins);
+            for (int i = binMean; i <= nBins && integral > (totalEntries - upperThreshold); ++i) {
+                integral = hDose_ThisNHits->Integral(i, nBins);
+                upperSpreadBin = i;
+            }
+
+            // Convert bin numbers to x values
+            double lowerSpreadValue = hDose_ThisNHits->GetBinLowEdge(lowerSpreadBin);
+            double upperSpreadValue = hDose_ThisNHits->GetBinLowEdge(upperSpreadBin) + hDose_ThisNHits->GetBinWidth(upperSpreadBin);
+
+            // Interval around the mean
+            double meanLowerDiff = mean - lowerSpreadValue;
+            double meanUpperDiff = upperSpreadValue - mean;
+
+            grMeanDose_PerNHits_Average->SetPoint(graphPoint, ((double)NHits), mean);
+            grMeanDose_PerNHits_Average->SetPointEYhigh(graphPoint, meanUpperDiff);
+            grMeanDose_PerNHits_Average->SetPointEYlow(graphPoint, meanLowerDiff);
 
             graphPoint++;
+
+            // int n = 3;
+            // double x_q[3];
+            // double y_q[3] = {0.16, 0.50, 0.84};
+
+            // hDose_ThisNHits->GetQuantiles(n, x_q, y_q);
+
+            // double medianDose = x_q[1];
+            // double doseAtQuantileMinus = x_q[0];
+            // double doseAtQuantilePlus = x_q[2];
+
+            // grMeanDose_PerNHits_Average->SetPoint(graphPoint, ((double)NHits), medianDose);
+            // grMeanDose_PerNHits_Average->SetPointEYhigh(graphPoint, doseAtQuantilePlus-medianDose);
+            // grMeanDose_PerNHits_Average->SetPointEYlow(graphPoint, medianDose-doseAtQuantileMinus);
+
+            // graphPoint++;
         }
     }
 }
