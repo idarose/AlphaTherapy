@@ -623,7 +623,7 @@ void PlotHistogramsLocationDecayLog(std::string cellLine, std::string cellGeomet
             if(diameter==5)
             {
                 // doseMax = doseMax*1./3.;
-                reBin = 2000;
+                reBin = 10000;
             }
             if(diameter==12)
             {
@@ -1026,8 +1026,8 @@ void PlotHistogramsLocationDecayLog(std::string cellLine, std::string cellGeomet
 
 void PlotHistogramsByLocationDecay()
 {
-    std::string cell_component = "Nucleus";
-    // std::string cell_component = "TotalCell";
+    // std::string cell_component = "Nucleus";
+    std::string cell_component = "TotalCell";
 
     // PlotHistogramsLocationDecay("C4_2", "D12RP", cell_component, 25);
     // PlotHistogramsLocationDecay("C4_2", "D12CP", cell_component, 25);
@@ -1039,10 +1039,10 @@ void PlotHistogramsByLocationDecay()
     // PlotHistogramsLocationDecay("PC3_PIP", "D5RP", cell_component, 25);
     // PlotHistogramsLocationDecay("PC3_PIP", "D5CP", cell_component, 25);
 
-    // PlotHistogramsLocationDecay("PC3_Flu", "D12RP", cell_component, 25);
-    // PlotHistogramsLocationDecay("PC3_Flu", "D12CP", cell_component, 25);
-    // PlotHistogramsLocationDecay("PC3_Flu", "D5RP", cell_component, 25);
-    // PlotHistogramsLocationDecay("PC3_Flu", "D5CP", cell_component, 25);
+    PlotHistogramsLocationDecay("PC3_Flu", "D12RP", cell_component, 25);
+    PlotHistogramsLocationDecay("PC3_Flu", "D12CP", cell_component, 25);
+    PlotHistogramsLocationDecay("PC3_Flu", "D5RP", cell_component, 25);
+    PlotHistogramsLocationDecay("PC3_Flu", "D5CP", cell_component, 25);
 
     // PlotHistogramsLocationDecayLog("C4_2", "D12RP", cell_component, 25);
     // PlotHistogramsLocationDecayLog("C4_2", "D12CP", cell_component, 25);
@@ -1055,7 +1055,7 @@ void PlotHistogramsByLocationDecay()
     // PlotHistogramsLocationDecayLog("PC3_PIP", "D5CP", cell_component, 25);
 
     PlotHistogramsLocationDecayLog("PC3_Flu", "D12RP", cell_component, 25);
-    // PlotHistogramsLocationDecayLog("PC3_Flu", "D12CP", cell_component, 25);
-    // PlotHistogramsLocationDecayLog("PC3_Flu", "D5RP", cell_component, 25);
-    // PlotHistogramsLocationDecayLog("PC3_Flu", "D5CP", cell_component, 25);
+    PlotHistogramsLocationDecayLog("PC3_Flu", "D12CP", cell_component, 25);
+    PlotHistogramsLocationDecayLog("PC3_Flu", "D5RP", cell_component, 25);
+    PlotHistogramsLocationDecayLog("PC3_Flu", "D5CP", cell_component, 25);
 }

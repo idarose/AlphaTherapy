@@ -121,7 +121,7 @@ int main(int argc,char** argv)
 
   // auto physicsList = new FTFP_BERT;
   auto physicsList = new PhysicsList;
-  physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
+  // physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics);
   runManager->SetUserInitialization(physicsList);
 
   auto actionInitialization = new ActionInitialization(detConstruction);

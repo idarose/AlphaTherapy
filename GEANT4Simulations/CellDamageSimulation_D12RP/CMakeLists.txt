@@ -77,6 +77,7 @@ set(EXAMPLEB4A_SCRIPTS
     gui.mac
     init_vis.mac
     vis.mac
+    Run_Test.mac
     Run_C4_2_Solution_Case_0.mac
     Run_C4_2_Solution_Case_1.mac
     Run_C4_2_Solution_Case_2.mac

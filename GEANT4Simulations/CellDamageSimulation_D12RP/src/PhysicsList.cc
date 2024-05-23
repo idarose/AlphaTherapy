@@ -45,56 +45,166 @@
 #include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
 #include "G4EmDNAPhysics_option7.hh"
+#include "G4EmDNAPhysics_option8.hh"
 
+#include "G4EmStandardPhysics.hh"
+#include "G4EmStandardPhysics_option3.hh"
 #include "G4EmStandardPhysics_option4.hh"
+#include "G4EmLivermorePhysics.hh"
+#include "G4EmPenelopePhysics.hh"
+
 #include "G4DecayPhysics.hh"
+#include "G4RadioactiveDecayPhysics.hh"
 
 #include "G4EmDNAPhysicsActivator.hh"
-
+#include "G4EmDNABuilder.hh"
+#include "G4GenericIon.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-PhysicsList::PhysicsList() 
-: G4VModularPhysicsList()
+PhysicsList::PhysicsList() : G4VModularPhysicsList()
 {
-  SetDefaultCutValue(1.0*micrometer);
-  SetVerboseLevel(1);
-  
-  // FIRST METHOD TO ACTIVATE Geant4-DNA Physics, 
-  //  using a Geant4-DNA Physics constructor only
-  //
-  //  RegisterPhysics(new G4EmDNAPhysics());
-  // or
-  //  RegisterPhysics(new G4EmDNAPhysics_option1());
-  // or
-  //  RegisterPhysics(new G4EmDNAPhysics_option2());
-  // or
-  //  RegisterPhysics(new G4EmDNAPhysics_option3());
-  // or
-  //  RegisterPhysics(new G4EmDNAPhysics_option4());
-  // or
-  //  RegisterPhysics(new G4EmDNAPhysics_option5());
-  // or
-  //  RegisterPhysics(new G4EmDNAPhysics_option6());
-  // or
-  //  RegisterPhysics(new G4EmDNAPhysics_option7());
-  
-  // or SECOND METHOD TO ACTIVATE Geant4-DNA Physics
-  // (this includes combination with Geant4 EM Physics)
-  
-  RegisterPhysics(new G4EmStandardPhysics_option4());
-  
-  RegisterPhysics(new G4DecayPhysics());
-  
-  RegisterPhysics(new G4EmDNAPhysicsActivator());
+    SetDefaultCutValue(1.0*micrometer);
+    SetVerboseLevel(1);
 
-  G4ProductionCutsTable::GetProductionCutsTable()->
+    fEmPhysics = "emstandard_opt4";
+    fEmPhysicsList = new G4EmStandardPhysics_option4();
+    fDecayPhysicsList = new G4DecayPhysics();
+    fEmDNAActivator = new G4EmDNAPhysicsActivator();
+
+    G4ProductionCutsTable::GetProductionCutsTable()->
       SetEnergyRange(100*eV, 1*GeV);
-  G4EmParameters* param = G4EmParameters::Instance();
-  param->SetMinEnergy(100*eV);
-  param->SetMaxEnergy(1*GeV);
+    G4EmParameters* param = G4EmParameters::Instance();
+    param->SetMinEnergy(100*eV);
+    param->SetMaxEnergy(1*GeV);
+
+    AddPhysics("raddecay");
+    AddPhysics("DNA_Opt2");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysicsList::~PhysicsList()
-{}
+{
+  delete fEmPhysicsList;
+  delete fEmDNAActivator;
+  delete fDecayPhysicsList;
+  delete fRadDecayPhysicsList;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PhysicsList::ConstructParticle()
+{
+  fEmPhysicsList->ConstructParticle();
+  fDecayPhysicsList->ConstructParticle();
+  fEmDNAActivator->ConstructParticle();
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PhysicsList::ConstructProcess()
+{
+  AddTransportation();
+  fEmPhysicsList->ConstructProcess();
+  fDecayPhysicsList->ConstructProcess();
+  if(nullptr != fRadDecayPhysicsList)
+  {
+    fRadDecayPhysicsList->ConstructProcess();
+  }
+  if(!fDNAPL)
+  {
+    fEmDNAActivator->ConstructProcess();
+  }
+  if(fIsTrackingCutSet)
+  {
+    TrackingCut();
+  }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PhysicsList::AddPhysics(const G4String& name)
+{
+  if(name == fEmPhysics) { return; }
+  G4cout << "### PhysicsList::AddPhysics Warning: Physics List <"
+	 << name << "> is requested" << G4endl;
+  fEmPhysics = name;
+  if(name == "emstandard_opt0") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmStandardPhysics();
+    fDNAPL = false;
+  } else if(name == "emstandard_opt3") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmStandardPhysics_option3();
+    fDNAPL = false;
+  } else if(name == "emstandard_opt4") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmStandardPhysics_option4();
+    fDNAPL = false;
+  } else if(name == "raddecay") {
+    if(nullptr == fRadDecayPhysicsList)
+      fRadDecayPhysicsList = new G4RadioactiveDecayPhysics();
+  } else if(name == "emlivermore") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmLivermorePhysics();
+    fDNAPL = false;
+  } else if(name == "empenelope") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmPenelopePhysics();
+    fDNAPL = false;
+  } else if(name == "DNA_Opt0") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt1") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option1();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt2") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option2();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt3") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option3();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt4") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option4();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt5") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option5();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt6") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option6();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt7") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option7();
+    fDNAPL = true;
+  } else if(name == "DNA_Opt8") {
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option8();
+    fDNAPL = true;
+  } else {
+    G4cout << "### PhysicsList::AddPhysics Warning: Physics List <"
+	   << name << "> is does not exist - the command ignored"
+	   << G4endl;
+  }
+}
+
+void PhysicsList::TrackingCut()
+{
+  auto particle = G4GenericIon::GenericIon();//DNA heavy ions
+  auto particleName = particle->GetParticleName();
+  auto capture = G4EmDNABuilder::FindOrBuildCapture(0.5*CLHEP::MeV, particle);
+  capture->AddRegion("World");
+  capture->SetKinEnergyLimit(0.5*CLHEP::MeV);// 0.5 MeV/u
+}
+
+void PhysicsList::SetTrackingCut(G4bool isCut)
+{
+  fIsTrackingCutSet = isCut;
+}
