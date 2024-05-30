@@ -60,7 +60,7 @@ set(EXAMPLEB4A_SCRIPTS
     jobScript_PC3_PIP_Membrane.sh
     jobScript_PC3_PIP_Cytoplasm.sh
     jobScript_PC3_Flu_Solution.sh
-    jobscript_Bragg.sh
+    jobScript_Bragg.sh
     gui.mac
     init_vis.mac
     vis.mac
