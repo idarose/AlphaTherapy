@@ -335,16 +335,37 @@ void HitAnalysis::MakeGraph_FractionHit_PerNHits(int MaxNHits)
 
         for(int i=0; i<hHitMultiplicity_vec.size(); i++)
         {
-            double activity = std::get<0>(hHitMultiplicity_vec[i]);
-            TH1D* hHitMultiplicity_OneActivity = std::get<1>(hHitMultiplicity_vec[i]);
-
-            if(hHitMultiplicity_OneActivity->GetNbinsX()>0)
+            if(NHits==0)
             {
-                double fractionHit = hHitMultiplicity_OneActivity->GetBinContent(NHits+1);
+                double activity = std::get<0>(hHitMultiplicity_vec[i]);
+                TH1D* hHitMultiplicity_OneActivity = std::get<1>(hHitMultiplicity_vec[i]);
+                TH1D* hDose = std::get<2>(hDose_Activity_Vec[i]);
 
-                if(fractionHit>0.)
+                double fractionWithNoEnergyDeps = 1. - hDose->Integral();
+
+                if(hHitMultiplicity_OneActivity->GetNbinsX()>0)
                 {
-                    fractionHit_Activity_ThisNHit_Vec.push_back(std::make_tuple(activity,fractionHit));
+                    double fractionHit = hHitMultiplicity_OneActivity->GetBinContent(NHits+1) + fractionWithNoEnergyDeps;
+
+                    if(fractionHit>0.)
+                    {
+                        fractionHit_Activity_ThisNHit_Vec.push_back(std::make_tuple(activity,fractionHit));
+                    }
+                }
+            }
+            else
+            {
+                double activity = std::get<0>(hHitMultiplicity_vec[i]);
+                TH1D* hHitMultiplicity_OneActivity = std::get<1>(hHitMultiplicity_vec[i]);
+
+                if(hHitMultiplicity_OneActivity->GetNbinsX()>0)
+                {
+                    double fractionHit = hHitMultiplicity_OneActivity->GetBinContent(NHits+1);
+
+                    if(fractionHit>0.)
+                    {
+                        fractionHit_Activity_ThisNHit_Vec.push_back(std::make_tuple(activity,fractionHit));
+                    }
                 }
             }
         }
@@ -352,8 +373,6 @@ void HitAnalysis::MakeGraph_FractionHit_PerNHits(int MaxNHits)
         {
             double activity = std::get<0>(fractionHit_Activity_ThisNHit_Vec[i]);
             double fractionHit_NHits = std::get<1>(fractionHit_Activity_ThisNHit_Vec[i]);
-
-            // std::cout << "N : " << NHits << " A : " << activity << " : " << fractionHit_NHits << std::endl;
 
             grFractionHit_PerOneHit->SetPoint(i, activity, fractionHit_NHits);
         }
@@ -449,7 +468,7 @@ void HitAnalysis::MakeGraph_ProbabilityDeath_UWA_ForNHits()
             double probabilityDeath = grProbDeath->GetPointY(n);
             double dProbabilityDeath = grProbDeath->GetErrorY(n);
 
-            if(dProbabilityDeath>1.e-14)
+            if(dProbabilityDeath>1.e-14&&dProbabilityDeath>0.)
             {
                 double w_i = 1./std::pow(dProbabilityDeath,2.);
                 double mu_i_w = w_i*probabilityDeath;
@@ -470,14 +489,17 @@ void HitAnalysis::MakeGraph_ProbabilityDeath_UWA_ForNHits()
             }
         }
 
-        double UWA_percentDeath_perN = sum_mu_i_w/sum_w_i;
-        double dUWA_percentDeath_perN = 1./std::sqrt(sum_w_i);
+        if(sum_w_i>0.)
+        {
+            double UWA_percentDeath_perN = sum_mu_i_w/sum_w_i;
+            double dUWA_percentDeath_perN = 1./std::sqrt(sum_w_i);
 
+            std::cout << "N : " << NHits << " P :" << dUWA_percentDeath_perN << std::endl;
+            grProbabilityDeath_ForNHits->SetPoint(NPoints, ((double)NHits), UWA_percentDeath_perN);
+            grProbabilityDeath_ForNHits->SetPointError(NPoints, 0., dUWA_percentDeath_perN);
 
-        grProbabilityDeath_ForNHits->SetPoint(NPoints, ((double)NHits), UWA_percentDeath_perN);
-        grProbabilityDeath_ForNHits->SetPointError(NPoints, 0., dUWA_percentDeath_perN);
-
-        NPoints++;
+            NPoints++;
+        }
     }
 }
 

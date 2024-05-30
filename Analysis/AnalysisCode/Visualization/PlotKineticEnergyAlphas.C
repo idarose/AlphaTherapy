@@ -882,7 +882,7 @@ void PlotKineticEnergyAlphas()
     // MakePlots(cellLine, "D5CP", "TotalCell", 25);
     // MakePlots(cellLine, "D5RP", "TotalCell", 25);
 
-    MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
+    // MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
     // MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);

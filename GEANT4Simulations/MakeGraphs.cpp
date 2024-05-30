@@ -71,7 +71,7 @@ void MakeBraggPeakCurves()
                 maxZ = positionZ;
             }
 
-            double S = energyDep/step;
+            double S = energyDep;
 
             histEnergyDep->Fill(positionZ, S);
 

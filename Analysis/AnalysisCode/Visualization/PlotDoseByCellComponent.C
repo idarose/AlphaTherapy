@@ -715,33 +715,33 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, int activity, 
 
 void PlotDoseByCellComponent()
 {
-    // std::string cellLine = "C4_2";
+    std::string cellLine = "C4_2";
     // std::string cellLine = "PC3_PIP";
-    std::string cellLine = "PC3_Flu";
+    // std::string cellLine = "PC3_Flu";
 
-    // MakePlots(cellLine, "D12RP", 25, 1);
-    // MakePlotsLog(cellLine, "D12RP", 25, 1);
+    MakePlots(cellLine, "D12RP", 25, 1);
+    MakePlotsLog(cellLine, "D12RP", 25, 1);
 
-    // MakePlots(cellLine, "D12RP", 25, 0);
+    MakePlots(cellLine, "D12RP", 25, 0);
     MakePlotsLog(cellLine, "D12RP", 25, 0);
 
 
-    // MakePlots(cellLine, "D12CP", 25, 1);
-    // MakePlotsLog(cellLine, "D12CP", 25, 1);
+    MakePlots(cellLine, "D12CP", 25, 1);
+    MakePlotsLog(cellLine, "D12CP", 25, 1);
 
-    // MakePlots(cellLine, "D12CP", 25, 0);
-    // MakePlotsLog(cellLine, "D12CP", 25, 0);
+    MakePlots(cellLine, "D12CP", 25, 0);
+    MakePlotsLog(cellLine, "D12CP", 25, 0);
 
-    // MakePlots(cellLine, "D5RP", 25, 1);
-    // MakePlotsLog(cellLine, "D5RP", 25, 1);
+    MakePlots(cellLine, "D5RP", 25, 1);
+    MakePlotsLog(cellLine, "D5RP", 25, 1);
 
-    // MakePlots(cellLine, "D5RP", 25, 0);
-    // MakePlotsLog(cellLine, "D5RP", 25, 0);
+    MakePlots(cellLine, "D5RP", 25, 0);
+    MakePlotsLog(cellLine, "D5RP", 25, 0);
 
-    // MakePlots(cellLine, "D5CP", 25, 1);
-    // MakePlotsLog(cellLine, "D5CP", 25, 1);
+    MakePlots(cellLine, "D5CP", 25, 1);
+    MakePlotsLog(cellLine, "D5CP", 25, 1);
 
-    // MakePlots(cellLine, "D5CP", 25, 0);
-    // MakePlotsLog(cellLine, "D5CP", 25, 0);
+    MakePlots(cellLine, "D5CP", 25, 0);
+    MakePlotsLog(cellLine, "D5CP", 25, 0);
 
 }
