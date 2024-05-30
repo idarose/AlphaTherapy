@@ -53,6 +53,7 @@ set(EXAMPLEB4A_SCRIPTS
     exampleB4a.out
     exampleB4.in
     plotHisto.C
+    jobScript_Bragg.sh
     jobScript_C4_2_Solution.sh
     jobScript_C4_2_Membrane.sh
     jobScript_C4_2_Cytoplasm.sh
@@ -60,7 +61,6 @@ set(EXAMPLEB4A_SCRIPTS
     jobScript_PC3_PIP_Membrane.sh
     jobScript_PC3_PIP_Cytoplasm.sh
     jobScript_PC3_Flu_Solution.sh
-    jobScript_Bragg.sh
     gui.mac
     init_vis.mac
     vis.mac
