@@ -3,4 +3,4 @@
 /Sim/setSeed 356614
 /Sim/setOutputFileName Output_Run2.root
 /Sim/SetAlphaEnergy 8.78
-/run/beamOn 1000
+/run/beamOn 10

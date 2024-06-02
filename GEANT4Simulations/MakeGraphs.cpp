@@ -21,12 +21,12 @@
 
 void MakeBraggPeakCurves()
 {
-    TFile *fileRun1 = TFile::Open("BraggPeakSimulation-build/Output_Run1.root");
+    TFile *fileRun1 = TFile::Open("BraggPeakSimulation-build/Output_Run2.root");
     auto treeRun1= fileRun1->Get<TTree>("B4");
     TTreeReader myReaderRun1(treeRun1);
 
 
-    // TFile *fileRun2 = TFile::Open("Output_Run2.root");
+    // TFile *fileRun2 = TFile::Open("BraggPeakSimulation-build/Output_Run2.root");
     // auto treeRun2= fileRun2->Get<TTree>("B4");
     // TTreeReader myReaderRun2(treeRun2);
 
@@ -36,53 +36,82 @@ void MakeBraggPeakCurves()
     TTreeReaderArray<double> stepLengthRun1(myReaderRun1, "StepLength");
 
 
-    // TTreeReaderArray<double> energyLossRun2(myReaderRun2, "EnergyLoss");
-    // TTreeReaderArray<double> stepLengthRun2(myReaderRun2, "StepLength");
     // TTreeReaderArray<double> energyDepRun2(myReaderRun2, "EnergyDep");
+    // TTreeReaderArray<double> positionZRun2(myReaderRun2, "PositionZ");
+    // TTreeReaderArray<double> stepLengthRun2(myReaderRun2, "StepLength");
 
 
 
-    int NBins = 5000;
-    TH2D* histRun1 = new TH2D("hEnergyLoss_Lengths_Run1", "Energy loss for lengths travelled", NBins, 0., 2., NBins, 0.,150.);
+    int NBins = 100;
+    TH2D* histRun1 = new TH2D("hEnergyLoss_Lengths_Run1", "Energy loss for lengths travelled", NBins, 0., 2., NBins, 0.,100.);
     histRun1->GetXaxis()->SetTitle("Energy Deposition [MeV");
     histRun1->GetYaxis()->SetTitle("Position z [um]");
 
-    TH1D* histMaxZ = new TH1D("hMaxZPosition", "Maximum z position", NBins, 0., 150.);
+    TH1D* histMaxZ = new TH1D("hMaxZPosition", "Maximum z position", NBins, 0., 100.);
     histMaxZ->GetXaxis()->SetTitle("Position z [um]");
 
-    TH1D* histEnergyDep = new TH1D("hEnergyDep", "Energy deposition for range", NBins, 0., 150.);
+    TH1D* histEnergyDep = new TH1D("hEnergyDep", "Energy deposition for range", NBins, 0., 100.);
     histMaxZ->GetXaxis()->SetTitle("Position z [um]");
+
+    std::cout << 100./((double)NBins) << std::endl;
 
     int scale = 0;
     // std::vector<std::tuple<double,double>> vec;
 
+
+
     while(myReaderRun1.Next())
     {
         double maxZ = 0.;
+        // if(scale>1)
+        // {
+        //     break;
+        // }
 
-        for(int i=0; i<energyDepRun1.GetSize(); i++)
+        double z = 0.;
+        double dz = 1.;
+
+        for(int i=0; i<101; i++)
         {
-            double step = stepLengthRun1[i];
-            double positionZ = positionZRun1[i];
-            double energyDep = energyDepRun1[i];
+            z = i;
 
-            if(positionZ>maxZ)
+            double energyAtZ = 0;
+
+            for(int i=0; i<energyDepRun1.GetSize(); i++)
             {
-                maxZ = positionZ;
+                double step = stepLengthRun1[i];
+                double positionZ = positionZRun1[i];
+
+                if(positionZ>(z-dz) && positionZ < z)
+                {
+                    double energyDep = energyDepRun1[i];
+
+                    double S = energyDep*1000.;
+
+                    energyAtZ+=S;
+                }
+
+                // histRun1->Fill(S,positionZ);
+                // scale++;
+
             }
-
-            double S = energyDep;
-
-            histEnergyDep->Fill(positionZ, S);
-
-            histRun1->Fill(energyDep,positionZ);
-
+            histEnergyDep->Fill(z, energyAtZ);
         }
+
         scale++;
 
         histMaxZ->Fill(maxZ);
     }
-    histRun1->Scale(((double)scale));
+    histEnergyDep->Scale(1./((double)scale));
+
+    // histEnergyDep->Rebin(10);
+
+    TH1D* projectionY = histRun1->ProjectionY("projectionY", 1, histRun1->GetNbinsX());
+    projectionY->SetDirectory(0);
+    projectionY->SetName("hProj");
+
+    projectionY->Scale(1./((double)scale));
+    projectionY->Rebin(10);
 
     TGraph* grRun1 = new TGraph();
     grRun1->SetName("grRun1");
@@ -91,17 +120,23 @@ void MakeBraggPeakCurves()
     grRun1->GetXaxis()->SetTitle("Length Travelled z [um]");
 
     int NPoint = 0;
-    for(int i=0; i<histRun1->GetNbinsY(); i++)
+    for(int i=0; i<histEnergyDep->GetNbinsX(); i++)
     {
-        double len = (histRun1->GetYaxis())->GetBinCenter(i+1);
-        TH1D* projected = histRun1->ProjectionX("projRun1",i+1,i+1);
-        double meanS = projected->GetMean();
+        double len = (histEnergyDep->GetXaxis())->GetBinCenter(i+1);
+        // TH1D* projected = histRun1->ProjectionX("projRun1",i+1,i+1);
+        // double meanS = projected->GetMean();
 
-        projected->SetDirectory(0);
-        // double len = std::get<0>(vec[i]);
-        // double meanS = std::get<1>(vec[i]);
+        // projected->SetDirectory(0);
+        // // double len = std::get<0>(vec[i]);
+        // // double meanS = std::get<1>(vec[i]);
 
-        grRun1->SetPoint(NPoint, len, meanS);
+        // grRun1->SetPoint(NPoint, len, meanS);
+
+        double energyDep = histEnergyDep->GetBinContent(i+1);
+
+
+        // std::cout << len << " . " << energyDep << std::endl;
+        grRun1->SetPoint(NPoint,len,energyDep);
 
         NPoint++;
     }
@@ -127,9 +162,10 @@ void MakeBraggPeakCurves()
     // }
     // histRun2->Scale(((double)scale));
 
-    std::string outputName = "Output_Bragg.root";
+    std::string outputName = "Output_Bragg_2.root";
     auto output = new TFile(outputName.c_str(), "RECREATE");
     histRun1->Write();
+    projectionY->Write();
     // histRun2->Write();
     histMaxZ->Write();
     histEnergyDep->Write();

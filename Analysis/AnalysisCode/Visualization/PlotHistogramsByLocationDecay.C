@@ -23,6 +23,58 @@ std::pair<int, int> FindNonEmptyBinRange(TH1D* hist)
 
 void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry, std::string cellComponent, int activity)
 {
+    std::string cellComponentForTitle;
+    if(cellComponent=="TotalCell")
+    {
+        cellComponentForTitle = "Total cell";
+    }
+    else
+    {
+        cellComponentForTitle = cellComponent;
+    }
+
+    std::string panel;
+
+    if(cellComponent=="Nucleus")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "a";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "b";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "c";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "d";
+        }
+    }
+
+    if(cellComponent=="TotalCell")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "e";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "f";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "g";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "h";
+        }
+    }
+
     std::vector<int> colours;
     colours.push_back(kCyan+1);
     colours.push_back(kGreen-2);
@@ -169,21 +221,21 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
         std::string xAxisName = "Dose delivered in " + region + " [Gy]";
         double unitBinGray = ((double)reBin)*1.e-2;
         std::string yAxisName = "Fraction of cells in sample / " + std::string(Form("%.0f", unitBinGray)) + " mGy bin";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string title =  nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
-        std::string generalTitle = "Dose Delivered in " + cellComponentTitle;
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
 
         histogramDose_FractionFromSolution->GetXaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetYaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose_FractionFromSolution->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose_FractionFromSolution->SetTitle("");
+        histogramDose_FractionFromSolution->SetTitle(generalTitle.c_str());
 
         histogramDose->GetXaxis()->CenterTitle(true);
         histogramDose->GetYaxis()->CenterTitle(true);
         histogramDose->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose->SetTitle("");
+        histogramDose->SetTitle(generalTitle.c_str());
 
         histogramDose_FractionFromSolution->GetXaxis()->SetTitleSize(titleSize);
         histogramDose->GetXaxis()->SetTitleSize(titleSize);
@@ -422,32 +474,32 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
         std::string xAxisName = "Dose delivered in " + region + " [Gy]";
         double unitBinMGray = ((double)reBin)*1.e-2;
         std::string yAxisName = "Fraction of cells in sample / " + std::string(Form("%.0f", unitBinMGray)) + " mGy bin";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
-        std::string generalTitle = "Dose Delivered in " + cellComponentTitle;
+        std::string title =  nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
 
         histogramDose_FractionFromSolution->GetXaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetYaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose_FractionFromSolution->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose_FractionFromSolution->SetTitle("");
+        histogramDose_FractionFromSolution->SetTitle(generalTitle.c_str());
 
         sumHist_SolutionPlusMembrane->GetXaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembrane->GetYaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembrane->GetXaxis()->SetTitle(xAxisName.c_str());
         sumHist_SolutionPlusMembrane->GetYaxis()->SetTitle(yAxisName.c_str());
-        sumHist_SolutionPlusMembrane->SetTitle("");
+        sumHist_SolutionPlusMembrane->SetTitle(generalTitle.c_str());
 
         sumHist_SolutionPlusMembranePlusCytoplasm->GetXaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembranePlusCytoplasm->GetYaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembranePlusCytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
         sumHist_SolutionPlusMembranePlusCytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
-        sumHist_SolutionPlusMembranePlusCytoplasm->SetTitle("");
+        sumHist_SolutionPlusMembranePlusCytoplasm->SetTitle(generalTitle.c_str());
 
         histogramDose->GetXaxis()->CenterTitle(true);
         histogramDose->GetYaxis()->CenterTitle(true);
         histogramDose->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose->SetTitle("");
+        histogramDose->SetTitle(generalTitle.c_str());
 
         histogramDose_FractionFromSolution->GetXaxis()->SetTitleSize(titleSize);
         sumHist_SolutionPlusMembrane->GetXaxis()->SetTitleSize(titleSize);
@@ -519,6 +571,57 @@ void PlotHistogramsLocationDecay(std::string cellLine, std::string cellGeometry,
 
 void PlotHistogramsLocationDecayLog(std::string cellLine, std::string cellGeometry, std::string cellComponent, int activity)
 {
+    std::string cellComponentForTitle;
+    if(cellComponent=="TotalCell")
+    {
+        cellComponentForTitle = "Total cell";
+    }
+    else
+    {
+        cellComponentForTitle = cellComponent;
+    }
+    std::string panel;
+
+    if(cellComponent=="Nucleus")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "a";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "b";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "c";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "d";
+        }
+    }
+
+    if(cellComponent=="TotalCell")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "e";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "f";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "g";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "h";
+        }
+    }
+
     std::vector<int> colours;
     colours.push_back(kCyan+1);
     colours.push_back(kGreen-2);
@@ -665,21 +768,21 @@ void PlotHistogramsLocationDecayLog(std::string cellLine, std::string cellGeomet
         std::string xAxisName = "Dose delivered in " + region + " [Gy]";
         double unitBinGray = ((double)reBin)*1.e-2;
         std::string yAxisName = "Fraction of cells in sample / " + std::string(Form("%.0f", unitBinGray)) + " mGy bin";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string title =  nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
-        std::string generalTitle = "Dose Delivered in " + cellComponentTitle;
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
 
         histogramDose_FractionFromSolution->GetXaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetYaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose_FractionFromSolution->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose_FractionFromSolution->SetTitle("");
+        histogramDose_FractionFromSolution->SetTitle(generalTitle.c_str());
 
         histogramDose->GetXaxis()->CenterTitle(true);
         histogramDose->GetYaxis()->CenterTitle(true);
         histogramDose->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose->SetTitle("");
+        histogramDose->SetTitle(generalTitle.c_str());
 
         histogramDose_FractionFromSolution->GetXaxis()->SetTitleSize(titleSize);
         histogramDose->GetXaxis()->SetTitleSize(titleSize);
@@ -916,32 +1019,32 @@ void PlotHistogramsLocationDecayLog(std::string cellLine, std::string cellGeomet
         std::string xAxisName = "Dose delivered in " + region + " [Gy]";
         double unitBinMGray = ((double)reBin)*1.e-2;
         std::string yAxisName = "Fraction of cells in sample / " + std::string(Form("%.0f", unitBinMGray)) + " mGy bin";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
-        std::string generalTitle = "Dose Delivered in " + cellComponentTitle;
+        std::string title =  nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
 
         histogramDose_FractionFromSolution->GetXaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetYaxis()->CenterTitle(true);
         histogramDose_FractionFromSolution->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose_FractionFromSolution->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose_FractionFromSolution->SetTitle("");
+        histogramDose_FractionFromSolution->SetTitle(generalTitle.c_str());
 
         sumHist_SolutionPlusMembrane->GetXaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembrane->GetYaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembrane->GetXaxis()->SetTitle(xAxisName.c_str());
         sumHist_SolutionPlusMembrane->GetYaxis()->SetTitle(yAxisName.c_str());
-        sumHist_SolutionPlusMembrane->SetTitle("");
+        sumHist_SolutionPlusMembrane->SetTitle(generalTitle.c_str());
 
         sumHist_SolutionPlusMembranePlusCytoplasm->GetXaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembranePlusCytoplasm->GetYaxis()->CenterTitle(true);
         sumHist_SolutionPlusMembranePlusCytoplasm->GetXaxis()->SetTitle(xAxisName.c_str());
         sumHist_SolutionPlusMembranePlusCytoplasm->GetYaxis()->SetTitle(yAxisName.c_str());
-        sumHist_SolutionPlusMembranePlusCytoplasm->SetTitle("");
+        sumHist_SolutionPlusMembranePlusCytoplasm->SetTitle(generalTitle.c_str());
 
         histogramDose->GetXaxis()->CenterTitle(true);
         histogramDose->GetYaxis()->CenterTitle(true);
         histogramDose->GetXaxis()->SetTitle(xAxisName.c_str());
         histogramDose->GetYaxis()->SetTitle(yAxisName.c_str());
-        histogramDose->SetTitle("");
+        histogramDose->SetTitle(generalTitle.c_str());
 
         histogramDose_FractionFromSolution->GetXaxis()->SetTitleSize(titleSize);
         sumHist_SolutionPlusMembrane->GetXaxis()->SetTitleSize(titleSize);
@@ -1028,8 +1131,8 @@ void PlotHistogramsLocationDecayLog(std::string cellLine, std::string cellGeomet
 
 void PlotHistogramsByLocationDecay()
 {
-    // std::string cell_component = "Nucleus";
-    std::string cell_component = "TotalCell";
+    std::string cell_component = "Nucleus";
+    // std::string cell_component = "TotalCell";
 
     PlotHistogramsLocationDecay("C4_2", "D12RP", cell_component, 25);
     PlotHistogramsLocationDecay("C4_2", "D12CP", cell_component, 25);

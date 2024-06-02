@@ -31,8 +31,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     //Getting the volume copy number for the interaction
 
     G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
-    if(particleType==1000020040)
-    {
+    // if(particleType==1000020040)
+    // {
         // G4StepPoint* preStepPoint = step->GetPreStepPoint();
         G4StepPoint* postStepPoint = step->GetPostStepPoint();
 
@@ -47,8 +47,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
         G4double energyDep = step->GetTotalEnergyDeposit();
 
-        fEventAction->StoreInteractionInformation(energyLoss/MeV,postZPosition/um, stepLength/um);
-    }
+        fEventAction->StoreInteractionInformation(energyDep/MeV,postZPosition/um, stepLength/um);
+    // }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

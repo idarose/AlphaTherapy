@@ -113,6 +113,8 @@ void HitAnalysis::MakeHitMultiplicity_SurvivalFraction_Histograms()
 
             double fractionHitNTimes = hHitMultiplicity_OneActivity->GetBinContent(n+1);
 
+            std::cout << "N : " << n << " F : " << fractionHitNTimes << std::endl;
+
             //--------------------------
             // Loop over x axis (dose deposited)
             for(int j=0; j<hDose_hitsAlpha_CellComponent_OneActivity->GetNbinsX(); j++)
@@ -195,6 +197,8 @@ void HitAnalysis::MakeHitMultiplicity_SurvivalFraction_Graphs()
             double fraction = hHitMultiplicity_SurvivalFraction_OneActivity->GetBinContent(i+1);
             double dFraction = hHitMultiplicity_SurvivalFraction_OneActivity->GetBinError(i+1);
 
+            // std::cout << "A : " << activity << " N : " << i << " F : " << fraction << std::endl;
+
             if(fraction>0.)
             {
                 grHitMultiplicity_SurvivalFraction_OneActivity->SetPoint(graphPoint, ((double)i), fraction);
@@ -237,8 +241,6 @@ void HitAnalysis::MakeHitMultiplicity_PercentKilled_Histograms()
         auto CalculateUncertainty_PercentKilled_NHits = [&](double fractionHitNHits, double fractionHitNHits_survived, double dFractionSurvivedNHits)
         {
             return (100./fractionHitNHits)*dFractionSurvivedNHits;
-            // return (100./fractionHitNHits)*fractionHitNHits_survived*dFractionSurvivedNHits;
-            // return 0.01*(100.*(fractionHitNHits-fractionHitNHits_survived)/fractionHitNHits);
 
         };
 
@@ -262,8 +264,13 @@ void HitAnalysis::MakeHitMultiplicity_PercentKilled_Histograms()
                 double dPercentKilled = CalculateUncertainty_PercentKilled_NHits(fractionHitThisNHits, fractionSurvivedThisNHits, dFractionSurvivedThisNHits);
 
 
-                hHitMultiplicity_PercentKilled->SetBinContent(i+1, percentKilled);
-                hHitMultiplicity_PercentKilled->SetBinError(i+1, dPercentKilled);
+                if(dPercentKilled>0.)
+                {
+                    hHitMultiplicity_PercentKilled->SetBinContent(i+1, percentKilled);
+                    hHitMultiplicity_PercentKilled->SetBinError(i+1, dPercentKilled);
+
+                    // std::cout << "A : " << activity << " N : " << i << " dP : " << dPercentKilled << std::endl;
+                }
             }
         }
 
@@ -468,38 +475,50 @@ void HitAnalysis::MakeGraph_ProbabilityDeath_UWA_ForNHits()
             double probabilityDeath = grProbDeath->GetPointY(n);
             double dProbabilityDeath = grProbDeath->GetErrorY(n);
 
-            if(dProbabilityDeath>1.e-14&&dProbabilityDeath>0.)
-            {
-                double w_i = 1./std::pow(dProbabilityDeath,2.);
-                double mu_i_w = w_i*probabilityDeath;
+            double w_i = 1./std::pow(dProbabilityDeath,2.);
+            double mu_i_w = w_i*probabilityDeath;
 
-                sum_w_i += w_i;
-                sum_mu_i_w += mu_i_w;
-            }
-            else
-            {
-                // dProbabilityDeath = 0.01*probabilityDeath;
-                // double w_i = 1./std::pow(dProbabilityDeath,2.);
-                // double mu_i_w = w_i*probabilityDeath;
+            // std::cout << std::pow(dProbabilityDeath,2.) << std::endl;
 
-                // sum_w_i += w_i;
-                // sum_mu_i_w += mu_i_w;
+            // std::cout << w_i << std::endl;
 
-                grProbDeath->RemovePoint(n);
-            }
+            sum_w_i += w_i;
+            sum_mu_i_w += mu_i_w;
+
+            // if(dProbabilityDeath>1.e-14&&dProbabilityDeath>0.)
+            // {
+            //     double w_i = 1./std::pow(dProbabilityDeath,2.);
+            //     double mu_i_w = w_i*probabilityDeath;
+
+            //     sum_w_i += w_i;
+            //     sum_mu_i_w += mu_i_w;
+            // }
+            // else
+            // {
+            //     // dProbabilityDeath = 0.01*probabilityDeath;
+            //     // double w_i = 1./std::pow(dProbabilityDeath,2.);
+            //     // double mu_i_w = w_i*probabilityDeath;
+
+            //     // sum_w_i += w_i;
+            //     // sum_mu_i_w += mu_i_w;
+
+            //     grProbDeath->RemovePoint(n);
+            // }
         }
 
-        if(sum_w_i>0.)
-        {
+        // std::cout << sum_mu_i_w << std::endl;
+
+        // if(sum_w_i>0.)
+        // {
             double UWA_percentDeath_perN = sum_mu_i_w/sum_w_i;
             double dUWA_percentDeath_perN = 1./std::sqrt(sum_w_i);
 
-            std::cout << "N : " << NHits << " P :" << dUWA_percentDeath_perN << std::endl;
+            // std::cout << "N : " << NHits << " P :" << sum_mu_i_w << std::endl;
             grProbabilityDeath_ForNHits->SetPoint(NPoints, ((double)NHits), UWA_percentDeath_perN);
             grProbabilityDeath_ForNHits->SetPointError(NPoints, 0., dUWA_percentDeath_perN);
 
             NPoints++;
-        }
+        // }
     }
 }
 

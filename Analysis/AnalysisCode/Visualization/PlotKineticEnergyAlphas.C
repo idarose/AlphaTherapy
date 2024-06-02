@@ -15,6 +15,48 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
     colours.push_back(kGreen+2);
     colours.push_back(kViolet);
 
+    std::string panel;
+
+    if(cellComponent=="Nucleus")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "a";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "b";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "c";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "d";
+        }
+    }
+
+    if(cellComponent=="TotalCell")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "e";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "f";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "g";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "h";
+        }
+    }
+
     int diameter;
 
     if(cellGeometry=="D12RP"||cellGeometry=="D12CP")
@@ -73,7 +115,7 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
     std::string cellComponentForTitle;
     if(cellComponent=="TotalCell")
     {
-        cellComponentForTitle = "Total Cell";
+        cellComponentForTitle = "Total cell";
     }
     else
     {
@@ -159,9 +201,9 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         double maxY = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.3*histogram_KineticEnergy_FromSolution->GetMaximum();
 
 
-        std::string generalTitle = "Kinetic Energy of Impingning #alpha-Particles, " + cellComponentForTitle;
-        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting the " + region + " [MeV]";
+        std::string title =  nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetRangeUser(0.,9.);
@@ -325,10 +367,10 @@ void MakePlots(std::string cellLine, std::string cellGeometry, std::string cellC
         histogram_KineticEnergy_FromMembrane->Rebin(reBin);
         histogram_KineticEnergy_FromCytoplasm->Rebin(reBin);
 
-        std::string generalTitle = "Kinetic Energy of #alpha-Particles Impingning on " + cellComponentForTitle;
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
         std::string yAxisName = "Fraction of #alpha-particles / 20 keV bin";
-        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting the " + region + " [MeV]";
+        std::string title = nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
         double maxY_Mem = histogram_KineticEnergy_FromMembrane->GetMaximum() + 0.1*histogram_KineticEnergy_FromMembrane->GetMaximum();
         double maxY_Sol = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.1*histogram_KineticEnergy_FromSolution->GetMaximum();
@@ -434,6 +476,48 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
     colours.push_back(kGreen+2);
     colours.push_back(kViolet);
 
+    std::string panel;
+
+    if(cellComponent=="Nucleus")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "a";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "b";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "c";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "d";
+        }
+    }
+
+    if(cellComponent=="TotalCell")
+    {
+        if(cellGeometry=="D12RP")
+        {
+            panel = "e";
+        }
+        if(cellGeometry=="D12CP")
+        {
+            panel = "f";
+        }
+        if(cellGeometry=="D5RP")
+        {
+            panel = "g";
+        }
+        if(cellGeometry=="D5CP")
+        {
+            panel = "h";
+        }
+    }
+
     int diameter;
 
     if(cellGeometry=="D12RP"||cellGeometry=="D12CP")
@@ -492,7 +576,7 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
     std::string cellComponentForTitle;
     if(cellComponent=="TotalCell")
     {
-        cellComponentForTitle = "Total Cell";
+        cellComponentForTitle = "Total cell";
     }
     else
     {
@@ -582,9 +666,9 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         double maxY = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.3*histogram_KineticEnergy_FromSolution->GetMaximum();
 
 
-        std::string generalTitle = "Kinetic Energy of Impingning #alpha-Particles, " + cellComponentForTitle;
-        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting the " + region + " [MeV]";
+        std::string title = nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->SetRangeUser(0.,9.);
@@ -765,9 +849,9 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         histogram_KineticEnergy_FromMembrane->Rebin(reBin);
         histogram_KineticEnergy_FromCytoplasm->Rebin(reBin);
 
-        std::string generalTitle = "Kinetic Energy of #alpha-Particles Impingning on " + cellComponentForTitle;
-        std::string xAxisName = "Kinetic energy of #alpha-particle hitting " + region + " [MeV]";
-        std::string title = cellLine_Name + ", " + nucleiDist + " Dist. Nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
+        std::string generalTitle = "(" + panel + ") " + cellLine_Name + ", " + cellComponentForTitle;
+        std::string xAxisName = "Kinetic energy of #alpha-particle hitting the " + region + " [MeV]";
+        std::string title =  nucleiDist + " distributed nuclei, d_{nuc} = " + Form("%d", diameter) + " #mum, " + Form("%d", activity)   + " kBq / mL";
 
         double maxY_Mem = histogram_KineticEnergy_FromMembrane->GetMaximum() + 0.1*histogram_KineticEnergy_FromMembrane->GetMaximum();
         double maxY_Sol = histogram_KineticEnergy_FromSolution->GetMaximum() + 0.1*histogram_KineticEnergy_FromSolution->GetMaximum();
@@ -793,9 +877,9 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
         histogram_KineticEnergy_FromCytoplasm->GetYaxis()->SetRangeUser(1.e-6,1.0);
 
 
-        histogram_KineticEnergy_FromSolution->SetTitle("");
-        histogram_KineticEnergy_FromMembrane->SetTitle("");
-        histogram_KineticEnergy_FromCytoplasm->SetTitle("");
+        histogram_KineticEnergy_FromSolution->SetTitle(generalTitle.c_str());
+        histogram_KineticEnergy_FromMembrane->SetTitle(generalTitle.c_str());
+        histogram_KineticEnergy_FromCytoplasm->SetTitle(generalTitle.c_str());
 
         histogram_KineticEnergy_FromSolution->GetXaxis()->CenterTitle(true);
         histogram_KineticEnergy_FromSolution->GetYaxis()->CenterTitle(true);
@@ -864,26 +948,70 @@ void MakePlotsLog(std::string cellLine, std::string cellGeometry, std::string ce
 void PlotKineticEnergyAlphas()
 {
     std::string cellLine = "C4_2";
-    // std::string cellLine = "PC3_PIP";
-    // std::string cellLine = "PC3_Flu";
 
-    // MakePlots(cellLine, "D12RP", "Nucleus", 25);
-    // MakePlots(cellLine, "D12CP", "Nucleus", 25);
-    // MakePlots(cellLine, "D5CP", "Nucleus", 25);
-    // MakePlots(cellLine, "D5RP", "Nucleus", 25);
+    MakePlots(cellLine, "D12RP", "Nucleus", 25);
+    MakePlots(cellLine, "D12CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5RP", "Nucleus", 25);
 
-    // MakePlotsLog(cellLine, "D12RP", "Nucleus", 25);
-    // MakePlotsLog(cellLine, "D12CP", "Nucleus", 25);
-    // MakePlotsLog(cellLine, "D5CP", "Nucleus", 25);
-    // MakePlotsLog(cellLine, "D5RP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D12RP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D12CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5RP", "Nucleus", 25);
 
-    // MakePlots(cellLine, "D12RP", "TotalCell", 25);
-    // MakePlots(cellLine, "D12CP", "TotalCell", 25);
-    // MakePlots(cellLine, "D5CP", "TotalCell", 25);
-    // MakePlots(cellLine, "D5RP", "TotalCell", 25);
+    MakePlots(cellLine, "D12RP", "TotalCell", 25);
+    MakePlots(cellLine, "D12CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5RP", "TotalCell", 25);
 
-    // MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
-    // MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
-    // MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
-    // MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
+
+
+    cellLine = "PC3_PIP";
+
+    MakePlots(cellLine, "D12RP", "Nucleus", 25);
+    MakePlots(cellLine, "D12CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5RP", "Nucleus", 25);
+
+    MakePlotsLog(cellLine, "D12RP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D12CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5RP", "Nucleus", 25);
+
+    MakePlots(cellLine, "D12RP", "TotalCell", 25);
+    MakePlots(cellLine, "D12CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5RP", "TotalCell", 25);
+
+    MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
+
+
+    cellLine = "PC3_Flu";
+
+    MakePlots(cellLine, "D12RP", "Nucleus", 25);
+    MakePlots(cellLine, "D12CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5CP", "Nucleus", 25);
+    MakePlots(cellLine, "D5RP", "Nucleus", 25);
+
+    MakePlotsLog(cellLine, "D12RP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D12CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5CP", "Nucleus", 25);
+    MakePlotsLog(cellLine, "D5RP", "Nucleus", 25);
+
+    MakePlots(cellLine, "D12RP", "TotalCell", 25);
+    MakePlots(cellLine, "D12CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5CP", "TotalCell", 25);
+    MakePlots(cellLine, "D5RP", "TotalCell", 25);
+
+    MakePlotsLog(cellLine, "D12RP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D12CP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5CP", "TotalCell", 25);
+    MakePlotsLog(cellLine, "D5RP", "TotalCell", 25);
 }
