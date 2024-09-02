@@ -21,7 +21,7 @@
 
 void MakeBraggPeakCurves()
 {
-    TFile *fileRun1 = TFile::Open("BraggPeakSimulation-build/Output_Run2.root");
+    TFile *fileRun1 = TFile::Open("BraggPeakSimulation-build/Output_Run1.root");
     auto treeRun1= fileRun1->Get<TTree>("B4");
     TTreeReader myReaderRun1(treeRun1);
 
@@ -42,15 +42,15 @@ void MakeBraggPeakCurves()
 
 
 
-    int NBins = 100;
-    TH2D* histRun1 = new TH2D("hEnergyLoss_Lengths_Run1", "Energy loss for lengths travelled", NBins, 0., 2., NBins, 0.,100.);
+    int NBins = 1000;
+    TH2D* histRun1 = new TH2D("hEnergyLoss_Lengths_Run1", "Energy loss for lengths travelled", NBins, 0., 2., NBins, 0.,1000.);
     histRun1->GetXaxis()->SetTitle("Energy Deposition [MeV");
     histRun1->GetYaxis()->SetTitle("Position z [um]");
 
-    TH1D* histMaxZ = new TH1D("hMaxZPosition", "Maximum z position", NBins, 0., 100.);
+    TH1D* histMaxZ = new TH1D("hMaxZPosition", "Maximum z position", NBins, 0., 1000.);
     histMaxZ->GetXaxis()->SetTitle("Position z [um]");
 
-    TH1D* histEnergyDep = new TH1D("hEnergyDep", "Energy deposition for range", NBins, 0., 100.);
+    TH1D* histEnergyDep = new TH1D("hEnergyDep", "Energy deposition for range", NBins, 0., 1000.);
     histMaxZ->GetXaxis()->SetTitle("Position z [um]");
 
     std::cout << 100./((double)NBins) << std::endl;
@@ -162,7 +162,7 @@ void MakeBraggPeakCurves()
     // }
     // histRun2->Scale(((double)scale));
 
-    std::string outputName = "Output_Bragg_2.root";
+    std::string outputName = "Output_Bragg_1_electrons.root";
     auto output = new TFile(outputName.c_str(), "RECREATE");
     histRun1->Write();
     projectionY->Write();

@@ -57,7 +57,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    auto particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("alpha");
+    auto particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("e-");
 
     fParticleGun->SetParticleDefinition(particleDefinition);
 

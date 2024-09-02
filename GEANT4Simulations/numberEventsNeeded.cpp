@@ -139,7 +139,7 @@ void numberEventsNeeded()
 
     // Calculating volume ratio
     double VolumeSample = 0.2*1000; // mm^3
-    double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
+    double volumeCellTube = TMath::Pi()*std::pow(0.5*0.464,2.0)*1.0*0.464; // mm^3
     double volumeRatio = volumeCellTube/VolumeSample;
     // int numberCells = 1000000;
 
