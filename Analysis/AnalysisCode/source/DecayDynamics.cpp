@@ -11,7 +11,8 @@ DecayDynamics::DecayDynamics(int activitySample_in, std::string cellLine_in, std
 
     //-----------------------
     double VolumeSample = 0.2*1000; // mm^3
-    double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
+    // double volumeCellTube = TMath::Pi()*std::pow(0.5,2.0)*1.0; // mm^3
+    double volumeCellTube = TMath::Pi()*std::pow(0.5*0.464,2.0)*0.464*1.0; // mm^3
     volumeRatio = volumeCellTube/VolumeSample;
 
     numberCells = 500000.*volumeRatio;

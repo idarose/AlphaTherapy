@@ -599,7 +599,10 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     AddEnergyDepositionHistograms addHistograms;
 
     //------------------–----------
-    std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation_" + decayDynamicsInstance.GetCellGeometry() + "-build/";
+    // std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation_" + decayDynamicsInstance.GetCellGeometry() + "-build/";
+    std::string filepathSimulationOutput = "../../GEANT4Simulations/CellDamageSimulation_" + decayDynamicsInstance.GetCellGeometry() + "_Test-build/";
+
+    // std::string filepathSimulationOutput = "/Volumes/SamsungT7/G4SEMOut/";
 
     // std::cout << filepathSimulationOutput << std::endl;
 
@@ -607,50 +610,51 @@ EnergyDepositionHistograms AnalyzeHistogramsFromSimulation(DecayDynamics decayDy
     std::vector<TFile*> inputFiles_membrane;
     std::vector<TFile*> inputFiles_cytoplasm;
 
-    int startIt;
-    int stopIt;
+    int startIt = 0;
+    int stopIt = numberIterations;
 
-    if(decayDynamicsInstance.GetCellLine()=="C4_2")
-    {
-        startIt = 0;
-        stopIt = 40;
-    }
-    if(decayDynamicsInstance.GetCellLine()=="PC3_PIP")
-    {
-        if(caseNum==1)
-        {
-            startIt = 0;
-            stopIt = 10;
-        }
-        if(caseNum==2)
-        {
-            startIt = 10;
-            stopIt = 20;
-        }
-        if(caseNum==3)
-        {
-            startIt = 20;
-            stopIt = 30;
-        }
-        if(caseNum==4)
-        {
-            startIt = 30;
-            stopIt = 40;
-        }
-    }
-    if(decayDynamicsInstance.GetCellLine()=="PC3_Flu")
-    {
-        if(caseNum==1)
-        {
-            startIt = 0;
-            stopIt = 40;
-        }
-        if(caseNum==2)
-        {
-            startIt = 40;
-            stopIt = 80;
-        }
-    }
+    // if(decayDynamicsInstance.GetCellLine()=="C4_2")
+    // {
+    //     startIt = 0;
+    //     stopIt = 40;
+    // }
+    // if(decayDynamicsInstance.GetCellLine()=="PC3_PIP")
+    // {
+    //     if(caseNum==1)
+    //     {
+    //         startIt = 0;
+    //         stopIt = 10;
+    //     }
+    //     if(caseNum==2)
+    //     {
+    //         startIt = 10;
+    //         stopIt = 20;
+    //     }
+    //     if(caseNum==3)
+    //     {
+    //         startIt = 20;
+    //         stopIt = 30;
+    //     }
+    //     if(caseNum==4)
+    //     {
+    //         startIt = 30;
+    //         stopIt = 40;
+    //     }
+    // }
+    // if(decayDynamicsInstance.GetCellLine()=="PC3_Flu")
+    // {
+    //     if(caseNum==1)
+    //     {
+    //         startIt = 0;
+    //         stopIt = 40;
+    //     }
+    //     if(caseNum==2)
+    //     {
+    //         startIt = 40;
+    //         stopIt = 80;
+    //     }
+    // }
+
 
     for(int i=startIt; i<stopIt; i++)
     {
