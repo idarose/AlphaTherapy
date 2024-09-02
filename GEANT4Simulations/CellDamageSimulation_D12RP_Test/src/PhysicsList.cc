@@ -78,7 +78,7 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList()
     param->SetMaxEnergy(1*GeV);
 
     AddPhysics("raddecay");
-    // AddPhysics("DNA_Opt2");
+    AddPhysics("DNA_Opt2");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
