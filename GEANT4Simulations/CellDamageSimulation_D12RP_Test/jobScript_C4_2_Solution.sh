@@ -6,7 +6,7 @@
 #SBATCH --time=0-05:00:00
 #SBATCH --mem-per-cpu=2000
 #SBATCH --ntasks=1 --cpus-per-task=40
-#SBATCH --array=0-359
+#SBATCH --array=4
 
 # export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6"
 # export G4RADIOACTIVEDATA="/Users/kcwli/Academic/Codes/Installations/GEANT4/geant4.10.07.p03-data/RadioactiveDecay5.6_212Pb_212Bi"

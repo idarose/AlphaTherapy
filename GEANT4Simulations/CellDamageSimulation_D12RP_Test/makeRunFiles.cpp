@@ -116,7 +116,7 @@ void makeRunFiles()
     double decaysMembrane;
     double decaysCytoplasm;
 
-    int numInterations = 40;
+    int numInterations = 1;
 
     // //-------------------------
     // // Making files for C4-2
@@ -137,39 +137,39 @@ void makeRunFiles()
     }
 
 
-    numInterations = 10;
-    caseNum = 0;
-    for(int i = 0; i < std::get<0>(data_PC3_PIP).size(); i++)
-    {
-        //-------------------------
-        // Making files for PC3 PIP
-        activity = std::get<0>(data_PC3_PIP)[i];
-        decaysSolution = std::ceil(std::get<1>(data_PC3_PIP)[i]);
-        decaysMembrane = std::ceil(std::get<2>(data_PC3_PIP)[i]);
-        decaysCytoplasm = std::ceil(std::get<3>(data_PC3_PIP)[i]);
+    // numInterations = 10;
+    // caseNum = 0;
+    // for(int i = 0; i < std::get<0>(data_PC3_PIP).size(); i++)
+    // {
+    //     //-------------------------
+    //     // Making files for PC3 PIP
+    //     activity = std::get<0>(data_PC3_PIP)[i];
+    //     decaysSolution = std::ceil(std::get<1>(data_PC3_PIP)[i]);
+    //     decaysMembrane = std::ceil(std::get<2>(data_PC3_PIP)[i]);
+    //     decaysCytoplasm = std::ceil(std::get<3>(data_PC3_PIP)[i]);
 
-        GenerateFiles(0, decaysSolution, activity, "PC3_PIP", numInterations, caseNum);
-        GenerateFiles(1, decaysMembrane, activity, "PC3_PIP", numInterations, caseNum);
-        GenerateFiles(2, decaysCytoplasm, activity, "PC3_PIP", numInterations, caseNum);
+    //     GenerateFiles(0, decaysSolution, activity, "PC3_PIP", numInterations, caseNum);
+    //     GenerateFiles(1, decaysMembrane, activity, "PC3_PIP", numInterations, caseNum);
+    //     GenerateFiles(2, decaysCytoplasm, activity, "PC3_PIP", numInterations, caseNum);
 
-        caseNum += numInterations;
-    }
-
-
-    numInterations = 80;
-    caseNum = 0;
-    for(int i = 0; i < std::get<0>(data_PC3_Flu).size(); i++)
-    {
-        //-------------------------
-        // Making files for PC3 Flu
-        activity = std::get<0>(data_PC3_Flu)[i];
-        decaysSolution = std::ceil(std::get<1>(data_PC3_Flu)[i]);
+    //     caseNum += numInterations;
+    // }
 
 
-        GenerateFiles(0, decaysSolution, activity, "PC3_Flu", numInterations, caseNum);
+    // numInterations = 80;
+    // caseNum = 0;
+    // for(int i = 0; i < std::get<0>(data_PC3_Flu).size(); i++)
+    // {
+    //     //-------------------------
+    //     // Making files for PC3 Flu
+    //     activity = std::get<0>(data_PC3_Flu)[i];
+    //     decaysSolution = std::ceil(std::get<1>(data_PC3_Flu)[i]);
 
-        caseNum += numInterations;
-    }
+
+    //     GenerateFiles(0, decaysSolution, activity, "PC3_Flu", numInterations, caseNum);
+
+    //     caseNum += numInterations;
+    // }
 }
 /*
 run0.mac
