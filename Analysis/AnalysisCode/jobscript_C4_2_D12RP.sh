@@ -6,7 +6,7 @@
 #SBATCH --time=0-40:00:00
 #SBATCH --mem-per-cpu=32G
 #SBATCH --ntasks=1 --cpus-per-task=1
-#SBATCH --array=3
+#SBATCH --array=50
 
 EXECUTABLE=main
 
