@@ -104,6 +104,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             //Getting the particle type number for the interaction
             G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
 
+            if(particleType==1000020040)
+            {
+                G4cout << "Alpha in membrane : " << particleType  << " energy : " << energyDeposition << G4endl;
+            }
+
             //Getting the kinetic energy of the particle for the interaction, in MeV
             G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
 
@@ -130,6 +135,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             //Getting the particle type number for the interaction
             G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
 
+            if(particleType==1000020040)
+            {
+                G4cout << "Alpha in cytoplasm : " << particleType << " energy : " << energyDeposition << G4endl;
+            }
+
             //Getting the kinetic energy of the particle for the interaction, in MeV
             G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
 
@@ -155,6 +165,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
             //Getting the particle type number for the interaction
             G4int particleType = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
+
+            if(particleType==1000020040)
+            {
+                G4cout << "Alpha in nucleus : " << particleType << " energy : " << energyDeposition << G4endl;
+            }
 
             //Getting the kinetic energy of the particle for the interaction, in MeV
             G4double kineticEnergy = step->GetPreStepPoint()->GetKineticEnergy()/MeV;
