@@ -112,7 +112,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         flagParticle = 2;
 
     if (partDef == G4Alpha::AlphaDefinition())
-        // G4cout << "FOUND ALPHA!" << G4endl;
         flagParticle = 4;
 
     //----------------------------------
@@ -142,6 +141,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             // Getting parent ID
             G4int parentID = step->GetTrack()->GetParentID();
 
+            if (flagParticle == 4)
+            {
+                G4cout << "FOUND ALPHA" << G4endl;
+            }
+
             // Storing information
             // fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, particleType, interactionTime, trackID, parentID);
             fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeMembrane, kineticEnergy, flagParticle, interactionTime, trackID, parentID);
@@ -168,6 +172,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
             // Getting parent ID
             G4int parentID = step->GetTrack()->GetParentID();
+
+            if (flagParticle == 4)
+            {
+                G4cout << "FOUND ALPHA" << G4endl;
+            }
 
             // Storing information
             // fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeCytoplasm, kineticEnergy, particleType, interactionTime, trackID, parentID);
@@ -196,6 +205,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
             // Getting parent ID
             G4int parentID = step->GetTrack()->GetParentID();
+
+            if (flagParticle == 4)
+            {
+                G4cout << "FOUND ALPHA" << G4endl;
+            }
 
             // Storing information
             // fEventAction->StoreInteractionInformation(energyDeposition, cellID, volumeTypeNucleus, kineticEnergy, particleType, interactionTime, trackID, parentID);
