@@ -112,6 +112,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         flagParticle = 2;
 
     if (partDef == G4Alpha::AlphaDefinition())
+        // G4cout << "FOUND ALPHA!" << G4endl;
         flagParticle = 4;
 
     //----------------------------------
