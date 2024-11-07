@@ -107,7 +107,7 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList()
     param->SetMaxEnergy(1*GeV);
 
     // AddPhysics("raddecay");
-    fRadDecayPhysicsList = new G4RadioactiveDecayPhysics();
+    // fRadDecayPhysicsList = new G4RadioactiveDecayPhysics();
     AddPhysics("DNA_Opt2");
 }
 
