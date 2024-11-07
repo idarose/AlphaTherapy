@@ -33,6 +33,34 @@
 /// \file PhysicsList.cc
 /// \brief Implementation of the PhysicsList class
 
+// #include "PhysicsList.hh"
+// #include "G4SystemOfUnits.hh"
+// #include "G4EmParameters.hh"
+
+// #include "G4EmDNAPhysics.hh"
+// #include "G4EmDNAPhysics_option1.hh"
+// #include "G4EmDNAPhysics_option2.hh"
+// #include "G4EmDNAPhysics_option3.hh"
+// #include "G4EmDNAPhysics_option4.hh"
+// #include "G4EmDNAPhysics_option5.hh"
+// #include "G4EmDNAPhysics_option6.hh"
+// #include "G4EmDNAPhysics_option7.hh"
+// #include "G4EmDNAPhysics_option8.hh"
+
+// #include "G4EmStandardPhysics.hh"
+// #include "G4EmStandardPhysics_option3.hh"
+// #include "G4EmStandardPhysics_option4.hh"
+// #include "G4EmLivermorePhysics.hh"
+// #include "G4EmPenelopePhysics.hh"
+
+// #include "G4DecayPhysics.hh"
+// #include "G4RadioactiveDecayPhysics.hh"
+
+// #include "G4EmDNAPhysicsActivator.hh"
+// #include "G4EmDNABuilder.hh"
+// #include "G4GenericIon.hh"
+
+
 #include "PhysicsList.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4EmParameters.hh"
@@ -59,6 +87,7 @@
 #include "G4EmDNAPhysicsActivator.hh"
 #include "G4EmDNABuilder.hh"
 #include "G4GenericIon.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysicsList::PhysicsList() : G4VModularPhysicsList()
@@ -78,7 +107,7 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList()
     param->SetMaxEnergy(1*GeV);
 
     AddPhysics("raddecay");
-    // AddPhysics("DNA_Opt2");
+    AddPhysics("DNA_Opt2");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

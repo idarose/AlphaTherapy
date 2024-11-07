@@ -362,7 +362,9 @@ void PrimaryGeneratorAction::SetInitialRadionuclide_location(G4int value)
 void PrimaryGeneratorAction::DefineInitialRadionuclide()
 {
     ion = G4IonTable::GetIonTable()->GetIon(initialRadionuclide_Z, initialRadionuclide_A, initialRadionuclide_excitationEnergy);
-    fParticleGun->SetParticleDefinition(ion);
+    // fParticleGun->SetParticleDefinition(ion);
+    fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("alpha"));
+    fParticleGun->SetParticleEnergy(1.*MeV);
     ion->SetPDGLifeTime(0.*ns);
 }
 
